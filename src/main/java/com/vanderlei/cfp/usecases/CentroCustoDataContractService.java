@@ -1,4 +1,4 @@
-package com.vanderlei.cfp.usecases.impl;
+package com.vanderlei.cfp.usecases;
 
 public interface CentroCustoDataContractService {
 }

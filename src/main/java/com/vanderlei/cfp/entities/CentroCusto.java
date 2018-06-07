@@ -18,9 +18,6 @@ public class CentroCusto implements Serializable {
     @Id
     private String id;
 
-    @NotNull(message = "O usuario deve ser informado")
-    private Usuario usuario;
-
     @NotEmpty(message = "Preenchimento obrigatório")
     @Length(min = 5, max = 100, message = "O nome deve conter entre 5 e 100 caracteres")
     private String nome;
@@ -28,6 +25,9 @@ public class CentroCusto implements Serializable {
     private Boolean aplicarNaReceita;
 
     private Boolean aplicarNaDespesa;
+
+    @NotNull(message = "O usuario deve ser informado")
+    private Usuario usuario;
 
     @NotEmpty(message = "Preenchimento obrigatório")
     private LocalDateTime dataInclusao;
@@ -39,12 +39,12 @@ public class CentroCusto implements Serializable {
     public CentroCusto() {
     }
 
-    public CentroCusto(String id, Usuario usuario, String nome, Boolean aplicarNaReceita, Boolean aplicarNaDespesa) {
+    public CentroCusto(final String id, final String nome, final Boolean aplicarNaReceita, final Boolean aplicarNaDespesa, final Usuario usuario) {
         this.id = id;
-        this.usuario = usuario;
         this.nome = nome;
         this.aplicarNaReceita = aplicarNaReceita;
         this.aplicarNaDespesa = aplicarNaDespesa;
+        this.usuario = usuario;
     }
 
     public String getId() {
@@ -53,14 +53,6 @@ public class CentroCusto implements Serializable {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
     }
 
     public String getNome() {
@@ -85,6 +77,14 @@ public class CentroCusto implements Serializable {
 
     public void setAplicarNaDespesa(Boolean aplicarNaDespesa) {
         this.aplicarNaDespesa = aplicarNaDespesa;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public LocalDateTime getDataInclusao() {
