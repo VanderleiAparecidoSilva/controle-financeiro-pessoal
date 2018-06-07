@@ -1,0 +1,110 @@
+package com.vanderlei.cfp.entities;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import javax.persistence.Column;
+import javax.validation.constraints.NotEmpty;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.Objects;
+
+@Document(collection = "usuario")
+public class Usuario implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    private String id;
+
+    @NotEmpty(message = "Preenchimento obrigatório")
+    private String nome;
+
+    @NotEmpty(message = "Preenchimento obrigatório")
+    @Column(unique = true)
+    private String email;
+
+    @NotEmpty(message = "Preenchimento obrigatório")
+    private LocalDateTime dataInclusao;
+
+    private LocalDateTime dataAlteracao;
+
+    private LocalDateTime dataExclusao;
+
+    public Usuario() {
+    }
+
+    public Usuario(String id, @NotEmpty String nome, @NotEmpty String email) {
+        this.id = id;
+        this.nome = nome;
+        this.email = email;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public LocalDateTime getDataInclusao() {
+        return dataInclusao;
+    }
+
+    public void setDataInclusao(LocalDateTime dataInclusao) {
+        this.dataInclusao = dataInclusao;
+    }
+
+    public LocalDateTime getDataAlteracao() {
+        return dataAlteracao;
+    }
+
+    public void setDataAlteracao(LocalDateTime dataAlteracao) {
+        this.dataAlteracao = dataAlteracao;
+    }
+
+    public LocalDateTime getDataExclusao() {
+        return dataExclusao;
+    }
+
+    public void setDataExclusao(LocalDateTime dataExclusao) {
+        this.dataExclusao = dataExclusao;
+    }
+
+    @JsonIgnore
+    public boolean getAtivo() {
+        return this.dataExclusao == null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Usuario usuario = (Usuario) o;
+        return Objects.equals(nome, usuario.nome) &&
+                Objects.equals(email, usuario.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nome, email);
+    }
+}
