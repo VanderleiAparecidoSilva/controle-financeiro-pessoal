@@ -31,87 +31,87 @@ public class UsuarioController {
     private UsuarioGateway gateway;
 
     @Autowired
-    private UsuarioDataContractConverter usuarioDataContractConverter;
+    private UsuarioDataContractConverter dataContractConverter;
 
     @Autowired
-    private UsuarioConverter usuarioConverter;
+    private UsuarioConverter converter;
 
-    @ApiOperation(value = "Buscar usuario por Codigo")
+    @ApiOperation(value = "Buscar por codigo")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Sucesso")
     })
     @RequestMapping(value = "/{id}", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> buscaPorId(@PathVariable final String id) {
-        Usuario usuario = gateway.buscarPorCodigo(id);
-        final UsuarioDataContract dataContract = usuarioDataContractConverter.convert(usuario);
+        Usuario obj = gateway.buscarPorCodigo(id);
+        final UsuarioDataContract dataContract = dataContractConverter.convert(obj);
         return ResponseEntity
                 .ok().body(dataContract);
     }
 
-    @ApiOperation(value = "Buscar todos os usuarios")
+    @ApiOperation(value = "Buscar todos")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Sucesso")
     })
     @RequestMapping(method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<UsuarioDataContract>> buscaTodos() {
-        Collection<Usuario> usuarios = gateway.buscarTodos();
-        Collection<UsuarioDataContract> dataContractList = usuarios
+        Collection<Usuario> objList = gateway.buscarTodos();
+        Collection<UsuarioDataContract> dataContractList = objList
                 .stream()
-                .map(usuario -> new UsuarioDataContract(usuario.getId(), usuario.getNome(), usuario.getEmail()))
+                .map(obj -> new UsuarioDataContract(obj.getId(), obj.getNome(), obj.getEmail()))
                 .collect(Collectors.toList());
         return ResponseEntity
                 .ok().body(dataContractList);
     }
 
-    @ApiOperation(value = "Buscar todos os usuarios ativos")
+    @ApiOperation(value = "Buscar todos ativos")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Sucesso")
     })
     @RequestMapping(value = "/ativos", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<UsuarioDataContract>> buscaTodosAtivos() {
-        Collection<Usuario> usuarios = gateway.buscarTodosAtivos();
-        Collection<UsuarioDataContract> dataContractList = usuarios
+        Collection<Usuario> objList = gateway.buscarTodosAtivos();
+        Collection<UsuarioDataContract> dataContractList = objList
                 .stream()
-                .map(usuario -> new UsuarioDataContract(usuario.getId(), usuario.getNome(), usuario.getEmail()))
+                .map(obj -> new UsuarioDataContract(obj.getId(), obj.getNome(), obj.getEmail()))
                 .collect(Collectors.toList());
         return ResponseEntity
                 .ok().body(dataContractList);
     }
 
-    @ApiOperation(value = "Criar novo usuario")
+    @ApiOperation(value = "Criar novo")
     @ApiResponses( value = {
-            @ApiResponse(code = 201, message = "Usuario inserido com sucesso")
+            @ApiResponse(code = 201, message = "Inserido com sucesso")
     })
     @RequestMapping(method = RequestMethod.POST,
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> inserir(@Valid @RequestBody final UsuarioDataContract dataContract) {
-        Usuario usuario = usuarioConverter.convert(dataContract);
-        gateway.inserir(usuario);
+        Usuario obj = converter.convert(dataContract);
+        gateway.inserir(obj);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(
-                usuario.getId()).toUri();
+                obj.getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
 
-    @ApiOperation(value = "Atualizar usuario")
+    @ApiOperation(value = "Atualizar")
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Usuario atualizado com sucesso")
+            @ApiResponse(code = 204, message = "Atualizado com sucesso")
     })
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Void> atualizar(@Valid @RequestBody final UsuarioDataContract dataContract,
                                           @PathVariable final String id) {
-        Usuario usuario = gateway.buscarPorCodigo(id);
-        Parsers.parse(id, usuario, dataContract);
-        gateway.atualizar(usuario);
+        Usuario obj = gateway.buscarPorCodigo(id);
+        Parsers.parse(id, obj, dataContract);
+        gateway.atualizar(obj);
         return ResponseEntity.noContent().build();
     }
 
-    @ApiOperation(value = "Ativar usuario")
+    @ApiOperation(value = "Ativar")
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Usuario ativado com sucesso")
+            @ApiResponse(code = 204, message = "Ativado com sucesso")
     })
     @RequestMapping(value = "/{id}/ativar", method = RequestMethod.PUT)
     public ResponseEntity<Void> ativar(@PathVariable final String id) {
@@ -119,9 +119,9 @@ public class UsuarioController {
         return ResponseEntity.noContent().build();
     }
 
-    @ApiOperation(value = "Desativar usuario")
+    @ApiOperation(value = "Desativar")
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Usuario desativado com sucesso")
+            @ApiResponse(code = 204, message = "Desativado com sucesso")
     })
     @RequestMapping(value = "/{id}/desativar", method = RequestMethod.PUT)
     public ResponseEntity<Void> desativar(@PathVariable final String id) {

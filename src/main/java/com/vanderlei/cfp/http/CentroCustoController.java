@@ -29,94 +29,92 @@ public class CentroCustoController {
     private CentroCustoGateway gateway;
 
     @Autowired
-    private CentroCustoDataContractConverter centroCustoDataContractConverter;
+    private CentroCustoDataContractConverter dataContractConverter;
 
     @Autowired
-    private CentroCustoConverter centroCustoConverter;
+    private CentroCustoConverter converter;
 
     @Autowired
     private UsuarioDataContractConverter usuarioDataContractConverter;
 
-    @ApiOperation(value = "Buscar centro de custo por Codigo")
+    @ApiOperation(value = "Buscar por codigo")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Sucesso")
     })
     @RequestMapping(value = "/{id}", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> buscaPorId(@PathVariable final String id) {
-        CentroCusto centroCusto = gateway.buscarPorCodigo(id);
-        final CentroCustoDataContract dataContract = centroCustoDataContractConverter.convert(centroCusto);
+        CentroCusto obj = gateway.buscarPorCodigo(id);
+        final CentroCustoDataContract dataContract = dataContractConverter.convert(obj);
         return ResponseEntity
                 .ok().body(dataContract);
     }
 
-    @ApiOperation(value = "Buscar todos os centros de custo")
+    @ApiOperation(value = "Buscar todos")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Sucesso")
     })
     @RequestMapping(method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<CentroCustoDataContract>> buscaTodos() {
-        Collection<CentroCusto> centroCustos = gateway.buscarTodos();
-        Collection<CentroCustoDataContract> dataContractList = centroCustos
+        Collection<CentroCusto> objList = gateway.buscarTodos();
+        Collection<CentroCustoDataContract> dataContractList = objList
                 .stream()
-                .map(centroCusto -> new CentroCustoDataContract(centroCusto.getId(), centroCusto.getNome(),
-                        centroCusto.getAplicarNaDespesa(), centroCusto.getAplicarNaReceita(),
-                        usuarioDataContractConverter.convert(centroCusto.getUsuario())))
+                .map(obj -> new CentroCustoDataContract(obj.getId(), obj.getNome(), obj.getAplicarNaDespesa(),
+                        obj.getAplicarNaReceita(), usuarioDataContractConverter.convert(obj.getUsuario())))
                 .collect(Collectors.toList());
         return ResponseEntity
                 .ok().body(dataContractList);
     }
 
-    @ApiOperation(value = "Buscar todos os centros de custo ativos")
+    @ApiOperation(value = "Buscar todos ativos")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Sucesso")
     })
     @RequestMapping(value = "/ativos", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<CentroCustoDataContract>> buscaTodosAtivos() {
-        Collection<CentroCusto> centroCustos = gateway.buscarTodosAtivos();
-        Collection<CentroCustoDataContract> dataContractList = centroCustos
+        Collection<CentroCusto> objList = gateway.buscarTodosAtivos();
+        Collection<CentroCustoDataContract> dataContractList = objList
                 .stream()
-                .map(centroCusto -> new CentroCustoDataContract(centroCusto.getId(), centroCusto.getNome(),
-                        centroCusto.getAplicarNaDespesa(), centroCusto.getAplicarNaReceita(),
-                        usuarioDataContractConverter.convert(centroCusto.getUsuario())))
+                .map(obj -> new CentroCustoDataContract(obj.getId(), obj.getNome(), obj.getAplicarNaDespesa(),
+                        obj.getAplicarNaReceita(), usuarioDataContractConverter.convert(obj.getUsuario())))
                 .collect(Collectors.toList());
         return ResponseEntity
                 .ok().body(dataContractList);
     }
 
-    @ApiOperation(value = "Criar novo centro de custo")
+    @ApiOperation(value = "Criar novo")
     @ApiResponses( value = {
-            @ApiResponse(code = 201, message = "Centro de custo inserido com sucesso")
+            @ApiResponse(code = 201, message = "Inserido com sucesso")
     })
     @RequestMapping(method = RequestMethod.POST,
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> inserir(@Valid @RequestBody final CentroCustoDataContract dataContract) {
-        CentroCusto centroCusto = centroCustoConverter.convert(dataContract);
-        gateway.inserir(centroCusto);
+        CentroCusto obj = converter.convert(dataContract);
+        gateway.inserir(obj);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(
-                centroCusto.getId()).toUri();
+                obj.getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
 
-    @ApiOperation(value = "Atualizar centro de custo")
+    @ApiOperation(value = "Atualizar")
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Centro de custo atualizado com sucesso")
+            @ApiResponse(code = 204, message = "Atualizado com sucesso")
     })
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Void> atualizar(@Valid @RequestBody final CentroCustoDataContract dataContract,
                                           @PathVariable final String id) {
-        CentroCusto centroCusto = gateway.buscarPorCodigo(id);
-        Parsers.parse(id, centroCusto, dataContract);
-        gateway.atualizar(centroCusto);
+        CentroCusto obj = gateway.buscarPorCodigo(id);
+        Parsers.parse(id, obj, dataContract);
+        gateway.atualizar(obj);
         return ResponseEntity.noContent().build();
     }
 
-    @ApiOperation(value = "Ativar centro de custo")
+    @ApiOperation(value = "Ativar")
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Centro de custo ativado com sucesso")
+            @ApiResponse(code = 204, message = "Ativado com sucesso")
     })
     @RequestMapping(value = "/{id}/ativar", method = RequestMethod.PUT)
     public ResponseEntity<Void> ativar(@PathVariable final String id) {
@@ -124,9 +122,9 @@ public class CentroCustoController {
         return ResponseEntity.noContent().build();
     }
 
-    @ApiOperation(value = "Desativar centro de custo")
+    @ApiOperation(value = "Desativar")
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Centro de custo desativado com sucesso")
+            @ApiResponse(code = 204, message = "Desativado com sucesso")
     })
     @RequestMapping(value = "/{id}/desativar", method = RequestMethod.PUT)
     public ResponseEntity<Void> desativar(@PathVariable final String id) {
