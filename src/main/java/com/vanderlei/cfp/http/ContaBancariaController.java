@@ -2,7 +2,11 @@ package com.vanderlei.cfp.http;
 
 import com.vanderlei.cfp.entities.CentroCusto;
 import com.vanderlei.cfp.gateways.CentroCustoGateway;
-import com.vanderlei.cfp.gateways.converters.*;
+import com.vanderlei.cfp.gateways.ContaBancariaGateway;
+import com.vanderlei.cfp.gateways.converters.CentroCustoConverter;
+import com.vanderlei.cfp.gateways.converters.CentroCustoDataContractConverter;
+import com.vanderlei.cfp.gateways.converters.Parsers;
+import com.vanderlei.cfp.gateways.converters.UsuarioDataContractConverter;
 import com.vanderlei.cfp.http.data.CentroCustoDataContract;
 import com.vanderlei.cfp.http.mapping.UrlMapping;
 import io.swagger.annotations.ApiOperation;
@@ -22,17 +26,17 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(UrlMapping.CENTRO_CUSTO)
-public class CentroCustoController {
+@RequestMapping(UrlMapping.CONTA_BANCARIA)
+public class ContaBancariaController {
 
     @Autowired
-    private CentroCustoGateway gateway;
+    private ContaBancariaGateway gateway;
 
     @Autowired
-    private CentroCustoDataContractConverter centroCustoDataContractConverter;
+    private ContaBancariaDataContractConverter contaBancariaDataContractConverter;
 
     @Autowired
-    private CentroCustoConverter centroCustoConverter;
+    private ContaBancariaConverter contaBancariaConverter;
 
     @Autowired
     private UsuarioDataContractConverter usuarioDataContractConverter;
