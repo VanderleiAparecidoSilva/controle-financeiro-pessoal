@@ -9,6 +9,4 @@ public class CfpAppApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(CfpAppApplication.class, args);
 	}
-
-	ver a questão dos indices para as collections igual é feito no FB-Order
 }

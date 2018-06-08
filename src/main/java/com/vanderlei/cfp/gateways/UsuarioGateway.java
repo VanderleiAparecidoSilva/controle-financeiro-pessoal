@@ -35,12 +35,18 @@ public class UsuarioGateway {
             id + ", Tipo: " + Usuario.class.getName()));
     }
 
+    public Usuario buscarPorEmail(final String email) {
+        Optional<Usuario> obj = repository.findByEmail(email);
+        return obj.orElseThrow(() -> new ObjectNotFoundException("Usuario não encontrado! Email: " +
+                email + ", Tipo: " + Usuario.class.getName()));
+    }
+
     public Usuario inserir(final Usuario obj) {
         if (repository.findByNomeAndEmail(obj.getNome(), obj.getEmail())
                 .isPresent()) {
             throw new ObjectDuplicatedException("Usuario já cadastrado com o nome: " + obj.getNome() +
             ", Tipo: " + Usuario.class.getName());
-        } else if (repository.findByEmail(obj.getEmail()).size() > 0) {
+        } else if (repository.findByEmail(obj.getEmail()).isPresent()) {
             throw new ObjectDuplicatedException("Usuario já cadastrado com o email: " + obj.getEmail() +
                     ", Tipo: " + Usuario.class.getName());
         }

@@ -1,5 +1,6 @@
 package com.vanderlei.cfp.http;
 
+import com.vanderlei.cfp.configs.ff4j.FeatureConfiguration;
 import com.vanderlei.cfp.entities.Usuario;
 import com.vanderlei.cfp.gateways.UsuarioGateway;
 import com.vanderlei.cfp.gateways.converters.Parsers;
@@ -11,6 +12,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.ff4j.FF4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +25,7 @@ import java.net.URI;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(UrlMapping.USUARIO)
@@ -36,14 +40,33 @@ public class UsuarioController {
     @Autowired
     private UsuarioConverter converter;
 
+    @Autowired
+    private FF4j ff4j;
+
     @ApiOperation(value = "Buscar por codigo")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Sucesso")
     })
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET,
+    @RequestMapping(value = "/id/{id}", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> buscaPorId(@PathVariable final String id) {
         Usuario obj = gateway.buscarPorCodigo(id);
+        if (ff4j.check(FeatureConfiguration.IMPRIMIR_LOG.getKey())) {
+            log.info("teste");
+        }
+        final UsuarioDataContract dataContract = dataContractConverter.convert(obj);
+        return ResponseEntity
+                .ok().body(dataContract);
+    }
+
+    @ApiOperation(value = "Buscar por email")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Sucesso")
+    })
+    @RequestMapping(value = "/email/{email}", method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> buscaPorEmail(@PathVariable final String email) {
+        Usuario obj = gateway.buscarPorEmail(email);
         final UsuarioDataContract dataContract = dataContractConverter.convert(obj);
         return ResponseEntity
                 .ok().body(dataContract);
@@ -113,7 +136,7 @@ public class UsuarioController {
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Ativado com sucesso")
     })
-    @RequestMapping(value = "/{id}/ativar", method = RequestMethod.PUT)
+    @RequestMapping(value = "/ativar/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Void> ativar(@PathVariable final String id) {
         gateway.ativar(id);
         return ResponseEntity.noContent().build();
@@ -123,7 +146,7 @@ public class UsuarioController {
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Desativado com sucesso")
     })
-    @RequestMapping(value = "/{id}/desativar", method = RequestMethod.PUT)
+    @RequestMapping(value = "/desativar/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Void> desativar(@PathVariable final String id) {
         gateway.desativar(id);
         return ResponseEntity.noContent().build();

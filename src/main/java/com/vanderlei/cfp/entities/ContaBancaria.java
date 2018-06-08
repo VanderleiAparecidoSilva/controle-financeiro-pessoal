@@ -2,6 +2,8 @@ package com.vanderlei.cfp.entities;
 
 import org.hibernate.validator.constraints.Length;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotEmpty;
@@ -11,6 +13,14 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Document(collection = "contabancaria")
+@CompoundIndexes(
+        {
+                @CompoundIndex(name = "nome", def = "{'nome' : 1}"),
+                @CompoundIndex(name = "numerocontabancaria", def = "{'numeroContaBancaria' : 1}"),
+                @CompoundIndex(name = "nome-usuarionome", def = "{'nome' : 1, 'usuario.nome' : 1}"),
+                @CompoundIndex(name = "nome-usuarioemail", def = "{'nome' : 1, 'usuario.email' : 1}")
+        }
+)
 public class ContaBancaria implements Serializable {
 
     private static final long serialVersionUID = 1L;

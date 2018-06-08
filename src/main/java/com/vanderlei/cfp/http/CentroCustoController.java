@@ -116,7 +116,7 @@ public class CentroCustoController {
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Ativado com sucesso")
     })
-    @RequestMapping(value = "/{id}/ativar", method = RequestMethod.PUT)
+    @RequestMapping(value = "/ativar/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Void> ativar(@PathVariable final String id) {
         gateway.ativar(id);
         return ResponseEntity.noContent().build();
@@ -126,7 +126,7 @@ public class CentroCustoController {
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Desativado com sucesso")
     })
-    @RequestMapping(value = "/{id}/desativar", method = RequestMethod.PUT)
+    @RequestMapping(value = "/desativar/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Void> desativar(@PathVariable final String id) {
         gateway.desativar(id);
         return ResponseEntity.noContent().build();

@@ -4,6 +4,7 @@ import com.vanderlei.cfp.entities.CentroCusto;
 import com.vanderlei.cfp.exceptions.ObjectDuplicatedException;
 import com.vanderlei.cfp.exceptions.ObjectNotFoundException;
 import com.vanderlei.cfp.gateways.repository.CentroCustoRepository;
+import com.vanderlei.cfp.gateways.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,9 @@ public class CentroCustoGateway {
 
     @Autowired
     private CentroCustoRepository repository;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     public Collection<CentroCusto> buscarTodos() {
         return repository.findAll();
@@ -36,6 +40,10 @@ public class CentroCustoGateway {
     }
 
     public CentroCusto inserir(final CentroCusto obj) {
+        if (!usuarioRepository.findByNomeAndEmail(obj.getUsuario().getNome(), obj.getUsuario().getEmail()).isPresent()) {
+            throw new ObjectNotFoundException("O usuário informado no centro de custo não existe: " + obj.getUsuario() +
+            ", Tipo: " + CentroCusto.class.getName());
+        }
         if (repository.findByNomeAndUsuarioEmail(obj.getNome(), obj.getUsuario().getEmail())
                 .isPresent()) {
             throw new ObjectDuplicatedException("Centro de custo já cadastrado com o nome: " + obj.getNome() +
@@ -47,6 +55,10 @@ public class CentroCustoGateway {
     }
 
     public CentroCusto atualizar(final CentroCusto obj) {
+        if (!usuarioRepository.findByNomeAndEmail(obj.getUsuario().getNome(), obj.getUsuario().getEmail()).isPresent()) {
+            throw new ObjectNotFoundException("O usuário informado no centro de custo não existe: " + obj.getUsuario() +
+                    ", Tipo: " + CentroCusto.class.getName());
+        }
         obj.setDataAlteracao(LocalDateTime.now());
         return repository.save(obj);
     }

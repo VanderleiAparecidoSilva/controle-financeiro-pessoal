@@ -2,6 +2,8 @@ package com.vanderlei.cfp.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Column;
@@ -11,6 +13,13 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Document(collection = "usuario")
+@CompoundIndexes(
+        {
+                @CompoundIndex(name = "nome", def = "{'nome' : 1}"),
+                @CompoundIndex(name = "email", def = "{'email' : 1}"),
+                @CompoundIndex(name = "nome-email", def = "{'nome' : 1, 'email' : 1}")
+        }
+)
 public class Usuario implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -106,5 +115,12 @@ public class Usuario implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(nome, email);
+    }
+
+    @Override
+    public String toString() {
+        return "[Usuário] - " +
+                "Nome = '" + nome + '\'' +
+                ", Email = '" + email + '\'';
     }
 }

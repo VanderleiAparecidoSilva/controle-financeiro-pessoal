@@ -5,6 +5,7 @@ import com.vanderlei.cfp.entities.ContaBancaria;
 import com.vanderlei.cfp.exceptions.ObjectDuplicatedException;
 import com.vanderlei.cfp.exceptions.ObjectNotFoundException;
 import com.vanderlei.cfp.gateways.repository.ContaBancariaRepository;
+import com.vanderlei.cfp.gateways.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,9 @@ public class ContaBancariaGateway {
 
     @Autowired
     private ContaBancariaRepository repository;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     public Collection<ContaBancaria> buscarTodos() {
         return repository.findAll();
@@ -37,6 +41,10 @@ public class ContaBancariaGateway {
     }
 
     public ContaBancaria inserir(final ContaBancaria obj) {
+        if (!usuarioRepository.findByNomeAndEmail(obj.getUsuario().getNome(), obj.getUsuario().getEmail()).isPresent()) {
+            throw new ObjectNotFoundException("O usuário informado na conta bancária não existe: " + obj.getUsuario() +
+                    ", Tipo: " + CentroCusto.class.getName());
+        }
         if (repository.findByNomeAndUsuarioEmail(obj.getNome(), obj.getUsuario().getEmail())
                 .isPresent()) {
             throw new ObjectDuplicatedException("Conta bancária já cadastrada com o nome: " + obj.getNome() +
@@ -48,6 +56,10 @@ public class ContaBancariaGateway {
     }
 
     public ContaBancaria atualizar(final ContaBancaria obj) {
+        if (!usuarioRepository.findByNomeAndEmail(obj.getUsuario().getNome(), obj.getUsuario().getEmail()).isPresent()) {
+            throw new ObjectNotFoundException("O usuário informado na conta bancária não existe: " + obj.getUsuario() +
+                    ", Tipo: " + CentroCusto.class.getName());
+        }
         obj.setDataAlteracao(LocalDateTime.now());
         return repository.save(obj);
     }
