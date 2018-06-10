@@ -48,15 +48,18 @@ public class Parsers {
     }
 
     public static void parse(final String id, final Receita obj, final ReceitaDataContract dataContract) {
+        TituloReceitaDespesaConverter tituloReceitaDespesaConverter = new TituloReceitaDespesaConverter();
+        CentroCustoConverter centroCustoConverter = new CentroCustoConverter();
+        ContaBancariaConverter contaBancariaConverter = new ContaBancariaConverter();
         UsuarioConverter usuarioConverter = new UsuarioConverter();
 
         obj.setId(id);
-        obj.setNome(dataContract.getNome());
-        obj.setCentroCusto(dataContract.getCentroCusto());
+        obj.setNome(tituloReceitaDespesaConverter.convert(dataContract.getNome()));
+        obj.setCentroCusto(centroCustoConverter.convert(dataContract.getCentroCusto()));
         obj.setVencimento(dataContract.getVencimento());
         obj.setValor(dataContract.getValor());
         obj.setQuantidadeParcelas(dataContract.getQuantidadeParcelas());
-        obj.setContaBancaria(dataContract.getContaBancaria());
+        obj.setContaBancaria(contaBancariaConverter.convert(dataContract.getContaBancaria()));
         obj.setObservacao(dataContract.getObservacao());
         obj.setStatus(dataContract.getStatus());
         obj.setTipo(dataContract.getTipo());

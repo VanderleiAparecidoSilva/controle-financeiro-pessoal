@@ -48,7 +48,8 @@ public class CentroCusto implements Serializable {
     public CentroCusto() {
     }
 
-    public CentroCusto(final String id, final String nome, final Boolean aplicarNaReceita, final Boolean aplicarNaDespesa, final Usuario usuario) {
+    public CentroCusto(final String id, final String nome, final Boolean aplicarNaReceita,
+                       final Boolean aplicarNaDespesa, final Usuario usuario) {
         this.id = id;
         this.nome = nome;
         this.aplicarNaReceita = aplicarNaReceita;

@@ -2,10 +2,7 @@ package com.vanderlei.cfp.http;
 
 import com.vanderlei.cfp.entities.Receita;
 import com.vanderlei.cfp.gateways.ReceitaGateway;
-import com.vanderlei.cfp.gateways.converters.Parsers;
-import com.vanderlei.cfp.gateways.converters.ReceitaConverter;
-import com.vanderlei.cfp.gateways.converters.ReceitaDataContractConverter;
-import com.vanderlei.cfp.gateways.converters.UsuarioDataContractConverter;
+import com.vanderlei.cfp.gateways.converters.*;
 import com.vanderlei.cfp.http.data.ReceitaDataContract;
 import com.vanderlei.cfp.http.mapping.UrlMapping;
 import io.swagger.annotations.ApiOperation;
@@ -38,6 +35,15 @@ public class ReceitaController {
     private ReceitaConverter converter;
 
     @Autowired
+    private TituloReceitaDespesaDataContractConverter tituloReceitaDespesaDataContractConverter;
+
+    @Autowired
+    private CentroCustoDataContractConverter centroCustoDataContractConverter;
+
+    @Autowired
+    private ContaBancariaDataContractConverter contaBancariaDataContractConverter;
+
+    @Autowired
     private UsuarioDataContractConverter usuarioDataContractConverter;
 
     @ApiOperation(value = "Buscar por codigo")
@@ -63,8 +69,9 @@ public class ReceitaController {
         Collection<Receita> objList = gateway.buscarTodos();
         Collection<ReceitaDataContract> dataContractList = objList
                 .stream()
-                .map(obj -> new ReceitaDataContract(obj.getId(), obj.getNome(), obj.getCentroCusto(),
-                        obj.getVencimento(), obj.getValor(), obj.getQuantidadeParcelas(), obj.getContaBancaria(),
+                .map(obj -> new ReceitaDataContract(obj.getId(), tituloReceitaDespesaDataContractConverter.convert(obj.getNome()),
+                        centroCustoDataContractConverter.convert(obj.getCentroCusto()), obj.getVencimento(),
+                        obj.getValor(), obj.getQuantidadeParcelas(), contaBancariaDataContractConverter.convert(obj.getContaBancaria()),
                         obj.getObservacao(), obj.getStatus(), obj.getTipo(), usuarioDataContractConverter.convert(obj.getUsuario())))
                 .collect(Collectors.toList());
         return ResponseEntity
@@ -81,8 +88,9 @@ public class ReceitaController {
         Collection<Receita> objList = gateway.buscarTodosAtivos();
         Collection<ReceitaDataContract> dataContractList = objList
                 .stream()
-                .map(obj -> new ReceitaDataContract(obj.getId(), obj.getNome(), obj.getCentroCusto(),
-                        obj.getVencimento(), obj.getValor(), obj.getQuantidadeParcelas(), obj.getContaBancaria(),
+                .map(obj -> new ReceitaDataContract(obj.getId(), tituloReceitaDespesaDataContractConverter.convert(obj.getNome()),
+                        centroCustoDataContractConverter.convert(obj.getCentroCusto()), obj.getVencimento(),
+                        obj.getValor(), obj.getQuantidadeParcelas(), contaBancariaDataContractConverter.convert(obj.getContaBancaria()),
                         obj.getObservacao(), obj.getStatus(), obj.getTipo(), usuarioDataContractConverter.convert(obj.getUsuario())))
                 .collect(Collectors.toList());
         return ResponseEntity

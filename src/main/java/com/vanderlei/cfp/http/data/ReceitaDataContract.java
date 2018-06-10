@@ -2,15 +2,10 @@ package com.vanderlei.cfp.http.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vanderlei.cfp.entities.CentroCusto;
-import com.vanderlei.cfp.entities.ContaBancaria;
-import com.vanderlei.cfp.entities.TituloReceitaDespesa;
 import com.vanderlei.cfp.entities.enums.Status;
 import com.vanderlei.cfp.entities.enums.Tipo;
-import org.hibernate.validator.constraints.Length;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -23,12 +18,12 @@ public class ReceitaDataContract implements Serializable {
     private String id;
 
     @NotNull(message = "Preenchimento obrigatório")
-    private TituloReceitaDespesa nome;
+    private TituloReceitaDespesaDataContract nome;
 
     @Valid
     @NotNull(message = "Preenchimento obrigatório")
     @JsonProperty("centrocusto")
-    private CentroCusto centroCusto;
+    private CentroCustoDataContract centroCusto;
 
     @NotNull(message = "Preenchimento obrigatório")
     private LocalDate vencimento;
@@ -41,7 +36,7 @@ public class ReceitaDataContract implements Serializable {
 
     @Valid
     @JsonProperty("contabancaria")
-    private ContaBancaria contaBancaria;
+    private ContaBancariaDataContract contaBancaria;
 
     private String observacao;
 
@@ -60,9 +55,10 @@ public class ReceitaDataContract implements Serializable {
         this.tipo = Tipo.RECEITA;
     }
 
-    public ReceitaDataContract(final String id, final TituloReceitaDespesa nome, final CentroCusto centroCusto,
-                               final LocalDate vencimento, final Double valor, final int quantidadeParcelas,
-                               final ContaBancaria contaBancaria, final String observacao, final Status status,
+    public ReceitaDataContract(final String id, final TituloReceitaDespesaDataContract nome,
+                               final CentroCustoDataContract centroCusto, final LocalDate vencimento,
+                               final Double valor, final int quantidadeParcelas,
+                               final ContaBancariaDataContract contaBancaria, final String observacao, final Status status,
                                final Tipo tipo, final UsuarioDataContract usuario) {
         this.id = id;
         this.nome = nome;
@@ -86,19 +82,19 @@ public class ReceitaDataContract implements Serializable {
         this.id = id;
     }
 
-    public TituloReceitaDespesa getNome() {
+    public TituloReceitaDespesaDataContract getNome() {
         return nome;
     }
 
-    public void setNome(TituloReceitaDespesa nome) {
+    public void setNome(TituloReceitaDespesaDataContract nome) {
         this.nome = nome;
     }
 
-    public CentroCusto getCentroCusto() {
+    public CentroCustoDataContract getCentroCusto() {
         return centroCusto;
     }
 
-    public void setCentroCusto(CentroCusto centroCusto) {
+    public void setCentroCusto(CentroCustoDataContract centroCusto) {
         this.centroCusto = centroCusto;
     }
 
@@ -126,11 +122,11 @@ public class ReceitaDataContract implements Serializable {
         this.quantidadeParcelas = quantidadeParcelas;
     }
 
-    public ContaBancaria getContaBancaria() {
+    public ContaBancariaDataContract getContaBancaria() {
         return contaBancaria;
     }
 
-    public void setContaBancaria(ContaBancaria contaBancaria) {
+    public void setContaBancaria(ContaBancariaDataContract contaBancaria) {
         this.contaBancaria = contaBancaria;
     }
 
