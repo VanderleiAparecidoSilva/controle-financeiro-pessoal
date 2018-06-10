@@ -1,13 +1,7 @@
 package com.vanderlei.cfp.gateways.converters;
 
-import com.vanderlei.cfp.entities.CentroCusto;
-import com.vanderlei.cfp.entities.ContaBancaria;
-import com.vanderlei.cfp.entities.TituloReceitaDespesa;
-import com.vanderlei.cfp.entities.Usuario;
-import com.vanderlei.cfp.http.data.CentroCustoDataContract;
-import com.vanderlei.cfp.http.data.ContaBancariaDataContract;
-import com.vanderlei.cfp.http.data.TituloReceitaDespesaDataContract;
-import com.vanderlei.cfp.http.data.UsuarioDataContract;
+import com.vanderlei.cfp.entities.*;
+import com.vanderlei.cfp.http.data.*;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -50,6 +44,22 @@ public class Parsers {
         obj.setDiaVencimento(dataContract.getDiaVencimento());
         obj.setAplicarNaDespesa(dataContract.getAplicarNaDespesa());
         obj.setAplicarNaReceita(dataContract.getAplicarNaReceita());
+        obj.setUsuario(usuarioConverter.convert(dataContract.getUsuario()));
+    }
+
+    public static void parse(final String id, final Receita obj, final ReceitaDataContract dataContract) {
+        UsuarioConverter usuarioConverter = new UsuarioConverter();
+
+        obj.setId(id);
+        obj.setNome(dataContract.getNome());
+        obj.setCentroCusto(dataContract.getCentroCusto());
+        obj.setVencimento(dataContract.getVencimento());
+        obj.setValor(dataContract.getValor());
+        obj.setQuantidadeParcelas(dataContract.getQuantidadeParcelas());
+        obj.setContaBancaria(dataContract.getContaBancaria());
+        obj.setObservacao(dataContract.getObservacao());
+        obj.setStatus(dataContract.getStatus());
+        obj.setTipo(dataContract.getTipo());
         obj.setUsuario(usuarioConverter.convert(dataContract.getUsuario()));
     }
 }

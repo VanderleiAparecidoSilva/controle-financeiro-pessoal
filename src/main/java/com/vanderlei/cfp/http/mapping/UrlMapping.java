@@ -6,4 +6,5 @@ public interface UrlMapping {
     String USUARIO = "/api/usuarios";
     String CONTA_BANCARIA = "/api/contasbancarias";
     String TITULO_RECEITA_DESPESA = "/api/titulosreceitasdespesas";
+    String RECEITA = "/api/receitas";
 }
