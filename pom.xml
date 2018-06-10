@@ -83,21 +83,6 @@
 			<artifactId>logback-classic</artifactId>
 			<version>1.2.3</version>
 		</dependency>
-		<dependency>
-			<groupId>org.ff4j</groupId>
-			<artifactId>ff4j-core</artifactId>
-			<version>${ff4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.ff4j</groupId>
-			<artifactId>ff4j-web</artifactId>
-			<version>${ff4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.ff4j</groupId>
-			<artifactId>ff4j-store-mongodb-v3</artifactId>
-			<version>${ff4j.version}</version>
-		</dependency>
 	</dependencies>
 
 	<build>

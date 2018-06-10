@@ -1,26 +1,27 @@
 package com.vanderlei.cfp.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Column;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-@Document(collection = "usuario")
+@Document(collection = "tituloreceitadespesa")
 @CompoundIndexes(
         {
                 @CompoundIndex(name = "nome", def = "{'nome' : 1}"),
-                @CompoundIndex(name = "email", def = "{'email' : 1}"),
-                @CompoundIndex(name = "nome-email", def = "{'nome' : 1, 'email' : 1}")
+                @CompoundIndex(name = "diavencimento", def = "{'diaVencimento' : 1}"),
+                @CompoundIndex(name = "nome-usuarionome", def = "{'nome' : 1, 'usuario.nome' : 1}"),
+                @CompoundIndex(name = "nome-usuarioemail", def = "{'nome' : 1, 'usuario.email' : 1}")
         }
 )
-public class Usuario implements Serializable {
+public class TituloReceitaDespesa implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -28,14 +29,17 @@ public class Usuario implements Serializable {
     private String id;
 
     @NotEmpty(message = "Preenchimento obrigatório")
+    @Length(min = 5, max = 100, message = "O nome deve conter entre 5 e 100 caracteres")
     private String nome;
 
-    @NotEmpty(message = "Preenchimento obrigatório")
-    @Column(unique = true)
-    private String email;
+    private int diaVencimento;
 
-    @JsonIgnore
-    private String senha;
+    private Boolean aplicarNaReceita;
+
+    private Boolean aplicarNaDespesa;
+
+    @NotNull(message = "O usuario deve ser informado")
+    private Usuario usuario;
 
     @NotEmpty(message = "Preenchimento obrigatório")
     private LocalDateTime dataInclusao;
@@ -44,13 +48,17 @@ public class Usuario implements Serializable {
 
     private LocalDateTime dataExclusao;
 
-    public Usuario() {
+    public TituloReceitaDespesa() {
     }
 
-    public Usuario(final String id, final String nome, final String email) {
+    public TituloReceitaDespesa(final String id, final String nome, final int diaVencimento,
+                                final Boolean aplicarNaReceita, final Boolean aplicarNaDespesa, final Usuario usuario) {
         this.id = id;
         this.nome = nome;
-        this.email = email;
+        this.diaVencimento = diaVencimento;
+        this.aplicarNaReceita = aplicarNaReceita;
+        this.aplicarNaDespesa = aplicarNaDespesa;
+        this.usuario = usuario;
     }
 
     public String getId() {
@@ -69,20 +77,36 @@ public class Usuario implements Serializable {
         this.nome = nome;
     }
 
-    public String getEmail() {
-        return email;
+    public int getDiaVencimento() {
+        return diaVencimento;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setDiaVencimento(int diaVencimento) {
+        this.diaVencimento = diaVencimento;
     }
 
-    public String getSenha() {
-        return senha;
+    public Boolean getAplicarNaReceita() {
+        return aplicarNaReceita;
     }
 
-    public void setSenha(String senha) {
-        this.senha = senha;
+    public void setAplicarNaReceita(Boolean aplicarNaReceita) {
+        this.aplicarNaReceita = aplicarNaReceita;
+    }
+
+    public Boolean getAplicarNaDespesa() {
+        return aplicarNaDespesa;
+    }
+
+    public void setAplicarNaDespesa(Boolean aplicarNaDespesa) {
+        this.aplicarNaDespesa = aplicarNaDespesa;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public LocalDateTime getDataInclusao() {
@@ -109,7 +133,6 @@ public class Usuario implements Serializable {
         this.dataExclusao = dataExclusao;
     }
 
-    @JsonIgnore
     public boolean getAtivo() {
         return this.dataExclusao == null;
     }
@@ -118,20 +141,13 @@ public class Usuario implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Usuario usuario = (Usuario) o;
-        return Objects.equals(nome, usuario.nome) &&
-                Objects.equals(email, usuario.email);
+        TituloReceitaDespesa that = (TituloReceitaDespesa) o;
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(nome, email);
-    }
 
-    @Override
-    public String toString() {
-        return "[Usuário] - " +
-                "Nome = '" + nome + '\'' +
-                ", Email = '" + email + '\'';
+        return Objects.hash(id);
     }
 }

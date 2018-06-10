@@ -1,6 +1,5 @@
 package com.vanderlei.cfp.gateways;
 
-import com.vanderlei.cfp.entities.CentroCusto;
 import com.vanderlei.cfp.entities.ContaBancaria;
 import com.vanderlei.cfp.exceptions.ObjectDuplicatedException;
 import com.vanderlei.cfp.exceptions.ObjectNotFoundException;
@@ -16,6 +15,14 @@ import java.util.stream.Collectors;
 
 @Service
 public class ContaBancariaGateway {
+
+    private final String msgObjectNotFound = "Conta bancária não encontrada! Codigo: ";
+
+    private final String msgUsuarioObjectNotFound = "O usuário informado na conta bancária não existe: ";
+
+    private final String msgObjectDuplicated = "Conta bancária já cadastrada com o nome: ";
+
+    private final String msgTipo = ", Tipo: ";
 
     @Autowired
     private ContaBancariaRepository repository;
@@ -36,19 +43,19 @@ public class ContaBancariaGateway {
 
     public ContaBancaria buscarPorCodigo(final String id) {
         Optional<ContaBancaria> obj = repository.findById(id);
-        return obj.orElseThrow(() -> new ObjectNotFoundException("Centro de custo não encontrado! Codigo: " +
-            id + ", Tipo: " + CentroCusto.class.getName()));
+        return obj.orElseThrow(() -> new ObjectNotFoundException(msgObjectNotFound + id + msgTipo +
+                ContaBancaria.class.getName()));
     }
 
     public ContaBancaria inserir(final ContaBancaria obj) {
         if (!usuarioRepository.findByNomeAndEmail(obj.getUsuario().getNome(), obj.getUsuario().getEmail()).isPresent()) {
-            throw new ObjectNotFoundException("O usuário informado na conta bancária não existe: " + obj.getUsuario() +
-                    ", Tipo: " + CentroCusto.class.getName());
+            throw new ObjectNotFoundException(msgUsuarioObjectNotFound + obj.getUsuario() + msgTipo +
+                    ContaBancaria.class.getName());
         }
         if (repository.findByNomeAndUsuarioEmail(obj.getNome(), obj.getUsuario().getEmail())
                 .isPresent()) {
-            throw new ObjectDuplicatedException("Conta bancária já cadastrada com o nome: " + obj.getNome() +
-            ", Tipo: " + ContaBancaria.class.getName());
+            throw new ObjectDuplicatedException(msgObjectDuplicated + obj.getNome() + msgTipo +
+                    ContaBancaria.class.getName());
         }
         obj.setId(null);
         obj.setDataInclusao(LocalDateTime.now());
@@ -57,8 +64,8 @@ public class ContaBancariaGateway {
 
     public ContaBancaria atualizar(final ContaBancaria obj) {
         if (!usuarioRepository.findByNomeAndEmail(obj.getUsuario().getNome(), obj.getUsuario().getEmail()).isPresent()) {
-            throw new ObjectNotFoundException("O usuário informado na conta bancária não existe: " + obj.getUsuario() +
-                    ", Tipo: " + CentroCusto.class.getName());
+            throw new ObjectNotFoundException(msgUsuarioObjectNotFound + obj.getUsuario() + msgTipo +
+                    ContaBancaria.class.getName());
         }
         obj.setDataAlteracao(LocalDateTime.now());
         return repository.save(obj);

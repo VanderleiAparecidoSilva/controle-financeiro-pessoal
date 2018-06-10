@@ -15,6 +15,16 @@ import java.util.stream.Collectors;
 @Service
 public class UsuarioGateway {
 
+    private final String msgObjectNotFoundUsuarioCodigo = "Usuario não encontrado! Codigo: ";
+
+    private final String msgObjectNotFoundUsuarioEmail = "Usuario não encontrado! Email: ";
+
+    private final String msgObjectDuplicatedUsuarioNome = "Usuario já cadastrado com o nome: ";
+
+    private final String msgObjectDuplicatedUsuarioEmail = "Usuario já cadastrado com o email: ";
+
+    private final String msgTipo = ", Tipo: ";
+
     @Autowired
     private UsuarioRepository repository;
 
@@ -31,24 +41,24 @@ public class UsuarioGateway {
 
     public Usuario buscarPorCodigo(final String id) {
         Optional<Usuario> obj = repository.findById(id);
-        return obj.orElseThrow(() -> new ObjectNotFoundException("Usuario não encontrado! Codigo: " +
-            id + ", Tipo: " + Usuario.class.getName()));
+        return obj.orElseThrow(() -> new ObjectNotFoundException(msgObjectNotFoundUsuarioCodigo + id + msgTipo +
+                Usuario.class.getName()));
     }
 
     public Usuario buscarPorEmail(final String email) {
         Optional<Usuario> obj = repository.findByEmail(email);
-        return obj.orElseThrow(() -> new ObjectNotFoundException("Usuario não encontrado! Email: " +
-                email + ", Tipo: " + Usuario.class.getName()));
+        return obj.orElseThrow(() -> new ObjectNotFoundException(msgObjectNotFoundUsuarioEmail + email + msgTipo +
+                Usuario.class.getName()));
     }
 
     public Usuario inserir(final Usuario obj) {
         if (repository.findByNomeAndEmail(obj.getNome(), obj.getEmail())
                 .isPresent()) {
-            throw new ObjectDuplicatedException("Usuario já cadastrado com o nome: " + obj.getNome() +
-            ", Tipo: " + Usuario.class.getName());
+            throw new ObjectDuplicatedException(msgObjectDuplicatedUsuarioNome + obj.getNome() + msgTipo +
+                    Usuario.class.getName());
         } else if (repository.findByEmail(obj.getEmail()).isPresent()) {
-            throw new ObjectDuplicatedException("Usuario já cadastrado com o email: " + obj.getEmail() +
-                    ", Tipo: " + Usuario.class.getName());
+            throw new ObjectDuplicatedException(msgObjectDuplicatedUsuarioEmail + obj.getEmail() + msgTipo +
+                    Usuario.class.getName());
         }
         obj.setId(null);
         obj.setDataInclusao(LocalDateTime.now());
