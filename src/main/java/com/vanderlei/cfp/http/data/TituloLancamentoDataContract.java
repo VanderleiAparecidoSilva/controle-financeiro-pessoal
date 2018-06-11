@@ -9,7 +9,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
-public class TituloReceitaDespesaDataContract implements Serializable {
+public class TituloLancamentoDataContract implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -31,12 +31,12 @@ public class TituloReceitaDespesaDataContract implements Serializable {
     @JsonProperty("usuario")
     private UsuarioDataContract usuario;
 
-    public TituloReceitaDespesaDataContract() {
+    public TituloLancamentoDataContract() {
     }
 
-    public TituloReceitaDespesaDataContract(final String id, final String nome, final int diaVencimento,
-                                            final Boolean aplicarNaDespesa, final Boolean aplicarNaReceita,
-                                            final UsuarioDataContract usuario) {
+    public TituloLancamentoDataContract(final String id, final String nome, final int diaVencimento,
+                                        final Boolean aplicarNaDespesa, final Boolean aplicarNaReceita,
+                                        final UsuarioDataContract usuario) {
         this.id = id;
         this.nome = nome;
         this.diaVencimento = diaVencimento;

@@ -7,22 +7,23 @@ import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Document(collection = "receita")
+@Document(collection = "lancamento")
 @CompoundIndexes(
         {
                 @CompoundIndex(name = "nome", def = "{'nome' : 1}"),
+                @CompoundIndex(name = "tipo", def = "{'tipo' : 1}"),
+                @CompoundIndex(name = "status", def = "{'status' : 1}"),
                 @CompoundIndex(name = "nome-usuarionome", def = "{'nome' : 1, 'usuario.nome' : 1}"),
                 @CompoundIndex(name = "nome-usuarioemail", def = "{'nome' : 1, 'usuario.email' : 1}")
         }
 )
-public class Receita implements Serializable {
+public class Lancamento implements Serializable {
 
     public static final long serialVersionUID = 1L;
 
@@ -30,7 +31,7 @@ public class Receita implements Serializable {
     private String id;
 
     @NotNull(message = "Preenchimento obrigatório")
-    private TituloReceitaDespesa nome;
+    private TituloLancamento nome;
 
 
     @NotNull(message = "Preenchimento obrigatório")
@@ -65,13 +66,13 @@ public class Receita implements Serializable {
 
     private LocalDateTime dataExclusao;
 
-    public Receita() {
+    public Lancamento() {
         this.tipo = Tipo.RECEITA;
     }
 
-    public Receita(final String id, final TituloReceitaDespesa nome, final CentroCusto centroCusto, final LocalDate vencimento,
-                   final Double valor, final int quantidadeParcelas, final ContaBancaria contaBancaria,
-                   final String observacao, final Status status, final Tipo tipo, final Usuario usuario) {
+    public Lancamento(final String id, final TituloLancamento nome, final CentroCusto centroCusto, final LocalDate vencimento,
+                      final Double valor, final int quantidadeParcelas, final ContaBancaria contaBancaria,
+                      final String observacao, final Status status, final Tipo tipo, final Usuario usuario) {
         this.id = id;
         this.nome = nome;
         this.centroCusto = centroCusto;
@@ -93,11 +94,11 @@ public class Receita implements Serializable {
         this.id = id;
     }
 
-    public TituloReceitaDespesa getNome() {
+    public TituloLancamento getNome() {
         return nome;
     }
 
-    public void setNome(TituloReceitaDespesa nome) {
+    public void setNome(TituloLancamento nome) {
         this.nome = nome;
     }
 
@@ -195,9 +196,5 @@ public class Receita implements Serializable {
 
     public void setDataExclusao(LocalDateTime dataExclusao) {
         this.dataExclusao = dataExclusao;
-    }
-
-    public boolean getAtivo() {
-        return this.dataExclusao == null;
     }
 }

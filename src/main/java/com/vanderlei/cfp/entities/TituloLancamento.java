@@ -12,7 +12,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-@Document(collection = "tituloreceitadespesa")
+@Document(collection = "titulolancamento")
 @CompoundIndexes(
         {
                 @CompoundIndex(name = "nome", def = "{'nome' : 1}"),
@@ -21,7 +21,7 @@ import java.util.Objects;
                 @CompoundIndex(name = "nome-usuarioemail", def = "{'nome' : 1, 'usuario.email' : 1}")
         }
 )
-public class TituloReceitaDespesa implements Serializable {
+public class TituloLancamento implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -48,11 +48,11 @@ public class TituloReceitaDespesa implements Serializable {
 
     private LocalDateTime dataExclusao;
 
-    public TituloReceitaDespesa() {
+    public TituloLancamento() {
     }
 
-    public TituloReceitaDespesa(final String id, final String nome, final int diaVencimento,
-                                final Boolean aplicarNaReceita, final Boolean aplicarNaDespesa, final Usuario usuario) {
+    public TituloLancamento(final String id, final String nome, final int diaVencimento,
+                            final Boolean aplicarNaReceita, final Boolean aplicarNaDespesa, final Usuario usuario) {
         this.id = id;
         this.nome = nome;
         this.diaVencimento = diaVencimento;
@@ -141,7 +141,7 @@ public class TituloReceitaDespesa implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TituloReceitaDespesa that = (TituloReceitaDespesa) o;
+        TituloLancamento that = (TituloLancamento) o;
         return Objects.equals(id, that.id);
     }
 

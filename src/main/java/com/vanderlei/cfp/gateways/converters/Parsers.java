@@ -36,7 +36,7 @@ public class Parsers {
         obj.setUsuario(usuarioConverter.convert(dataContract.getUsuario()));
     }
 
-    public static void parse(final String id, final TituloReceitaDespesa obj, final TituloReceitaDespesaDataContract dataContract) {
+    public static void parse(final String id, final TituloLancamento obj, final TituloLancamentoDataContract dataContract) {
         UsuarioConverter usuarioConverter = new UsuarioConverter();
 
         obj.setId(id);
@@ -47,14 +47,14 @@ public class Parsers {
         obj.setUsuario(usuarioConverter.convert(dataContract.getUsuario()));
     }
 
-    public static void parse(final String id, final Receita obj, final ReceitaDataContract dataContract) {
-        TituloReceitaDespesaConverter tituloReceitaDespesaConverter = new TituloReceitaDespesaConverter();
+    public static void parse(final String id, final Lancamento obj, final LancamentoDataContract dataContract) {
+        TituloLancamentoConverter tituloLancamentoConverter = new TituloLancamentoConverter();
         CentroCustoConverter centroCustoConverter = new CentroCustoConverter();
         ContaBancariaConverter contaBancariaConverter = new ContaBancariaConverter();
         UsuarioConverter usuarioConverter = new UsuarioConverter();
 
         obj.setId(id);
-        obj.setNome(tituloReceitaDespesaConverter.convert(dataContract.getNome()));
+        obj.setNome(tituloLancamentoConverter.convert(dataContract.getNome()));
         obj.setCentroCusto(centroCustoConverter.convert(dataContract.getCentroCusto()));
         obj.setVencimento(dataContract.getVencimento());
         obj.setValor(dataContract.getValor());

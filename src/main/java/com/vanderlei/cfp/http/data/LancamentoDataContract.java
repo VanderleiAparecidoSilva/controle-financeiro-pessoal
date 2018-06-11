@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-public class ReceitaDataContract implements Serializable {
+public class LancamentoDataContract implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -18,7 +18,7 @@ public class ReceitaDataContract implements Serializable {
     private String id;
 
     @NotNull(message = "Preenchimento obrigatório")
-    private TituloReceitaDespesaDataContract nome;
+    private TituloLancamentoDataContract nome;
 
     @Valid
     @NotNull(message = "Preenchimento obrigatório")
@@ -51,15 +51,15 @@ public class ReceitaDataContract implements Serializable {
     @JsonProperty("usuario")
     private UsuarioDataContract usuario;
 
-    public ReceitaDataContract() {
+    public LancamentoDataContract() {
         this.tipo = Tipo.RECEITA;
     }
 
-    public ReceitaDataContract(final String id, final TituloReceitaDespesaDataContract nome,
-                               final CentroCustoDataContract centroCusto, final LocalDate vencimento,
-                               final Double valor, final int quantidadeParcelas,
-                               final ContaBancariaDataContract contaBancaria, final String observacao, final Status status,
-                               final Tipo tipo, final UsuarioDataContract usuario) {
+    public LancamentoDataContract(final String id, final TituloLancamentoDataContract nome,
+                                  final CentroCustoDataContract centroCusto, final LocalDate vencimento,
+                                  final Double valor, final int quantidadeParcelas,
+                                  final ContaBancariaDataContract contaBancaria, final String observacao, final Status status,
+                                  final Tipo tipo, final UsuarioDataContract usuario) {
         this.id = id;
         this.nome = nome;
         this.centroCusto = centroCusto;
@@ -82,11 +82,11 @@ public class ReceitaDataContract implements Serializable {
         this.id = id;
     }
 
-    public TituloReceitaDespesaDataContract getNome() {
+    public TituloLancamentoDataContract getNome() {
         return nome;
     }
 
-    public void setNome(TituloReceitaDespesaDataContract nome) {
+    public void setNome(TituloLancamentoDataContract nome) {
         this.nome = nome;
     }
 
