@@ -57,7 +57,7 @@ public class Parsers {
         obj.setNome(tituloLancamentoConverter.convert(dataContract.getNome()));
         obj.setCentroCusto(centroCustoConverter.convert(dataContract.getCentroCusto()));
         obj.setVencimento(dataContract.getVencimento());
-        obj.setValor(dataContract.getValor());
+        obj.setValorParcela(dataContract.getValorParcela());
         obj.setQuantidadeParcelas(dataContract.getQuantidadeParcelas());
         obj.setContaBancaria(contaBancariaConverter.convert(dataContract.getContaBancaria()));
         obj.setObservacao(dataContract.getObservacao());

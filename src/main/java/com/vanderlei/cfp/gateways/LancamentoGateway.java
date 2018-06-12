@@ -31,6 +31,10 @@ public class LancamentoGateway {
 
     private final String msgContaBancariaObjectNotFound = "A conta bancária informada não existe: ";
 
+    private final String msgBaixaUserNotFound = "O usuário informado na baixa do lançamento não corresponde ao lançamento informado: Título: ";
+
+    private final String msgLancamentoEmAberto = "O lançamento informado está em aberto. Não será possível estorná-lo: ";
+
     private final String msgTipo = ", Tipo: ";
 
     @Autowired
@@ -62,26 +66,46 @@ public class LancamentoGateway {
     }
 
     public Lancamento inserir(final Lancamento obj) {
+        Lancamento objRet = null;
+
         if (obj.getUsuario() != null && !usuarioRepository.findByNomeAndEmail(obj.getUsuario().getNome(), obj.getUsuario().getEmail()).isPresent()) {
             throw new ObjectNotFoundException(msgUsuarioObjectNotFound + obj.getUsuario() + msgTipo +
                     Lancamento.class.getName());
         }
-        if (obj.getNome() != null && !tituloLancamentoRepository.findByNomeAndUsuarioEmail(obj.getNome().getNome(), obj.getUsuario().getEmail()).isPresent()) {
-            throw new ObjectNotFoundException(msgTituloObjectNotFound + obj.getNome().getNome() + msgTipo +
-                    Lancamento.class.getName());
+        if (obj.getNome() != null &&
+                !tituloLancamentoRepository.findByNomeAndUsuarioEmail(obj.getNome().getNome(), obj.getUsuario().getEmail()).isPresent()) {
+            if (obj.getTipo().equals(Tipo.RECEITA)) {
+                obj.getNome().setAplicarNaReceita(true);
+            } else if (obj.getTipo().equals(Tipo.DESPESA)){
+                obj.getNome().setAplicarNaDespesa(true);
+            }
+            obj.getNome().setDataInclusao(LocalDateTime.now());
+            obj.getNome().setDiaVencimento(Integer.parseInt(obj.getVencimento().toString().substring(1, 2)));
+            Validar a linha acima com somente 1 digito no dia
+                    continuar os demais casos abaixo
+            tituloLancamentoRepository.save(obj.getNome());
         }
-        if (obj.getCentroCusto() != null && !centroCustoRepository.findByNomeAndUsuarioEmail(obj.getCentroCusto().getNome(), obj.getUsuario().getEmail()).isPresent()) {
-            throw new ObjectNotFoundException(msgCentroCustoObjectNotFound + obj.getCentroCusto().getNome() + msgTipo +
-                    Lancamento.class.getName());
+        if (obj.getCentroCusto() != null &&
+                !centroCustoRepository.findByNomeAndUsuarioEmail(obj.getCentroCusto().getNome(), obj.getUsuario().getEmail()).isPresent()) {
+            centroCustoRepository.save(obj.getCentroCusto());
         }
-        if (obj.getContaBancaria() != null && !contaBancariaRepository.findByNomeAndUsuarioEmail(obj.getContaBancaria().getNome(), obj.getUsuario().getEmail()).isPresent()) {
+        if (obj.getContaBancaria() != null &&
+                !contaBancariaRepository.findByNomeAndUsuarioEmail(obj.getContaBancaria().getNome(), obj.getUsuario().getEmail()).isPresent()) {
             throw new ObjectNotFoundException(msgContaBancariaObjectNotFound + obj.getContaBancaria().getNome() + msgTipo +
                     Lancamento.class.getName());
         }
 
-        obj.setId(null);
-        obj.setDataInclusao(LocalDateTime.now());
-        return repository.save(obj);
+        for (int i = 0; i < obj.getQuantidadeParcelas(); i++) {
+            obj.setParcela(i + 1);
+            obj.setId(null);
+            obj.setDataInclusao(LocalDateTime.now());
+            repository.save(obj);
+            if (objRet == null) {
+                objRet = obj;
+            }
+        }
+
+        return objRet;
     }
 
     public void alterarTipo(final String id) {
@@ -91,13 +115,30 @@ public class LancamentoGateway {
     }
 
     public void baixar(final String id, final Baixa baixa) {
-        //TODO criar o método findporcodigo para validar se o lancamento existe
-        Optional<Lancamento> objOpt = repository.findById(id);
-        objOpt.ifPresent(obj -> {
-            obj.setBaixa(baixa);
-            obj.setStatus(obj.getTipo().equals(Tipo.RECEITA) ? Status.RECEBIDO : Status.PAGO);
-            repository.save(obj);
-        });
+        Lancamento obj = this.buscarPorCodigo(id);
+        if (!obj.getUsuario().getEmail().equals(baixa.getUsuario().getEmail()) ||
+                !obj.getUsuario().getNome().equals(baixa.getUsuario().getNome())) {
+            throw new ObjectNotFoundException(msgBaixaUserNotFound + obj.getNome().getNome() + ", usuário: " +
+                    baixa.getUsuario().getNome() + msgTipo +
+                    Lancamento.class.getName());
+        }
+
+        obj.setBaixa(baixa);
+        obj.setStatus(obj.getTipo().equals(Tipo.RECEITA) ? Status.RECEBIDO : Status.PAGO);
+        repository.save(obj);
+    }
+
+    public void estornar(final String id) {
+        Lancamento obj = this.buscarPorCodigo(id);
+        if (obj.getStatus().equals(Status.ABERTO)) {
+            throw new ObjectNotFoundException(msgLancamentoEmAberto + obj.getNome().getNome() + ", status: " +
+                obj.getStatus().getDescricao() + msgTipo + Lancamento.class.getName());
+        }
+
+        //TODO Ajustar questão do saldo bancario no futuro
+        obj.setBaixa(null);
+        obj.setStatus(Status.ABERTO);
+        repository.save(obj);
     }
 
     public void ativar(final String id) {

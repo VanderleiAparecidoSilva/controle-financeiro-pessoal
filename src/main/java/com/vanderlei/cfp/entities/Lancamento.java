@@ -1,5 +1,6 @@
 package com.vanderlei.cfp.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vanderlei.cfp.entities.enums.Status;
 import com.vanderlei.cfp.entities.enums.Tipo;
 import org.springframework.data.annotation.Id;
@@ -41,10 +42,13 @@ public class Lancamento implements Serializable {
     private LocalDate vencimento;
 
     @NotNull(message = "Preenchimento obrigatório")
-    private Double valor;
+    private Double valorParcela;
 
     @NotNull(message = "Preenchimento obrigatório")
     private int quantidadeParcelas;
+
+    @JsonIgnore
+    private int parcela;
 
     private ContaBancaria contaBancaria;
 
@@ -73,15 +77,16 @@ public class Lancamento implements Serializable {
     }
 
     public Lancamento(final String id, final TituloLancamento nome, final CentroCusto centroCusto, final LocalDate vencimento,
-                      final Double valor, final int quantidadeParcelas, final ContaBancaria contaBancaria,
+                      final Double valorParcela, final int quantidadeParcelas, final int parcela, final ContaBancaria contaBancaria,
                       final String observacao, final Status status, final Tipo tipo, final Usuario usuario,
                       final Baixa baixa) {
         this.id = id;
         this.nome = nome;
         this.centroCusto = centroCusto;
         this.vencimento = vencimento;
-        this.valor = valor;
+        this.valorParcela = valorParcela;
         this.quantidadeParcelas = quantidadeParcelas;
+        this.parcela = parcela;
         this.contaBancaria = contaBancaria;
         this.observacao = observacao;
         this.status = status;
@@ -122,12 +127,12 @@ public class Lancamento implements Serializable {
         this.vencimento = vencimento;
     }
 
-    public Double getValor() {
-        return valor;
+    public Double getValorParcela() {
+        return valorParcela;
     }
 
-    public void setValor(Double valor) {
-        this.valor = valor;
+    public void setValorParcela(Double valorParcela) {
+        this.valorParcela = valorParcela;
     }
 
     public int getQuantidadeParcelas() {
@@ -136,6 +141,14 @@ public class Lancamento implements Serializable {
 
     public void setQuantidadeParcelas(int quantidadeParcelas) {
         this.quantidadeParcelas = quantidadeParcelas;
+    }
+
+    public int getParcela() {
+        return parcela;
+    }
+
+    public void setParcela(int parcela) {
+        this.parcela = parcela;
     }
 
     public ContaBancaria getContaBancaria() {

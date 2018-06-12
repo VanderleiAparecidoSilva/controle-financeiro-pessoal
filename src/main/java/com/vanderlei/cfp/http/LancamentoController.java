@@ -71,7 +71,7 @@ public class LancamentoController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> inserir(@Valid @RequestBody final LancamentoDataContract dataContract) {
         Lancamento obj = converter.convert(dataContract);
-        gateway.inserir(obj);
+        obj = gateway.inserir(obj);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(
                 obj.getId()).toUri();
         return ResponseEntity.created(uri).build();
@@ -95,9 +95,18 @@ public class LancamentoController {
     })
     @RequestMapping(value = "/baixar/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Void> baixar(@Valid @PathVariable final String id, @RequestBody final BaixaDataContract dataContract) {
-        //TODO fazer a conversão atribuir o usuario e validar se o usuario existe e outra informacao se necessario
         Baixa baixa = baixaConverter.convert(dataContract);
         gateway.baixar(id, baixa);
+        return ResponseEntity.noContent().build();
+    }
+
+    @ApiOperation(value = "Estornar")
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Confirmado com sucesso")
+    })
+    @RequestMapping(value = "/estornar/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<Void> estornar(@Valid @PathVariable final String id) {
+        gateway.estornar(id);
         return ResponseEntity.noContent().build();
     }
 

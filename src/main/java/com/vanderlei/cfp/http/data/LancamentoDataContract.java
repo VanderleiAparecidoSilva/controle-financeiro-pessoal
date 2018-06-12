@@ -29,7 +29,7 @@ public class LancamentoDataContract implements Serializable {
     private LocalDate vencimento;
 
     @NotNull(message = "Preenchimento obrigatório")
-    private Double valor;
+    private Double valorParcela;
 
     @NotNull(message = "Preenchimento obrigatório")
     private int quantidadeParcelas;
@@ -60,14 +60,14 @@ public class LancamentoDataContract implements Serializable {
 
     public LancamentoDataContract(final String id, final TituloLancamentoDataContract nome,
                                   final CentroCustoDataContract centroCusto, final LocalDate vencimento,
-                                  final Double valor, final int quantidadeParcelas,
+                                  final Double valorParcela, final int quantidadeParcelas,
                                   final ContaBancariaDataContract contaBancaria, final String observacao, final Status status,
                                   final Tipo tipo, final UsuarioDataContract usuario, final BaixaDataContract baixa) {
         this.id = id;
         this.nome = nome;
         this.centroCusto = centroCusto;
         this.vencimento = vencimento;
-        this.valor = valor;
+        this.valorParcela = valorParcela;
         this.quantidadeParcelas = quantidadeParcelas;
         this.contaBancaria = contaBancaria;
         this.observacao = observacao;
@@ -110,12 +110,12 @@ public class LancamentoDataContract implements Serializable {
         this.vencimento = vencimento;
     }
 
-    public Double getValor() {
-        return valor;
+    public Double getValorParcela() {
+        return valorParcela;
     }
 
-    public void setValor(Double valor) {
-        this.valor = valor;
+    public void setValorParcela(Double valorParcela) {
+        this.valorParcela = valorParcela;
     }
 
     public int getQuantidadeParcelas() {
