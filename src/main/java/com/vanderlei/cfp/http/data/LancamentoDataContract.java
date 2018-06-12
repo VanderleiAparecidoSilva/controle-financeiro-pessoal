@@ -46,6 +46,9 @@ public class LancamentoDataContract implements Serializable {
     @NotNull(message = "Preenchimento obrigatório")
     private Tipo tipo;
 
+    @JsonProperty("baixa")
+    private BaixaDataContract baixa;
+
     @Valid
     @NotNull
     @JsonProperty("usuario")
@@ -59,7 +62,7 @@ public class LancamentoDataContract implements Serializable {
                                   final CentroCustoDataContract centroCusto, final LocalDate vencimento,
                                   final Double valor, final int quantidadeParcelas,
                                   final ContaBancariaDataContract contaBancaria, final String observacao, final Status status,
-                                  final Tipo tipo, final UsuarioDataContract usuario) {
+                                  final Tipo tipo, final UsuarioDataContract usuario, final BaixaDataContract baixa) {
         this.id = id;
         this.nome = nome;
         this.centroCusto = centroCusto;
@@ -71,6 +74,7 @@ public class LancamentoDataContract implements Serializable {
         this.status = status;
         this.tipo = tipo;
         this.usuario = usuario;
+        this.baixa = baixa;
         this.tipo = Tipo.RECEITA;
     }
 
@@ -160,5 +164,13 @@ public class LancamentoDataContract implements Serializable {
 
     public void setUsuario(UsuarioDataContract usuario) {
         this.usuario = usuario;
+    }
+
+    public BaixaDataContract getBaixa() {
+        return baixa;
+    }
+
+    public void setBaixa(BaixaDataContract baixa) {
+        this.baixa = baixa;
     }
 }

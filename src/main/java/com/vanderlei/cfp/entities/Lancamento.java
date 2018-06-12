@@ -59,6 +59,8 @@ public class Lancamento implements Serializable {
     @NotNull(message = "O usuario deve ser informado")
     private Usuario usuario;
 
+    private Baixa baixa;
+
     @NotEmpty(message = "Preenchimento obrigatório")
     private LocalDateTime dataInclusao;
 
@@ -72,7 +74,8 @@ public class Lancamento implements Serializable {
 
     public Lancamento(final String id, final TituloLancamento nome, final CentroCusto centroCusto, final LocalDate vencimento,
                       final Double valor, final int quantidadeParcelas, final ContaBancaria contaBancaria,
-                      final String observacao, final Status status, final Tipo tipo, final Usuario usuario) {
+                      final String observacao, final Status status, final Tipo tipo, final Usuario usuario,
+                      final Baixa baixa) {
         this.id = id;
         this.nome = nome;
         this.centroCusto = centroCusto;
@@ -84,6 +87,7 @@ public class Lancamento implements Serializable {
         this.status = status;
         this.tipo = tipo;
         this.usuario = usuario;
+        this.baixa = baixa;
     }
 
     public String getId() {
@@ -172,6 +176,14 @@ public class Lancamento implements Serializable {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+    }
+
+    public Baixa getBaixa() {
+        return baixa;
+    }
+
+    public void setBaixa(Baixa baixa) {
+        this.baixa = baixa;
     }
 
     public LocalDateTime getDataInclusao() {

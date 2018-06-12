@@ -1,9 +1,12 @@
 package com.vanderlei.cfp.gateways;
 
 import com.vanderlei.cfp.entities.Lancamento;
+import com.vanderlei.cfp.entities.enums.Status;
 import com.vanderlei.cfp.entities.enums.Tipo;
 import com.vanderlei.cfp.exceptions.ObjectNotFoundException;
+import com.vanderlei.cfp.gateways.converters.LancamentoConverter;
 import com.vanderlei.cfp.gateways.repository.*;
+import com.vanderlei.cfp.http.data.LancamentoDataContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +22,8 @@ public class LancamentoGateway {
     private final String msgUsuarioObjectNotFound = "O usuário informado no lançamento não existe: ";
 
     private final String msgTituloObjectNotFound = "O título do lançamento informado não existe: ";
+
+    private final String msgBaixaObjectNotFound = "As informações de baixa do título não foram informadas: ";
 
     private final String msgCentroCustoObjectNotFound = "O centro de custo informado não existe: ";
 
@@ -40,6 +45,9 @@ public class LancamentoGateway {
 
     @Autowired
     private ContaBancariaRepository contaBancariaRepository;
+
+    @Autowired
+    private LancamentoConverter lancamentoConverter;
 
     public Collection<Lancamento> buscarTodos() {
         return repository.findAll();
@@ -76,8 +84,29 @@ public class LancamentoGateway {
 
     public void alterarTipo(final String id) {
         Lancamento obj = this.buscarPorCodigo(id);
-        obj.setTipo(Tipo.DESPESA);
+        obj.setTipo(obj.getTipo().equals(Tipo.RECEITA) ? Tipo.DESPESA : Tipo.RECEITA);
+        repository.save(obj);
+    }
 
+    public void baixar(final LancamentoDataContract dataContract) {
+        Lancamento obj = lancamentoConverter.convert(dataContract);
+        if (obj.getBaixa() == null) {
+            throw new ObjectNotFoundException(msgBaixaObjectNotFound + obj.getNome().getNome() + msgTipo +
+                    Lancamento.class.getName());
+        }
+        obj.setStatus(obj.getTipo().equals(Tipo.RECEITA) ? Status.RECEBIDO : Status.PAGO);
+        repository.save(obj);
+    }
+
+    public void ativar(final String id) {
+        Lancamento obj = this.buscarPorCodigo(id);
+        obj.setDataExclusao(null);
+        repository.save(obj);
+    }
+
+    public void desativar(final String id) {
+        Lancamento obj = this.buscarPorCodigo(id);
+        obj.setDataExclusao(LocalDateTime.now());
         repository.save(obj);
     }
 }

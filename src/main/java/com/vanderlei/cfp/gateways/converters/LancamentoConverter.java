@@ -6,6 +6,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 @Component
 public class LancamentoConverter implements Converter<LancamentoDataContract, Lancamento> {
 
@@ -15,25 +17,23 @@ public class LancamentoConverter implements Converter<LancamentoDataContract, La
         BeanUtils.copyProperties(dataContract, obj);
         if (dataContract.getNome() != null) {
             obj.setNome(new TituloLancamento(null, dataContract.getNome().getNome(),
-                    dataContract.getNome().getDiaVencimento(), dataContract.getNome().getAplicarNaReceita(),
-                    dataContract.getNome().getAplicarNaDespesa(), new Usuario(null, dataContract.getNome().getNome(),
-                    dataContract.getNome().getUsuario().getEmail())));
+                    0, false, false,
+                    new Usuario(null, dataContract.getUsuario().getNome(), dataContract.getNome().getUsuario().getEmail())));
         }
         if (dataContract.getCentroCusto() != null) {
             obj.setCentroCusto(new CentroCusto(null, dataContract.getCentroCusto().getNome(),
-                    dataContract.getCentroCusto().getAplicarNaReceita(),
-                    dataContract.getCentroCusto().getAplicarNaDespesa(),
+                    false, false,
                     new Usuario(null, dataContract.getUsuario().getNome(), dataContract.getCentroCusto().getUsuario().getEmail())));
         }
         if (dataContract.getContaBancaria() != null) {
             obj.setContaBancaria(new ContaBancaria(null, dataContract.getContaBancaria().getNome(),
-                    dataContract.getContaBancaria().getNumeroContaBancaria(),
-                    dataContract.getContaBancaria().getLimiteContaBancaria(),
-                    dataContract.getContaBancaria().getSaldoContaBancaria(),
-                    dataContract.getContaBancaria().getVincularSaldoBancarioNoSaldoFinal(),
-                    dataContract.getContaBancaria().getAtualizarSaldoBancarioNaBaixaTitulo(),
+                    null, null, null, null, null,
                     new Usuario(null, dataContract.getContaBancaria().getUsuario().getNome(),
                             dataContract.getContaBancaria().getUsuario().getEmail())));
+        }
+        if (dataContract.getBaixa() != null) {
+            obj.setBaixa(new Baixa(null, LocalDateTime.now(), dataContract.getObservacao(),
+                    new Usuario(null, dataContract.getUsuario().getNome(), dataContract.getUsuario().getEmail())));
         }
         obj.setUsuario(new Usuario(null, dataContract.getUsuario().getNome(), dataContract.getUsuario().getEmail()));
 
