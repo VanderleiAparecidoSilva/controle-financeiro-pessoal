@@ -1,8 +1,10 @@
 package com.vanderlei.cfp.http;
 
+import com.vanderlei.cfp.entities.Baixa;
 import com.vanderlei.cfp.entities.Lancamento;
 import com.vanderlei.cfp.gateways.LancamentoGateway;
 import com.vanderlei.cfp.gateways.converters.*;
+import com.vanderlei.cfp.http.data.BaixaDataContract;
 import com.vanderlei.cfp.http.data.LancamentoDataContract;
 import com.vanderlei.cfp.http.mapping.UrlMapping;
 import io.swagger.annotations.ApiOperation;
@@ -44,6 +46,9 @@ public class LancamentoController {
 
     @Autowired
     private UsuarioDataContractConverter usuarioDataContractConverter;
+
+    @Autowired
+    private BaixaConverter baixaConverter;
 
     @ApiOperation(value = "Buscar todos")
     @ApiResponses(value = {
@@ -88,9 +93,11 @@ public class LancamentoController {
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Confirmado com sucesso")
     })
-    @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity<Void> ativar(@Valid @RequestBody final LancamentoDataContract dataContract) {
-        gateway.baixar(dataContract);
+    @RequestMapping(value = "/baixar/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<Void> baixar(@Valid @PathVariable final String id, @RequestBody final BaixaDataContract dataContract) {
+        //TODO fazer a conversão atribuir o usuario e validar se o usuario existe e outra informacao se necessario
+        Baixa baixa = baixaConverter.convert(dataContract);
+        gateway.baixar(id, baixa);
         return ResponseEntity.noContent().build();
     }
 

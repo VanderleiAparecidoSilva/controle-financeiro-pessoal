@@ -1,6 +1,8 @@
 package com.vanderlei.cfp.gateways;
 
+import com.vanderlei.cfp.entities.Baixa;
 import com.vanderlei.cfp.entities.Lancamento;
+import com.vanderlei.cfp.entities.Usuario;
 import com.vanderlei.cfp.entities.enums.Status;
 import com.vanderlei.cfp.entities.enums.Tipo;
 import com.vanderlei.cfp.exceptions.ObjectNotFoundException;
@@ -88,14 +90,14 @@ public class LancamentoGateway {
         repository.save(obj);
     }
 
-    public void baixar(final LancamentoDataContract dataContract) {
-        Lancamento obj = lancamentoConverter.convert(dataContract);
-        if (obj.getBaixa() == null) {
-            throw new ObjectNotFoundException(msgBaixaObjectNotFound + obj.getNome().getNome() + msgTipo +
-                    Lancamento.class.getName());
-        }
-        obj.setStatus(obj.getTipo().equals(Tipo.RECEITA) ? Status.RECEBIDO : Status.PAGO);
-        repository.save(obj);
+    public void baixar(final String id, final Baixa baixa) {
+        //TODO criar o método findporcodigo para validar se o lancamento existe
+        Optional<Lancamento> objOpt = repository.findById(id);
+        objOpt.ifPresent(obj -> {
+            obj.setBaixa(baixa);
+            obj.setStatus(obj.getTipo().equals(Tipo.RECEITA) ? Status.RECEBIDO : Status.PAGO);
+            repository.save(obj);
+        });
     }
 
     public void ativar(final String id) {
