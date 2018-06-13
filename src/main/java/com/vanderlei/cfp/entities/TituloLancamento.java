@@ -12,7 +12,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-@Document(collection = "titulolancamento")
+@Document(collection = "tituloLancamento")
 @CompoundIndexes(
         {
                 @CompoundIndex(name = "nome", def = "{'nome' : 1}"),
