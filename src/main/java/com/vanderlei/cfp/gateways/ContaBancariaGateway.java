@@ -1,6 +1,7 @@
 package com.vanderlei.cfp.gateways;
 
 import com.vanderlei.cfp.entities.ContaBancaria;
+import com.vanderlei.cfp.entities.enums.Operacao;
 import com.vanderlei.cfp.exceptions.ObjectDuplicatedException;
 import com.vanderlei.cfp.exceptions.ObjectNotFoundException;
 import com.vanderlei.cfp.gateways.repository.ContaBancariaRepository;
@@ -81,5 +82,13 @@ public class ContaBancariaGateway {
         ContaBancaria obj = this.buscarPorCodigo(id);
         obj.setDataExclusao(LocalDateTime.now());
         return repository.save(obj);
+    }
+
+    public void atualizarSaldo(final String id, final Double valor, final Operacao operacao) {
+        ContaBancaria obj = this.buscarPorCodigo(id);
+        obj.setDataAlteracao(LocalDateTime.now());
+        obj.setSaldoContaBancaria(operacao.equals(Operacao.CREDITO) ? (obj.getSaldoContaBancaria() + valor) :
+                (obj.getSaldoContaBancaria() - valor));
+        repository.save(obj);
     }
 }

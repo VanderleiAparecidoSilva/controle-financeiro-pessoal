@@ -1,10 +1,12 @@
 package com.vanderlei.cfp.http;
 
 import com.vanderlei.cfp.entities.Baixa;
+import com.vanderlei.cfp.entities.ContaBancaria;
 import com.vanderlei.cfp.entities.Lancamento;
 import com.vanderlei.cfp.gateways.LancamentoGateway;
 import com.vanderlei.cfp.gateways.converters.*;
 import com.vanderlei.cfp.http.data.BaixaDataContract;
+import com.vanderlei.cfp.http.data.ContaBancariaDataContract;
 import com.vanderlei.cfp.http.data.LancamentoDataContract;
 import com.vanderlei.cfp.http.mapping.UrlMapping;
 import io.swagger.annotations.ApiOperation;
@@ -94,7 +96,8 @@ public class LancamentoController {
             @ApiResponse(code = 204, message = "Confirmado com sucesso")
     })
     @RequestMapping(value = "/baixar/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Void> baixar(@Valid @PathVariable final String id, @RequestBody final BaixaDataContract dataContract) {
+    public ResponseEntity<Void> baixar(@Valid @PathVariable final String id,
+                                       @RequestBody final BaixaDataContract dataContract) {
         Baixa baixa = baixaConverter.convert(dataContract);
         gateway.baixar(id, baixa);
         return ResponseEntity.noContent().build();
@@ -105,8 +108,10 @@ public class LancamentoController {
             @ApiResponse(code = 204, message = "Confirmado com sucesso")
     })
     @RequestMapping(value = "/estornar/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Void> estornar(@Valid @PathVariable final String id) {
-        gateway.estornar(id);
+    public ResponseEntity<Void> estornar(@Valid @PathVariable final String id,
+                                         @RequestBody final BaixaDataContract dataContract) {
+        Baixa baixa = baixaConverter.convert(dataContract);
+        gateway.estornar(id, baixa);
         return ResponseEntity.noContent().build();
     }
 

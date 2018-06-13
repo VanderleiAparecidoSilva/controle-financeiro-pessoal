@@ -30,7 +30,7 @@ public class Parsers {
         obj.setNome(dataContract.getNome());
         obj.setNumeroContaBancaria(dataContract.getNumeroContaBancaria());
         obj.setAtualizarSaldoBancarioNaBaixaTitulo(dataContract.getAtualizarSaldoBancarioNaBaixaTitulo());
-        obj.setVincularSaldoBancarioNoSaldoFinal(dataContract.getVincularSaldoBancarioNoSaldoFinal());
+        obj.setVincularSaldoBancarioNoTotalReceita(dataContract.getVincularSaldoBancarioNoTotalReceita());
         obj.setLimiteContaBancaria(dataContract.getLimiteContaBancaria());
         obj.setSaldoContaBancaria(dataContract.getSaldoContaBancaria());
         obj.setUsuario(usuarioConverter.convert(dataContract.getUsuario()));

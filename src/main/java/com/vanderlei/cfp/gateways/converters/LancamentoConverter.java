@@ -33,6 +33,8 @@ public class LancamentoConverter implements Converter<LancamentoDataContract, La
         }
         if (dataContract.getBaixa() != null) {
             obj.setBaixa(new Baixa(LocalDateTime.now(), dataContract.getObservacao(),
+                    new ContaBancaria(null, dataContract.getContaBancaria().getNome(), null, null, null, null, null,
+                            new Usuario(null, dataContract.getUsuario().getNome(), dataContract.getUsuario().getEmail())),
                     new Usuario(null, dataContract.getUsuario().getNome(), dataContract.getUsuario().getEmail())));
         }
         obj.setUsuario(new Usuario(null, dataContract.getUsuario().getNome(), dataContract.getUsuario().getEmail()));

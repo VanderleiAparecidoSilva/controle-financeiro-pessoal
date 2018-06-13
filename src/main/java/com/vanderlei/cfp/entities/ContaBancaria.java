@@ -38,7 +38,7 @@ public class ContaBancaria implements Serializable {
 
     private Double saldoContaBancaria;
 
-    private Boolean vincularSaldoBancarioNoSaldoFinal;
+    private Boolean vincularSaldoBancarioNoTotalReceita;
 
     private Boolean atualizarSaldoBancarioNaBaixaTitulo;
 
@@ -57,14 +57,14 @@ public class ContaBancaria implements Serializable {
 
     public ContaBancaria(final String id, final String nome, final String numeroContaBancaria,
                          final Double limiteContaBancaria, final Double saldoContaBancaria,
-                         final Boolean vincularSaldoBancarioNoSaldoFinal,
+                         final Boolean vincularSaldoBancarioNoTotalReceita,
                          final Boolean atualizarSaldoBancarioNaBaixaTitulo, final Usuario usuario) {
         this.id = id;
         this.nome = nome;
         this.numeroContaBancaria = numeroContaBancaria;
         this.limiteContaBancaria = limiteContaBancaria;
         this.saldoContaBancaria = saldoContaBancaria;
-        this.vincularSaldoBancarioNoSaldoFinal = vincularSaldoBancarioNoSaldoFinal;
+        this.vincularSaldoBancarioNoTotalReceita = vincularSaldoBancarioNoTotalReceita;
         this.atualizarSaldoBancarioNaBaixaTitulo = atualizarSaldoBancarioNaBaixaTitulo;
         this.usuario = usuario;
     }
@@ -109,12 +109,12 @@ public class ContaBancaria implements Serializable {
         this.saldoContaBancaria = saldoContaBancaria;
     }
 
-    public Boolean getVincularSaldoBancarioNoSaldoFinal() {
-        return vincularSaldoBancarioNoSaldoFinal;
+    public Boolean getVincularSaldoBancarioNoTotalReceita() {
+        return vincularSaldoBancarioNoTotalReceita;
     }
 
-    public void setVincularSaldoBancarioNoSaldoFinal(Boolean vincularSaldoBancarioNoSaldoFinal) {
-        this.vincularSaldoBancarioNoSaldoFinal = vincularSaldoBancarioNoSaldoFinal;
+    public void setVincularSaldoBancarioNoTotalReceita(Boolean vincularSaldoBancarioNoTotalReceita) {
+        this.vincularSaldoBancarioNoTotalReceita = vincularSaldoBancarioNoTotalReceita;
     }
 
     public Boolean getAtualizarSaldoBancarioNaBaixaTitulo() {

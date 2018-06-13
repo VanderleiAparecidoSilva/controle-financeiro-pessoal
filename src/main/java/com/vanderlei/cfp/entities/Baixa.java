@@ -12,15 +12,19 @@ public class Baixa implements Serializable {
 
     private String observacao;
 
+    private ContaBancaria contaBancaria;
+
     @NotNull(message = "O usuario deve ser informado")
     private Usuario usuario;
 
     public Baixa() {
     }
 
-    public Baixa(final LocalDateTime data, final String observacao, final Usuario usuario) {
+    public Baixa(final LocalDateTime data, final String observacao, final ContaBancaria contaBancaria,
+                 final Usuario usuario) {
         this.data = data;
         this.observacao = observacao;
+        this.contaBancaria = contaBancaria;
         this.usuario = usuario;
     }
 
@@ -38,6 +42,14 @@ public class Baixa implements Serializable {
 
     public void setObservacao(String observacao) {
         this.observacao = observacao;
+    }
+
+    public ContaBancaria getContaBancaria() {
+        return contaBancaria;
+    }
+
+    public void setContaBancaria(ContaBancaria contaBancaria) {
+        this.contaBancaria = contaBancaria;
     }
 
     public Usuario getUsuario() {

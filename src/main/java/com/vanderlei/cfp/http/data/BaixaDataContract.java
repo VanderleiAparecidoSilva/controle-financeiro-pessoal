@@ -16,6 +16,10 @@ public class BaixaDataContract implements Serializable {
     private String observacao;
 
     @Valid
+    @JsonProperty("contaBancaria")
+    private ContaBancariaDataContract contaBancaria;
+
+    @Valid
     @NotNull
     @JsonProperty("usuario")
     private UsuarioDataContract usuario;
@@ -24,9 +28,10 @@ public class BaixaDataContract implements Serializable {
     }
 
     public BaixaDataContract(final LocalDateTime data, final String observacao,
-                             final UsuarioDataContract usuario) {
+                             final ContaBancariaDataContract contaBancaria, final UsuarioDataContract usuario) {
         this.data = data;
         this.observacao = observacao;
+        this.contaBancaria = contaBancaria;
         this.usuario = usuario;
     }
 
@@ -44,6 +49,14 @@ public class BaixaDataContract implements Serializable {
 
     public void setObservacao(String observacao) {
         this.observacao = observacao;
+    }
+
+    public ContaBancariaDataContract getContaBancaria() {
+        return contaBancaria;
+    }
+
+    public void setContaBancaria(ContaBancariaDataContract contaBancaria) {
+        this.contaBancaria = contaBancaria;
     }
 
     public UsuarioDataContract getUsuario() {

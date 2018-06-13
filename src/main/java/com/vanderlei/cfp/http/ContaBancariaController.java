@@ -1,6 +1,7 @@
 package com.vanderlei.cfp.http;
 
 import com.vanderlei.cfp.entities.ContaBancaria;
+import com.vanderlei.cfp.entities.enums.Operacao;
 import com.vanderlei.cfp.gateways.ContaBancariaGateway;
 import com.vanderlei.cfp.gateways.converters.ContaBancariaConverter;
 import com.vanderlei.cfp.gateways.converters.ContaBancariaDataContractConverter;
@@ -65,7 +66,7 @@ public class ContaBancariaController {
                 .stream()
                 .map(obj -> new ContaBancariaDataContract(obj.getId(), obj.getNome(),
                         obj.getNumeroContaBancaria(), obj.getLimiteContaBancaria(), obj.getSaldoContaBancaria(),
-                        obj.getVincularSaldoBancarioNoSaldoFinal(), obj.getAtualizarSaldoBancarioNaBaixaTitulo(),
+                        obj.getVincularSaldoBancarioNoTotalReceita(), obj.getAtualizarSaldoBancarioNaBaixaTitulo(),
                         usuarioDataContractConverter.convert(obj.getUsuario())))
                 .collect(Collectors.toList());
         return ResponseEntity
@@ -84,7 +85,7 @@ public class ContaBancariaController {
                 .stream()
                 .map(obj -> new ContaBancariaDataContract(obj.getId(), obj.getNome(),
                         obj.getNumeroContaBancaria(), obj.getLimiteContaBancaria(), obj.getSaldoContaBancaria(),
-                        obj.getVincularSaldoBancarioNoSaldoFinal(), obj.getAtualizarSaldoBancarioNaBaixaTitulo(),
+                        obj.getVincularSaldoBancarioNoTotalReceita(), obj.getAtualizarSaldoBancarioNaBaixaTitulo(),
                         usuarioDataContractConverter.convert(obj.getUsuario())))
                 .collect(Collectors.toList());
         return ResponseEntity
@@ -136,6 +137,17 @@ public class ContaBancariaController {
     @RequestMapping(value = "/desativar/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Void> desativar(@PathVariable final String id) {
         gateway.desativar(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @ApiOperation(value = "Atualizar Saldo")
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Saldo atualizado com sucesso")
+    })
+    @RequestMapping(value = "/saldo/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<Void> saldo(@PathVariable final String id, @PathVariable final Double valor,
+                                      @PathVariable final Operacao operacao) {
+        gateway.atualizarSaldo(id, valor, operacao);
         return ResponseEntity.noContent().build();
     }
 }
