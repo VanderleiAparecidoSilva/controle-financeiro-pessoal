@@ -25,6 +25,7 @@
 		<springfox-swagger2.version>2.7.0</springfox-swagger2.version>
 		<slf4j-api.version>1.7.25</slf4j-api.version>
 		<ff4j.version>1.7.1</ff4j.version>
+		<quartz.version>2.2.3</quartz.version>
 	</properties>
 
 	<dependencies>
@@ -82,6 +83,11 @@
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>1.2.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>${quartz.version}</version>
 		</dependency>
 	</dependencies>
 
