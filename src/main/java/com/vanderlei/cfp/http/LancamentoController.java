@@ -1,12 +1,10 @@
 package com.vanderlei.cfp.http;
 
 import com.vanderlei.cfp.entities.Baixa;
-import com.vanderlei.cfp.entities.ContaBancaria;
 import com.vanderlei.cfp.entities.Lancamento;
 import com.vanderlei.cfp.gateways.LancamentoGateway;
 import com.vanderlei.cfp.gateways.converters.*;
 import com.vanderlei.cfp.http.data.BaixaDataContract;
-import com.vanderlei.cfp.http.data.ContaBancariaDataContract;
 import com.vanderlei.cfp.http.data.LancamentoDataContract;
 import com.vanderlei.cfp.http.mapping.UrlMapping;
 import io.swagger.annotations.ApiOperation;

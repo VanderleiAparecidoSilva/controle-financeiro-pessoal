@@ -22,11 +22,11 @@ create table qrtz_job_details
     job_group varchar(200) not null,
     description varchar(250) null,
     job_class_name   varchar(250) not null,
-    is_durable bool not null,
-    is_nonconcurrent bool not null,
-    is_update_data bool not null,
-    requests_recovery bool not null,
-    job_data bytea null,
+    is_durable boolean not null,
+    is_nonconcurrent boolean not null,
+    is_update_data boolean not null,
+    requests_recovery boolean not null,
+    job_data blob null,
     primary key (sched_name,job_name,job_group)
 );
 
@@ -47,7 +47,7 @@ create table qrtz_triggers
     end_time bigint null,
     calendar_name varchar(200) null,
     misfire_instr smallint null,
-    job_data bytea null,
+    job_data blob null,
     primary key (sched_name,trigger_name,trigger_group),
     foreign key (sched_name,job_name,job_group)
 	references qrtz_job_details(sched_name,job_name,job_group)
@@ -92,8 +92,8 @@ create table qrtz_simprop_triggers
     long_prop_2 bigint null,
     dec_prop_1 numeric(13,4) null,
     dec_prop_2 numeric(13,4) null,
-    bool_prop_1 bool null,
-    bool_prop_2 bool null,
+    bool_prop_1 boolean null,
+    bool_prop_2 boolean null,
     primary key (sched_name,trigger_name,trigger_group),
     foreign key (sched_name,trigger_name,trigger_group)
     references qrtz_triggers(sched_name,trigger_name,trigger_group)
@@ -104,7 +104,7 @@ create table qrtz_blob_triggers
     sched_name varchar(120) not null,
     trigger_name varchar(200) not null,
     trigger_group varchar(200) not null,
-    blob_data bytea null,
+    blob_data blob null,
     primary key (sched_name,trigger_name,trigger_group),
     foreign key (sched_name,trigger_name,trigger_group)
         references qrtz_triggers(sched_name,trigger_name,trigger_group)
@@ -114,7 +114,7 @@ create table qrtz_calendars
   (
     sched_name varchar(120) not null,
     calendar_name  varchar(200) not null,
-    calendar bytea not null,
+    calendar blob not null,
     primary key (sched_name,calendar_name)
 );
 
@@ -139,8 +139,8 @@ create table qrtz_fired_triggers
     state varchar(16) not null,
     job_name varchar(200) null,
     job_group varchar(200) null,
-    is_nonconcurrent bool null,
-    requests_recovery bool null,
+    is_nonconcurrent boolean null,
+    requests_recovery boolean null,
     primary key (sched_name,entry_id)
 );
 
