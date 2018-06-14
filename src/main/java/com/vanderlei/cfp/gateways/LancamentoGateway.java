@@ -15,6 +15,7 @@ import com.vanderlei.cfp.http.data.LancamentoDataContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
@@ -193,5 +194,9 @@ public class LancamentoGateway {
         Lancamento obj = this.buscarPorCodigo(id);
         obj.setDataExclusao(LocalDateTime.now());
         repository.save(obj);
+    }
+
+    public Collection<Lancamento> buscarLancamentosVencidos(final Status status, final LocalDate date) {
+        return repository.findByStatusAndVencimentoBefore(status, date);
     }
 }
