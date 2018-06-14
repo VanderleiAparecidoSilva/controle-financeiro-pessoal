@@ -28,7 +28,17 @@ public class DBGateway {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    private void cleanCollections() {
+        usuarioRepository.deleteAll();
+        contaBancariaRepository.deleteAll();
+        centroCustoRepository.deleteAll();
+        tituloLancamentoRepository.deleteAll();
+        lancamentoRepository.deleteAll();
+    }
+
     public void instantiateTestDatabase() {
+        cleanCollections();
+
         Usuario usuario = new Usuario(null, "Vanderlei Aparecido da Silva", "vanderlei@gmail.com");
 
         ContaBancaria contaBancaria = new ContaBancaria(null, "Santader", "0000000-00", 13300.00, 84.90, false, false, usuario);
@@ -52,6 +62,8 @@ public class DBGateway {
     }
 
     public void instantiateDevDatabase() {
+        cleanCollections();
+
         Usuario usuario01 = new Usuario(null, "Vanderlei Aparecido da Silva", "vanderlei@gmail.com");
         Usuario usuario02 = new Usuario(null, "Rita de Cássia da Silva Carminati", "ritacarminati@gmail.com");
 
