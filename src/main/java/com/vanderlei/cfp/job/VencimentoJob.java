@@ -43,6 +43,7 @@ public class VencimentoJob implements Job {
         Map<Usuario, List<Lancamento>> receitasPorUsuario = lancamentos
                 .stream()
                 .filter(lancamento -> lancamento.getTipo().equals(Tipo.RECEITA))
+                .filter(lancamento -> lancamento.getUsuario().getAtivo())
                 .filter(lancamento -> lancamento.getUsuario().getPermiteEmailLembrete())
                 .collect(Collectors.groupingBy(Lancamento::getUsuario));
 
@@ -54,6 +55,7 @@ public class VencimentoJob implements Job {
         Map<Usuario, List<Lancamento>> despesasPorUsuario = lancamentos
                 .stream()
                 .filter(lancamento -> lancamento.getTipo().equals(Tipo.DESPESA))
+                .filter(lancamento -> lancamento.getUsuario().getAtivo())
                 .filter(lancamento -> lancamento.getUsuario().getPermiteEmailLembrete())
                 .collect(Collectors.groupingBy(Lancamento::getUsuario));
 

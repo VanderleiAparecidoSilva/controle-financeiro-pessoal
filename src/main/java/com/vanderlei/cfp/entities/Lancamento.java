@@ -53,6 +53,8 @@ public class Lancamento implements Serializable {
     @JsonIgnore
     private int parcela;
 
+    private boolean gerarParcelaUnica;
+
     private ContaBancaria contaBancaria;
 
     private String observacao;
@@ -80,9 +82,9 @@ public class Lancamento implements Serializable {
     }
 
     public Lancamento(final String id, final TituloLancamento nome, final CentroCusto centroCusto, final LocalDate vencimento,
-                      final Double valorParcela, final int quantidadeParcelas, final int parcela, final ContaBancaria contaBancaria,
-                      final String observacao, final Status status, final Tipo tipo, final Usuario usuario,
-                      final Baixa baixa) {
+                      final Double valorParcela, final int quantidadeParcelas, final int parcela, final boolean gerarParcelaUnica,
+                      final ContaBancaria contaBancaria, final String observacao, final Status status, final Tipo tipo,
+                      final Usuario usuario, final Baixa baixa) {
         this.id = id;
         this.nome = nome;
         this.centroCusto = centroCusto;
@@ -90,6 +92,7 @@ public class Lancamento implements Serializable {
         this.valorParcela = valorParcela;
         this.quantidadeParcelas = quantidadeParcelas;
         this.parcela = parcela;
+        this.gerarParcelaUnica = gerarParcelaUnica;
         this.contaBancaria = contaBancaria;
         this.observacao = observacao;
         this.status = status;
@@ -152,6 +155,14 @@ public class Lancamento implements Serializable {
 
     public void setParcela(int parcela) {
         this.parcela = parcela;
+    }
+
+    public boolean isGerarParcelaUnica() {
+        return gerarParcelaUnica;
+    }
+
+    public void setGerarParcelaUnica(boolean gerarParcelaUnica) {
+        this.gerarParcelaUnica = gerarParcelaUnica;
     }
 
     public String getParcelaAtualTotalParcela() {

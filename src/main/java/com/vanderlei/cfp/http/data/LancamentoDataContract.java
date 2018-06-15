@@ -34,6 +34,8 @@ public class LancamentoDataContract implements Serializable {
     @NotNull(message = "Preenchimento obrigatório")
     private int quantidadeParcelas;
 
+    private boolean gerarParcelaUnica;
+
     @Valid
     @JsonProperty("contabancaria")
     private ContaBancariaDataContract contaBancaria;
@@ -60,7 +62,7 @@ public class LancamentoDataContract implements Serializable {
 
     public LancamentoDataContract(final String id, final TituloLancamentoDataContract nome,
                                   final CentroCustoDataContract centroCusto, final LocalDate vencimento,
-                                  final Double valorParcela, final int quantidadeParcelas,
+                                  final Double valorParcela, final int quantidadeParcelas, final boolean gerarParcelaUnica,
                                   final ContaBancariaDataContract contaBancaria, final String observacao, final Status status,
                                   final Tipo tipo, final UsuarioDataContract usuario, final BaixaDataContract baixa) {
         this.id = id;
@@ -69,6 +71,7 @@ public class LancamentoDataContract implements Serializable {
         this.vencimento = vencimento;
         this.valorParcela = valorParcela;
         this.quantidadeParcelas = quantidadeParcelas;
+        this.gerarParcelaUnica = gerarParcelaUnica;
         this.contaBancaria = contaBancaria;
         this.observacao = observacao;
         this.status = status;
@@ -124,6 +127,14 @@ public class LancamentoDataContract implements Serializable {
 
     public void setQuantidadeParcelas(int quantidadeParcelas) {
         this.quantidadeParcelas = quantidadeParcelas;
+    }
+
+    public boolean isGerarParcelaUnica() {
+        return gerarParcelaUnica;
+    }
+
+    public void setGerarParcelaUnica(boolean gerarParcelaUnica) {
+        this.gerarParcelaUnica = gerarParcelaUnica;
     }
 
     public ContaBancariaDataContract getContaBancaria() {

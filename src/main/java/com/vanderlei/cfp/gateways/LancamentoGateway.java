@@ -106,9 +106,9 @@ public class LancamentoGateway {
         }
 
         for (int i = 0; i < obj.getQuantidadeParcelas(); i++) {
-            obj.setParcela(i + 1);
             obj.setId(null);
             obj.setDataInclusao(LocalDateTime.now());
+            obj.setParcela(obj.isGerarParcelaUnica() ? 1 : i + 1);
             repository.save(obj);
             if (objRet == null) {
                 objRet = obj;
