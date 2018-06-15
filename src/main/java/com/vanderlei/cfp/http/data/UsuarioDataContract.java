@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 public class UsuarioDataContract implements Serializable {
@@ -24,13 +25,17 @@ public class UsuarioDataContract implements Serializable {
     @JsonIgnore
     private String senha;
 
+    @NotNull(message = "Preenchimento obrigatório")
+    private Boolean permiteEmailLembrete;
+
     public UsuarioDataContract() {
     }
 
-    public UsuarioDataContract(final String id, final String nome, final String email) {
+    public UsuarioDataContract(final String id, final String nome, final String email, final Boolean permiteEmailLembrete) {
         this.id = id;
         this.nome = nome;
         this.email = email;
+        this.permiteEmailLembrete = permiteEmailLembrete;
     }
 
     public String getId() {
@@ -63,5 +68,13 @@ public class UsuarioDataContract implements Serializable {
 
     public void setSenha(String senha) {
         this.senha = senha;
+    }
+
+    public Boolean getPermiteEmailLembrete() {
+        return permiteEmailLembrete;
+    }
+
+    public void setPermiteEmailLembrete(Boolean permiteEmailLembrete) {
+        this.permiteEmailLembrete = permiteEmailLembrete;
     }
 }

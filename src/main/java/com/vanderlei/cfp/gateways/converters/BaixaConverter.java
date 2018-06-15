@@ -18,9 +18,11 @@ public class BaixaConverter implements Converter<BaixaDataContract, Baixa> {
         if (dataContract.getContaBancaria() != null) {
             obj.setContaBancaria(new ContaBancaria(null, dataContract.getContaBancaria().getNome(), null, null, null,
                     null, null,
-                    new Usuario(null, dataContract.getUsuario().getNome(), dataContract.getUsuario().getEmail())));
+                    new Usuario(null, dataContract.getUsuario().getNome(), dataContract.getUsuario().getEmail(),
+                            dataContract.getUsuario().getPermiteEmailLembrete())));
         }
-        obj.setUsuario(new Usuario(null, dataContract.getUsuario().getNome(), dataContract.getUsuario().getEmail()));
+        obj.setUsuario(new Usuario(null, dataContract.getUsuario().getNome(), dataContract.getUsuario().getEmail(),
+                dataContract.getUsuario().getPermiteEmailLembrete()));
 
         return obj;
     }

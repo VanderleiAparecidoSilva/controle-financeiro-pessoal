@@ -11,8 +11,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 @Document(collection = "lancamento")
 @CompoundIndexes(
@@ -151,6 +154,10 @@ public class Lancamento implements Serializable {
         this.parcela = parcela;
     }
 
+    public String getParcelaAtualTotalParcela() {
+        return this.parcela + "/" + this.quantidadeParcelas;
+    }
+
     public ContaBancaria getContaBancaria() {
         return contaBancaria;
     }
@@ -221,5 +228,23 @@ public class Lancamento implements Serializable {
 
     public void setDataExclusao(LocalDateTime dataExclusao) {
         this.dataExclusao = dataExclusao;
+    }
+
+    @Override
+    public String toString() {
+        NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+        final StringBuilder sb = new StringBuilder("Lancamento{");
+        sb.append("Vencimento: ");
+        sb.append(getVencimento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        sb.append(", Descrição: ");
+        sb.append(getNome().getNome());
+        sb.append(", Valor: ");
+        sb.append(nf.format(getValorParcela()));
+        sb.append(", Parcela: ");
+        sb.append(getParcelaAtualTotalParcela());
+        sb.append(", Observação: ");
+        sb.append(getObservacao());
+        sb.append("\n");
+        return sb.toString();
     }
 }

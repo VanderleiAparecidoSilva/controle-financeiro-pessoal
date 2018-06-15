@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:remove="all">Lançamentos</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<div>
+    <p>
+        Usuário: <span th:text="${lancamento.usuario.nome}"></span>
+    </p>
+    <h3>Lançamentos:</h3>
+    <table border="1">
+        <tr>
+            <th>Tipo</th>
+            <th>Vencimento</th>
+            <th>Descrição</th>
+            <th>Valor</th>
+            <th>Parcela</th>
+            <th>Observação</th>
+        </tr>
+        <tr th:each="item : ${lancamento.lancamentos}">
+            <td th:text="${item.tipo.descricao}">tipo</td>
+            <td th:text="${item.vencimento}">vencimento</td>
+            <td th:text="${item.nome.nome}">descricao</td>
+            <td th:text="${#numbers.formatDecimal(item.valorParcela, 0, 'POINT', 2,
+'COMMA')}">valorParcela</td>
+            <td th:text="${item.getParcelaAtualTotalParcela()}">parcela</td>
+            <td th:text="${item.observacao}">observacao</td>
+        </tr>
+    </table>
+    <p><b>
+        Valor total: <span th:text="${#numbers.formatDecimal(lancamento.valorTotal, 0,
+'POINT', 2, 'COMMA')}"></span>
+    </b></p>
+    <p>
+        Controle Financeiro Pessoal - By Vanderlei - Copyright 2018
+    </p>
+</div>
+</body>
+</html>

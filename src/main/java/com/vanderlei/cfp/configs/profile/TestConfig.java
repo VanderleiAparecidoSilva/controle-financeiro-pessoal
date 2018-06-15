@@ -1,5 +1,7 @@
 package com.vanderlei.cfp.configs.profile;
 
+import com.vanderlei.cfp.email.EmailService;
+import com.vanderlei.cfp.email.MockEmailService;
 import com.vanderlei.cfp.gateways.DBGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +18,11 @@ public class TestConfig {
     @Bean
     public boolean instantiateDatabase() {
         dbGateway.instantiateTestDatabase();
-
         return true;
+    }
+
+    @Bean
+    public EmailService emailService() {
+        return new MockEmailService();
     }
 }

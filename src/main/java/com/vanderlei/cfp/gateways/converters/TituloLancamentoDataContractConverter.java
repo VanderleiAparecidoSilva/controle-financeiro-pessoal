@@ -15,7 +15,7 @@ public class TituloLancamentoDataContractConverter implements Converter<TituloLa
         TituloLancamentoDataContract objDataContract = new TituloLancamentoDataContract();
         BeanUtils.copyProperties(obj, objDataContract);
         objDataContract.setUsuario(new UsuarioDataContract(null, obj.getUsuario().getNome(),
-                obj.getUsuario().getEmail()));
+                obj.getUsuario().getEmail(), obj.getUsuario().getPermiteEmailLembrete()));
         return objDataContract;
     }
 }

@@ -15,5 +15,5 @@ public interface LancamentoRepository extends MongoRepository<Lancamento, String
 
     Optional<Lancamento> findByNomeAndUsuarioEmail(final String nome, final String email);
 
-    Collection<Lancamento> findByStatusAndVencimentoBefore(final Status status, final LocalDate date);
+    Collection<Lancamento> findByStatusAndVencimentoBeforeOrderByUsuarioNome(final Status status, final LocalDate date);
 }

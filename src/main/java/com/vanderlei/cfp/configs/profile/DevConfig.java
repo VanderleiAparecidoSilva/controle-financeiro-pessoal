@@ -1,5 +1,7 @@
 package com.vanderlei.cfp.configs.profile;
 
+import com.vanderlei.cfp.email.EmailService;
+import com.vanderlei.cfp.email.SmtpEmailService;
 import com.vanderlei.cfp.gateways.DBGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -18,5 +20,10 @@ public class DevConfig {
         dbGateway.instantiateDevDatabase();
 
         return true;
+    }
+
+    @Bean
+    public EmailService emailService() {
+        return new SmtpEmailService();
     }
 }

@@ -74,7 +74,8 @@ public class UsuarioController {
         Collection<Usuario> objList = gateway.buscarTodos();
         Collection<UsuarioDataContract> dataContractList = objList
                 .stream()
-                .map(obj -> new UsuarioDataContract(obj.getId(), obj.getNome(), obj.getEmail()))
+                .map(obj -> new UsuarioDataContract(obj.getId(), obj.getNome(), obj.getEmail(),
+                        obj.getPermiteEmailLembrete()))
                 .collect(Collectors.toList());
         return ResponseEntity
                 .ok().body(dataContractList);
@@ -90,7 +91,8 @@ public class UsuarioController {
         Collection<Usuario> objList = gateway.buscarTodosAtivos();
         Collection<UsuarioDataContract> dataContractList = objList
                 .stream()
-                .map(obj -> new UsuarioDataContract(obj.getId(), obj.getNome(), obj.getEmail()))
+                .map(obj -> new UsuarioDataContract(obj.getId(), obj.getNome(), obj.getEmail(),
+                        obj.getPermiteEmailLembrete()))
                 .collect(Collectors.toList());
         return ResponseEntity
                 .ok().body(dataContractList);

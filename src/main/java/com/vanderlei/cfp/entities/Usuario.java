@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Column;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -37,6 +38,9 @@ public class Usuario implements Serializable {
     @JsonIgnore
     private String senha;
 
+    @NotNull(message = "Preenchimento obrigatório")
+    private Boolean permiteEmailLembrete;
+
     @NotEmpty(message = "Preenchimento obrigatório")
     private LocalDateTime dataInclusao;
 
@@ -45,12 +49,14 @@ public class Usuario implements Serializable {
     private LocalDateTime dataExclusao;
 
     public Usuario() {
+        this.permiteEmailLembrete = true;
     }
 
-    public Usuario(final String id, final String nome, final String email) {
+    public Usuario(final String id, final String nome, final String email, final Boolean permiteEmailLembrete) {
         this.id = id;
         this.nome = nome;
         this.email = email;
+        this.permiteEmailLembrete = permiteEmailLembrete;
     }
 
     public String getId() {
@@ -83,6 +89,14 @@ public class Usuario implements Serializable {
 
     public void setSenha(String senha) {
         this.senha = senha;
+    }
+
+    public Boolean getPermiteEmailLembrete() {
+        return permiteEmailLembrete;
+    }
+
+    public void setPermiteEmailLembrete(Boolean permiteEmailLembrete) {
+        this.permiteEmailLembrete = permiteEmailLembrete;
     }
 
     public LocalDateTime getDataInclusao() {

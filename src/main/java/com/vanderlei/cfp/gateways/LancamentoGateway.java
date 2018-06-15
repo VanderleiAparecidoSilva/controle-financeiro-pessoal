@@ -1,9 +1,7 @@
 package com.vanderlei.cfp.gateways;
 
 import com.vanderlei.cfp.entities.Baixa;
-import com.vanderlei.cfp.entities.ContaBancaria;
 import com.vanderlei.cfp.entities.Lancamento;
-import com.vanderlei.cfp.entities.Usuario;
 import com.vanderlei.cfp.entities.enums.Operacao;
 import com.vanderlei.cfp.entities.enums.Status;
 import com.vanderlei.cfp.entities.enums.Tipo;
@@ -11,7 +9,6 @@ import com.vanderlei.cfp.exceptions.ObjectNotFoundException;
 import com.vanderlei.cfp.gateways.converters.LancamentoConverter;
 import com.vanderlei.cfp.gateways.repository.*;
 import com.vanderlei.cfp.http.ContaBancariaController;
-import com.vanderlei.cfp.http.data.LancamentoDataContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -197,6 +194,6 @@ public class LancamentoGateway {
     }
 
     public Collection<Lancamento> buscarLancamentosVencidos(final Status status, final LocalDate date) {
-        return repository.findByStatusAndVencimentoBefore(status, date);
+        return repository.findByStatusAndVencimentoBeforeOrderByUsuarioNome(status, date);
     }
 }
