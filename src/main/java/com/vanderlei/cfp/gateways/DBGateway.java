@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.UUID;
 
 @Service
 public class DBGateway {
@@ -52,11 +53,11 @@ public class DBGateway {
         TituloLancamento tituloLancamento = new TituloLancamento(null, "Compra Mensal", 10, false, true, usuario);
         TituloLancamento tituloLancamento02 = new TituloLancamento(null, "Tratamento com Massagem", 10, false, true, usuario02);
 
-        Lancamento lancamento = new Lancamento(null, tituloLancamento, centroCusto, LocalDate.now(), 100.00, 1, 1, false, contaBancaria, "Compra do mês - Carrefour",
+        Lancamento lancamento = new Lancamento(null, UUID.randomUUID(), tituloLancamento, centroCusto, LocalDate.now(), 100.00, 1, 1, false, contaBancaria, "Compra do mês - Carrefour",
                 Status.ABERTO, Tipo.DESPESA, usuario, null);
-        Lancamento lancamento01 = new Lancamento(null, tituloLancamento, centroCusto, LocalDate.now(), 100.00, 1, 1, false, contaBancaria, "Compra do mês - Carrefour",
+        Lancamento lancamento01 = new Lancamento(null, UUID.randomUUID(), tituloLancamento, centroCusto, LocalDate.now(), 100.00, 1, 1, false, contaBancaria, "Compra do mês - Carrefour",
                 Status.ABERTO, Tipo.DESPESA, usuario, null);
-        Lancamento lancamento02 = new Lancamento(null, tituloLancamento02, centroCusto02, LocalDate.now(), 100.00, 5, 5, false, contaBancaria02, "Tratamento com esteticista",
+        Lancamento lancamento02 = new Lancamento(null, UUID.randomUUID(), tituloLancamento02, centroCusto02, LocalDate.now(), 100.00, 5, 5, false, contaBancaria02, "Tratamento com esteticista",
                 Status.ABERTO, Tipo.DESPESA, usuario02, null);
 
         usuarioRepository.saveAll(Arrays.asList(usuario, usuario02));
@@ -85,21 +86,21 @@ public class DBGateway {
         TituloLancamento tituloLancamento01 = new TituloLancamento(null, "Compra Mensal Para Todo Mes - Teste", 10, false, true, usuario01);
         TituloLancamento tituloLancamento02 = new TituloLancamento(null, "Tratamento com Massagem - Teste", 10, false, true, usuario02);
 
-        Lancamento lancamento01 = new Lancamento(null, tituloLancamento01, centroCusto01, LocalDate.now(), 100.00, 1, 1, false, contaBancaria01, "Compra do mês - Carrefour",
+        Lancamento lancamento01 = new Lancamento(null, UUID.randomUUID(), tituloLancamento01, centroCusto01, LocalDate.now(), 100.00, 1, 1, false, contaBancaria01, "Compra do mês - Carrefour",
                 Status.ABERTO, Tipo.DESPESA, usuario01, null);
-        Lancamento lancamento011 = new Lancamento(null, tituloLancamento01, centroCusto01, LocalDate.now(), 200.00, 2, 1, false, contaBancaria01, "Compra do mês - Wallmart",
+        Lancamento lancamento011 = new Lancamento(null, UUID.randomUUID(), tituloLancamento01, centroCusto01, LocalDate.now(), 200.00, 2, 1, false, contaBancaria01, "Compra do mês - Wallmart",
                 Status.ABERTO, Tipo.DESPESA, usuario01, null);
-        Lancamento lancamento0111 = new Lancamento(null, tituloLancamento01, centroCusto01, LocalDate.now().plusMonths(1), 200.00, 2, 2, false, contaBancaria01, "Compra do mês - Wallmart",
+        Lancamento lancamento0111 = new Lancamento(null, UUID.randomUUID(), tituloLancamento01, centroCusto01, LocalDate.now().plusMonths(1), 200.00, 2, 2, false, contaBancaria01, "Compra do mês - Wallmart",
                 Status.ABERTO, Tipo.DESPESA, usuario01, null);
-        Lancamento lancamento02 = new Lancamento(null, tituloLancamento02, centroCusto02, LocalDate.now(), 100.00, 5, 1, false, contaBancaria02, "Tratamento com esteticista",
+        Lancamento lancamento02 = new Lancamento(null, UUID.randomUUID(), tituloLancamento02, centroCusto02, LocalDate.now(), 100.00, 5, 1, false, contaBancaria02, "Tratamento com esteticista",
                 Status.ABERTO, Tipo.DESPESA, usuario02, null);
-        Lancamento lancamento021 = new Lancamento(null, tituloLancamento02, centroCusto02, LocalDate.now().plusMonths(1), 100.00, 5, 2, false, contaBancaria02, "Tratamento com esteticista",
+        Lancamento lancamento021 = new Lancamento(null, UUID.randomUUID(), tituloLancamento02, centroCusto02, LocalDate.now().plusMonths(1), 100.00, 5, 2, false, contaBancaria02, "Tratamento com esteticista",
                 Status.ABERTO, Tipo.DESPESA, usuario02, null);
-        Lancamento lancamento022 = new Lancamento(null, tituloLancamento02, centroCusto02, LocalDate.now().plusMonths(2), 100.00, 5, 3, false, contaBancaria02, "Tratamento com esteticista",
+        Lancamento lancamento022 = new Lancamento(null, UUID.randomUUID(), tituloLancamento02, centroCusto02, LocalDate.now().plusMonths(2), 100.00, 5, 3, false, contaBancaria02, "Tratamento com esteticista",
                 Status.ABERTO, Tipo.DESPESA, usuario02, null);
-        Lancamento lancamento023 = new Lancamento(null, tituloLancamento02, centroCusto02, LocalDate.now().plusMonths(3), 100.00, 5, 4, false, contaBancaria02, "Tratamento com esteticista",
+        Lancamento lancamento023 = new Lancamento(null, UUID.randomUUID(), tituloLancamento02, centroCusto02, LocalDate.now().plusMonths(3), 100.00, 5, 4, false, contaBancaria02, "Tratamento com esteticista",
                 Status.ABERTO, Tipo.DESPESA, usuario02, null);
-        Lancamento lancamento024 = new Lancamento(null, tituloLancamento02, centroCusto02, LocalDate.now().plusMonths(4), 100.00, 5, 5, false, contaBancaria02, "Tratamento com esteticista",
+        Lancamento lancamento024 = new Lancamento(null, UUID.randomUUID(), tituloLancamento02, centroCusto02, LocalDate.now().plusMonths(4), 100.00, 5, 5, false, contaBancaria02, "Tratamento com esteticista",
                 Status.ABERTO, Tipo.DESPESA, usuario02, null);
 
         usuarioRepository.saveAll(Arrays.asList(usuario01, usuario02));

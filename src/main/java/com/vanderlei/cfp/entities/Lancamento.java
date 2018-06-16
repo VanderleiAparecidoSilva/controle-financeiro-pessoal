@@ -3,6 +3,7 @@ package com.vanderlei.cfp.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vanderlei.cfp.entities.enums.Status;
 import com.vanderlei.cfp.entities.enums.Tipo;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
@@ -16,6 +17,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.UUID;
 
 @Document(collection = "lancamento")
 @CompoundIndexes(
@@ -35,8 +37,10 @@ public class Lancamento implements Serializable {
     private String id;
 
     @NotNull(message = "Preenchimento obrigatório")
-    private TituloLancamento nome;
+    private UUID uuid;
 
+    @NotNull(message = "Preenchimento obrigatório")
+    private TituloLancamento nome;
 
     @NotNull(message = "Preenchimento obrigatório")
     private CentroCusto centroCusto;
@@ -78,14 +82,15 @@ public class Lancamento implements Serializable {
     private LocalDateTime dataExclusao;
 
     public Lancamento() {
-        this.tipo = Tipo.RECEITA;
+        this.tipo = Tipo.DESPESA;
     }
 
-    public Lancamento(final String id, final TituloLancamento nome, final CentroCusto centroCusto, final LocalDate vencimento,
-                      final Double valorParcela, final int quantidadeParcelas, final int parcela, final boolean gerarParcelaUnica,
-                      final ContaBancaria contaBancaria, final String observacao, final Status status, final Tipo tipo,
-                      final Usuario usuario, final Baixa baixa) {
+    public Lancamento(final String id, final UUID uuid, final TituloLancamento nome, final CentroCusto centroCusto,
+                      final LocalDate vencimento, final Double valorParcela, final int quantidadeParcelas, final int parcela,
+                      final boolean gerarParcelaUnica, final ContaBancaria contaBancaria, final String observacao,
+                      final Status status, final Tipo tipo, final Usuario usuario, final Baixa baixa) {
         this.id = id;
+        this.uuid = uuid;
         this.nome = nome;
         this.centroCusto = centroCusto;
         this.vencimento = vencimento;
@@ -107,6 +112,14 @@ public class Lancamento implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 
     public TituloLancamento getNome() {

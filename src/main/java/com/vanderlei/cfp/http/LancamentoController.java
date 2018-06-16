@@ -62,6 +62,18 @@ public class LancamentoController {
                 .ok().body(objList);
     }
 
+    @ApiOperation(value = "Buscar parcelas")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Sucesso")
+    })
+    @RequestMapping(value = "/parcelas/{id}", method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<Lancamento>> buscaParcelas(@PathVariable final String id) {
+        Collection<Lancamento> objList = gateway.buscarParcelasLancamentoAberto(id);
+        return ResponseEntity
+                .ok().body(objList);
+    }
+
     @ApiOperation(value = "Criar novo")
     @ApiResponses( value = {
             @ApiResponse(code = 201, message = "Inserido com sucesso")

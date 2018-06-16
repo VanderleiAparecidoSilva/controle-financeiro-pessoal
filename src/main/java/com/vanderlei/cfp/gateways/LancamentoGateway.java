@@ -14,8 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class LancamentoGateway {
@@ -71,6 +70,14 @@ public class LancamentoGateway {
                 Lancamento.class.getName()));
     }
 
+    public Collection<Lancamento> buscarParcelasLancamentoAberto(final String id) {
+        Lancamento obj = this.buscarPorCodigo(id);
+        Collection<Lancamento> objList = repository
+                .findByStatusAndUsuarioEmailAndUuidAndParcelaGreaterThanOrderByParcela(Status.ABERTO,
+                        obj.getUsuario().getEmail(), obj.getUuid(), obj.getParcela());
+        return objList;
+    }
+
     public Lancamento inserir(final Lancamento obj) {
         Lancamento objRet = null;
 
@@ -105,10 +112,24 @@ public class LancamentoGateway {
                     Lancamento.class.getName());
         }
 
-        for (int i = 0; i < obj.getQuantidadeParcelas(); i++) {
+        final int qtdParcelas = obj.getQuantidadeParcelas();
+        LocalDate vencimento = obj.getVencimento();
+        final UUID uuid = UUID.randomUUID();
+        for (int i = 0; i < qtdParcelas; i++) {
             obj.setId(null);
+            obj.setUuid(uuid);
             obj.setDataInclusao(LocalDateTime.now());
-            obj.setParcela(obj.isGerarParcelaUnica() ? 1 : i + 1);
+            if (!obj.isGerarParcelaUnica()) {
+                obj.setParcela(i + 1);
+            } else {
+                obj.setQuantidadeParcelas(1);
+                obj.setParcela(1);
+            }
+            if (i > 0) {
+                obj.setVencimento(vencimento.plusMonths(1));
+                vencimento = vencimento.plusMonths(1);
+            }
+
             repository.save(obj);
             if (objRet == null) {
                 objRet = obj;

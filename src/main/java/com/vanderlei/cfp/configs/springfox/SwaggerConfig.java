@@ -22,7 +22,6 @@ import static org.springframework.http.HttpStatus.*;
 
 @Configuration
 @EnableSwagger2
-@Profile("!test")
 public class SwaggerConfig {
     @Bean
     public Docket gatewayApi() {
