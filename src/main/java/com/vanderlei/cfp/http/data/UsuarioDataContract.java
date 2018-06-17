@@ -22,7 +22,7 @@ public class UsuarioDataContract implements Serializable {
     @Email
     private String email;
 
-    @JsonIgnore
+    @NotEmpty(message = "Preenchimento obrigatório")
     private String senha;
 
     @NotNull(message = "Preenchimento obrigatório")
@@ -31,10 +31,12 @@ public class UsuarioDataContract implements Serializable {
     public UsuarioDataContract() {
     }
 
-    public UsuarioDataContract(final String id, final String nome, final String email, final Boolean permiteEmailLembrete) {
+    public UsuarioDataContract(final String id, final String nome, final String email, final String senha,
+                               final Boolean permiteEmailLembrete) {
         this.id = id;
         this.nome = nome;
         this.email = email;
+        this.senha = senha;
         this.permiteEmailLembrete = permiteEmailLembrete;
     }
 

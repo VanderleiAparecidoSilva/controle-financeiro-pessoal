@@ -15,7 +15,7 @@ public class LancamentoDataContractConverter implements Converter<Lancamento, La
         LancamentoDataContract objDataContract = new LancamentoDataContract();
         BeanUtils.copyProperties(obj, objDataContract);
         objDataContract.setUsuario(new UsuarioDataContract(null, obj.getUsuario().getNome(),
-                obj.getUsuario().getEmail(), obj.getUsuario().getPermiteEmailLembrete()));
+                obj.getUsuario().getEmail(), null, obj.getUsuario().getPermiteEmailLembrete()));
         return objDataContract;
     }
 }

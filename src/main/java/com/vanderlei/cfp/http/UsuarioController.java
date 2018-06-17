@@ -64,40 +64,6 @@ public class UsuarioController {
                 .ok().body(dataContract);
     }
 
-    @ApiOperation(value = "Buscar todos")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Sucesso")
-    })
-    @RequestMapping(method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<UsuarioDataContract>> buscaTodos() {
-        Collection<Usuario> objList = gateway.buscarTodos();
-        Collection<UsuarioDataContract> dataContractList = objList
-                .stream()
-                .map(obj -> new UsuarioDataContract(obj.getId(), obj.getNome(), obj.getEmail(),
-                        obj.getPermiteEmailLembrete()))
-                .collect(Collectors.toList());
-        return ResponseEntity
-                .ok().body(dataContractList);
-    }
-
-    @ApiOperation(value = "Buscar todos ativos")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Sucesso")
-    })
-    @RequestMapping(value = "/ativos", method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<UsuarioDataContract>> buscaTodosAtivos() {
-        Collection<Usuario> objList = gateway.buscarTodosAtivos();
-        Collection<UsuarioDataContract> dataContractList = objList
-                .stream()
-                .map(obj -> new UsuarioDataContract(obj.getId(), obj.getNome(), obj.getEmail(),
-                        obj.getPermiteEmailLembrete()))
-                .collect(Collectors.toList());
-        return ResponseEntity
-                .ok().body(dataContractList);
-    }
-
     @ApiOperation(value = "Criar novo")
     @ApiResponses( value = {
             @ApiResponse(code = 201, message = "Inserido com sucesso")
