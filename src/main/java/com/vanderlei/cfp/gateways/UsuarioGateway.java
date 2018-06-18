@@ -1,9 +1,12 @@
 package com.vanderlei.cfp.gateways;
 
 import com.vanderlei.cfp.entities.Usuario;
+import com.vanderlei.cfp.entities.enums.Perfil;
+import com.vanderlei.cfp.exceptions.AuthorizationException;
 import com.vanderlei.cfp.exceptions.ObjectDuplicatedException;
 import com.vanderlei.cfp.exceptions.ObjectNotFoundException;
 import com.vanderlei.cfp.gateways.repository.UsuarioRepository;
+import com.vanderlei.cfp.security.UsuarioSecurity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,21 +31,14 @@ public class UsuarioGateway {
     @Autowired
     private UsuarioRepository repository;
 
-    public Collection<Usuario> buscarTodos() {
-        return repository.findAll();
-    }
-
-    public Collection<Usuario> buscarTodosAtivos() {
-        return repository.findAll()
-                .stream()
-                .filter(obj -> obj.getAtivo())
-                .collect(Collectors.toList());
-    }
-
     public Usuario buscarPorCodigo(final String id) {
-        Optional<Usuario> obj = repository.findById(id);
-        return obj.orElseThrow(() -> new ObjectNotFoundException(msgObjectNotFoundUsuarioCodigo + id + msgTipo +
-                Usuario.class.getName()));
+        if (UsuarioSecurityGateway.userAuthenticated(id)) {
+            Optional<Usuario> obj = repository.findById(id);
+            return obj.orElseThrow(() -> new ObjectNotFoundException(msgObjectNotFoundUsuarioCodigo + id + msgTipo +
+                    Usuario.class.getName()));
+        }
+
+        return null;
     }
 
     public Usuario buscarPorEmail(final String email) {
