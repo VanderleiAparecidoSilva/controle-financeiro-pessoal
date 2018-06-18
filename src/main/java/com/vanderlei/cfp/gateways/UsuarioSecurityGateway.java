@@ -13,8 +13,6 @@ public class UsuarioSecurityGateway {
             throw new AuthorizationException("Acesso negado");
         }
 
-        continuar validando o usuario nas requisicoes e melhorar quais dados validar
-
         return true;
     }
 
