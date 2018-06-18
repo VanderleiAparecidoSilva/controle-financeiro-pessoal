@@ -1,10 +1,12 @@
 package com.vanderlei.cfp.gateways;
 
 import com.vanderlei.cfp.entities.*;
+import com.vanderlei.cfp.entities.enums.Perfil;
 import com.vanderlei.cfp.entities.enums.Status;
 import com.vanderlei.cfp.entities.enums.Tipo;
 import com.vanderlei.cfp.gateways.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -30,6 +32,9 @@ public class DBGateway {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     private void cleanCollections() {
         usuarioRepository.deleteAll();
         contaBancariaRepository.deleteAll();
@@ -42,7 +47,10 @@ public class DBGateway {
         cleanCollections();
 
         Usuario usuario = new Usuario(null, "Vanderlei Aparecido da Silva", "vanderlei@gmail.com", true);
+        usuario.addPerfil(Perfil.ADMIN);
+        usuario.setSenha(bCryptPasswordEncoder.encode("123"));
         Usuario usuario02 = new Usuario(null, "Rita de Cássia da Silva Carminati", "ritacarminati@gmail.com", false);
+        usuario02.setSenha(bCryptPasswordEncoder.encode("456"));
 
         ContaBancaria contaBancaria = new ContaBancaria(null, "Santader", "0000000-00", 13300.00, 84.90, false, false, usuario);
         ContaBancaria contaBancaria02 = new ContaBancaria(null, "Santader Rita", "1111111-99", 1000.00, 340.90, true, true, usuario02);
@@ -75,6 +83,7 @@ public class DBGateway {
         cleanCollections();
 
         Usuario usuario01 = new Usuario(null, "Vanderlei Aparecido da Silva", "vanderlei@gmail.com", true);
+        usuario01.addPerfil(Perfil.ADMIN);
         Usuario usuario02 = new Usuario(null, "Rita de Cássia da Silva Carminati", "ritacarminati@gmail.com", false);
 
         ContaBancaria contaBancaria01 = new ContaBancaria(null, "Santader", "0000000-00", 13300.00, 84.90, false, false, usuario01);
