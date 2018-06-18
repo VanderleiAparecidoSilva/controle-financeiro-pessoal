@@ -32,7 +32,7 @@ public class UsuarioGateway {
     private UsuarioRepository repository;
 
     public Usuario buscarPorCodigo(final String id) {
-        if (UsuarioSecurityGateway.userAuthenticated(id)) {
+        if (UsuarioSecurityGateway.userAuthenticatedById(id)) {
             Optional<Usuario> obj = repository.findById(id);
             return obj.orElseThrow(() -> new ObjectNotFoundException(msgObjectNotFoundUsuarioCodigo + id + msgTipo +
                     Usuario.class.getName()));
@@ -42,9 +42,13 @@ public class UsuarioGateway {
     }
 
     public Usuario buscarPorEmail(final String email) {
-        Optional<Usuario> obj = repository.findByEmail(email);
-        return obj.orElseThrow(() -> new ObjectNotFoundException(msgObjectNotFoundUsuarioEmail + email + msgTipo +
-                Usuario.class.getName()));
+        if (UsuarioSecurityGateway.userAuthenticatedByEmail(email)) {
+            Optional<Usuario> obj = repository.findByEmail(email);
+            return obj.orElseThrow(() -> new ObjectNotFoundException(msgObjectNotFoundUsuarioEmail + email + msgTipo +
+                    Usuario.class.getName()));
+        }
+
+        return null;
     }
 
     public Usuario inserir(final Usuario obj) {
@@ -62,8 +66,12 @@ public class UsuarioGateway {
     }
 
     public Usuario atualizar(final Usuario obj) {
-        obj.setDataAlteracao(LocalDateTime.now());
-        return repository.save(obj);
+        if (UsuarioSecurityGateway.userAuthenticatedById(obj.getId())) {
+            obj.setDataAlteracao(LocalDateTime.now());
+            return repository.save(obj);
+        }
+
+        return null;
     }
 
     public Usuario ativar(final String id) {

@@ -57,7 +57,7 @@ public class CentroCustoController {
     @RequestMapping(method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<CentroCustoDataContract>> buscaTodos() {
-        Collection<CentroCusto> objList = gateway.buscarTodos();
+        Collection<CentroCusto> objList = gateway.buscarTodosPorUsuario();
         Collection<CentroCustoDataContract> dataContractList = objList
                 .stream()
                 .map(obj -> new CentroCustoDataContract(obj.getId(), obj.getNome(), obj.getAplicarNaDespesa(),
@@ -74,7 +74,7 @@ public class CentroCustoController {
     @RequestMapping(value = "/ativos", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<CentroCustoDataContract>> buscaTodosAtivos() {
-        Collection<CentroCusto> objList = gateway.buscarTodosAtivos();
+        Collection<CentroCusto> objList = gateway.buscarTodosAtivosPorUsuario();
         Collection<CentroCustoDataContract> dataContractList = objList
                 .stream()
                 .map(obj -> new CentroCustoDataContract(obj.getId(), obj.getNome(), obj.getAplicarNaDespesa(),
