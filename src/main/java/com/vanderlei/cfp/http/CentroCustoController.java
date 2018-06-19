@@ -107,6 +107,8 @@ public class CentroCustoController {
     public ResponseEntity<Void> atualizar(@Valid @RequestBody final CentroCustoDataContract dataContract,
                                           @PathVariable final String id) {
         CentroCusto obj = gateway.buscarPorCodigo(id);
+ajustar aqui
+        refresh token
         Parsers.parse(id, obj, dataContract);
         gateway.atualizar(obj);
         return ResponseEntity.noContent().build();

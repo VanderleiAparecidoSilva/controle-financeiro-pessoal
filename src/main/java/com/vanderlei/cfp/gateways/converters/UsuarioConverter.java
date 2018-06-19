@@ -14,7 +14,6 @@ public class UsuarioConverter implements Converter<UsuarioDataContract, Usuario>
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-
     @Override
     public Usuario convert(final UsuarioDataContract dataContract) {
         Usuario obj = new Usuario();
