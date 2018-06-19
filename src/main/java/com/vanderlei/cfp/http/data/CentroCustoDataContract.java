@@ -13,7 +13,6 @@ public class CentroCustoDataContract implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @JsonIgnore
     private String id;
 
     @NotEmpty(message = "Preenchimento obrigatório")

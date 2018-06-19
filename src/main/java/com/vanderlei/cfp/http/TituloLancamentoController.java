@@ -60,7 +60,7 @@ public class TituloLancamentoController {
     @RequestMapping(method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<TituloLancamentoDataContract>> buscaTodos() {
-        Collection<TituloLancamento> objList = gateway.buscarTodos();
+        Collection<TituloLancamento> objList = gateway.buscarTodosPorUsuario();
         Collection<TituloLancamentoDataContract> dataContractList = objList
                 .stream()
                 .map(obj -> new TituloLancamentoDataContract(obj.getId(), obj.getNome(), obj.getDiaVencimento(),

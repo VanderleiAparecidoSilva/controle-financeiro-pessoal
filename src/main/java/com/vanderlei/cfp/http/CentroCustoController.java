@@ -50,7 +50,7 @@ public class CentroCustoController {
                 .ok().body(dataContract);
     }
 
-    @ApiOperation(value = "Buscar todos")
+    @ApiOperation(value = "Buscar todos por usuário")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Sucesso")
     })
@@ -67,7 +67,7 @@ public class CentroCustoController {
                 .ok().body(dataContractList);
     }
 
-    @ApiOperation(value = "Buscar todos ativos")
+    @ApiOperation(value = "Buscar todos ativos por usuário")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Sucesso")
     })
@@ -107,7 +107,6 @@ public class CentroCustoController {
     public ResponseEntity<Void> atualizar(@Valid @RequestBody final CentroCustoDataContract dataContract,
                                           @PathVariable final String id) {
         CentroCusto obj = gateway.buscarPorCodigo(id);
-        //TODO ajustar aqui
         Parsers.parse(id, obj, dataContract);
         gateway.atualizar(obj);
         return ResponseEntity.noContent().build();

@@ -8,13 +8,10 @@ import org.springframework.stereotype.Component;
 public class Parsers {
 
     public static void parse(final String id, final CentroCusto obj, final CentroCustoDataContract dataContract) {
-        UsuarioConverter usuarioConverter = new UsuarioConverter();
-
         obj.setId(id);
         obj.setNome(dataContract.getNome());
         obj.setAplicarNaDespesa(dataContract.getAplicarNaDespesa());
         obj.setAplicarNaReceita(dataContract.getAplicarNaReceita());
-        obj.setUsuario(usuarioConverter.convert(dataContract.getUsuario()));
     }
 
     public static void parse(final String id, final Usuario obj, final UsuarioDataContract dataContract) {
@@ -24,8 +21,6 @@ public class Parsers {
     }
 
     public static void parse(final String id, final ContaBancaria obj, final ContaBancariaDataContract dataContract) {
-        UsuarioConverter usuarioConverter = new UsuarioConverter();
-
         obj.setId(id);
         obj.setNome(dataContract.getNome());
         obj.setNumeroContaBancaria(dataContract.getNumeroContaBancaria());
@@ -33,18 +28,14 @@ public class Parsers {
         obj.setVincularSaldoBancarioNoTotalReceita(dataContract.getVincularSaldoBancarioNoTotalReceita());
         obj.setLimiteContaBancaria(dataContract.getLimiteContaBancaria());
         obj.setSaldoContaBancaria(dataContract.getSaldoContaBancaria());
-        obj.setUsuario(usuarioConverter.convert(dataContract.getUsuario()));
     }
 
     public static void parse(final String id, final TituloLancamento obj, final TituloLancamentoDataContract dataContract) {
-        UsuarioConverter usuarioConverter = new UsuarioConverter();
-
         obj.setId(id);
         obj.setNome(dataContract.getNome());
         obj.setDiaVencimento(dataContract.getDiaVencimento());
         obj.setAplicarNaDespesa(dataContract.getAplicarNaDespesa());
         obj.setAplicarNaReceita(dataContract.getAplicarNaReceita());
-        obj.setUsuario(usuarioConverter.convert(dataContract.getUsuario()));
     }
 
     public static void parse(final String id, final Lancamento obj, final LancamentoDataContract dataContract) {

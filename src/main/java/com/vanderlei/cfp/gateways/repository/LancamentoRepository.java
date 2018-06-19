@@ -21,4 +21,6 @@ public interface LancamentoRepository extends MongoRepository<Lancamento, String
                                                                                                  final String email,
                                                                                                  final UUID uuid,
                                                                                                  final int parcela);
+
+    Collection<Lancamento> findByUsuarioEmail(final String email);
 }

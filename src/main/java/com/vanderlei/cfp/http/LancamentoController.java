@@ -50,19 +50,19 @@ public class LancamentoController {
     @Autowired
     private BaixaConverter baixaConverter;
 
-    @ApiOperation(value = "Buscar todos")
+    @ApiOperation(value = "Buscar todos por usuário")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Sucesso")
     })
     @RequestMapping(method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<Lancamento>> buscaTodos() {
-        Collection<Lancamento> objList = gateway.buscarTodos();
+        Collection<Lancamento> objList = gateway.buscarTodosPorUsuario();
         return ResponseEntity
                 .ok().body(objList);
     }
 
-    @ApiOperation(value = "Buscar parcelas")
+    @ApiOperation(value = "Buscar parcelas por usuário")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Sucesso")
     })

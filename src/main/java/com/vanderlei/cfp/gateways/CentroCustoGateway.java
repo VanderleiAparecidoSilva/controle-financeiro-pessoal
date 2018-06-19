@@ -33,30 +33,39 @@ public class CentroCustoGateway {
     private UsuarioRepository usuarioRepository;
 
     public Collection<CentroCusto> buscarTodosPorUsuario() {
-        UsuarioSecurity obj = UsuarioSecurityGateway.authenticated();
-        if (obj == null) {
+        UsuarioSecurity objSecurity = UsuarioSecurityGateway.authenticated();
+        if (objSecurity == null) {
             throw new AuthorizationException("Acesso negado");
         }
 
-        return repository.findByUsuarioEmail(obj.getUsername());
+        return repository.findByUsuarioEmail(objSecurity.getUsername());
     }
 
     public Collection<CentroCusto> buscarTodosAtivosPorUsuario() {
-        UsuarioSecurity obj = UsuarioSecurityGateway.authenticated();
-        if (obj == null) {
+        UsuarioSecurity objSecurity = UsuarioSecurityGateway.authenticated();
+        if (objSecurity == null) {
             throw new AuthorizationException("Acesso negado");
         }
 
-        return repository.findByUsuarioEmail(obj.getUsername())
+        return repository.findByUsuarioEmail(objSecurity.getUsername())
                 .stream()
-                .filter(centroCusto -> centroCusto.getAtivo())
+                .filter(obj -> obj.getAtivo())
                 .collect(Collectors.toList());
     }
 
     public CentroCusto buscarPorCodigo(final String id) {
+        UsuarioSecurity objSecurity = UsuarioSecurityGateway.authenticated();
+        if (objSecurity == null) {
+            throw new AuthorizationException("Acesso negado");
+        }
         Optional<CentroCusto> obj = repository.findById(id);
-        return obj.orElseThrow(() -> new ObjectNotFoundException(msgObjectNotFound + id + msgTipo +
+        CentroCusto centroCusto = obj.orElseThrow(() -> new ObjectNotFoundException(msgObjectNotFound + id + msgTipo +
                 CentroCusto.class.getName()));
+        if (UsuarioSecurityGateway.userAuthenticatedByEmail(centroCusto.getUsuario().getEmail())) {
+            return centroCusto;
+        }
+
+        return null;
     }
 
     public CentroCusto inserir(final CentroCusto obj) {
@@ -92,14 +101,12 @@ public class CentroCustoGateway {
     }
 
     public CentroCusto ativar(final String id) {
-        //TODO Ver se precisa validar com usuario logado
         CentroCusto obj = this.buscarPorCodigo(id);
         obj.setDataExclusao(null);
         return repository.save(obj);
     }
 
     public CentroCusto desativar(final String id) {
-        //TODO Ver se precisa validar com usuario logado
         CentroCusto obj = this.buscarPorCodigo(id);
         obj.setDataExclusao(LocalDateTime.now());
         return repository.save(obj);

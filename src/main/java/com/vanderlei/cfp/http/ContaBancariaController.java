@@ -54,14 +54,14 @@ public class ContaBancariaController {
                 .ok().body(dataContract);
     }
 
-    @ApiOperation(value = "Buscar todos")
+    @ApiOperation(value = "Buscar todos por usuário")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Sucesso")
     })
     @RequestMapping(method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ContaBancariaDataContract>> buscaTodos() {
-        Collection<ContaBancaria> objList = gateway.buscarTodos();
+        Collection<ContaBancaria> objList = gateway.buscarTodosPorUsuario();
         Collection<ContaBancariaDataContract> dataContractList = objList
                 .stream()
                 .map(obj -> new ContaBancariaDataContract(obj.getId(), obj.getNome(),
@@ -73,14 +73,14 @@ public class ContaBancariaController {
                 .ok().body(dataContractList);
     }
 
-    @ApiOperation(value = "Buscar todos ativos")
+    @ApiOperation(value = "Buscar todos ativos por usuário")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Sucesso")
     })
     @RequestMapping(value = "/ativos", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ContaBancariaDataContract>> buscaTodosAtivos() {
-        Collection<ContaBancaria> objList = gateway.buscarTodosAtivos();
+        Collection<ContaBancaria> objList = gateway.buscarTodosAtivosPorUsuario();
         Collection<ContaBancariaDataContract> dataContractList = objList
                 .stream()
                 .map(obj -> new ContaBancariaDataContract(obj.getId(), obj.getNome(),
