@@ -1,6 +1,7 @@
 package com.vanderlei.cfp.email;
 
 import com.vanderlei.cfp.email.templates.TemplateLancamentoVencido;
+import com.vanderlei.cfp.entities.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -45,6 +46,12 @@ public abstract class AbstractEmailService implements EmailService {
         }
     }
 
+    @Override
+    public void enviarNovasenhaEmail(final Usuario obj, final String novaSenha) {
+        SimpleMailMessage simpleMailMessage = prepararNovaSenhaEmail(obj, novaSenha);
+        enviarEmail(simpleMailMessage);
+    }
+
     protected SimpleMailMessage prepararSimpleMailMessageFromLancamento(final TemplateLancamentoVencido obj) {
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setTo(obj.getUsuario().getEmail());
@@ -66,6 +73,16 @@ public abstract class AbstractEmailService implements EmailService {
         mimeMessageHelper.setText(htmlFromTemplatePedido(obj), true);
 
         return mimeMessage;
+    }
+
+    protected SimpleMailMessage prepararNovaSenhaEmail(final Usuario usuario, final String newPass) {
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo(usuario.getEmail());
+        simpleMailMessage.setFrom(sender);
+        simpleMailMessage.setSubject("Solicitação de nova senha");
+        simpleMailMessage.setSentDate(new Date(System.currentTimeMillis()));
+        simpleMailMessage.setText("Nova senha: " + newPass);
+        return simpleMailMessage;
     }
 
     protected String htmlFromTemplatePedido(TemplateLancamentoVencido obj) {

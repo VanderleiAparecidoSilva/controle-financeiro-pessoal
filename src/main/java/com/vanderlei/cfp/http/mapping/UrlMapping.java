@@ -7,4 +7,5 @@ public interface UrlMapping {
     String CONTA_BANCARIA = "/api/contasbancarias";
     String TITULO_LANCAMENTO = "/api/tituloslancamentos";
     String LANCAMENTO = "/api/lancamentos";
+    String AUTHORIZATION = "/api/authorization";
 }
