@@ -4,24 +4,18 @@ import java.io.Serializable;
 
 public class StandardError implements Serializable {
 
-    private Integer status;
-    private String mensagem;
     private Long timeStamp;
+    private Integer status;
+    private String error;
+    private String message;
+    private String path;
 
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
+    public StandardError(Long timeStamp, Integer status, String error, String message, String path) {
+        this.timeStamp = timeStamp;
         this.status = status;
-    }
-
-    public String getMensagem() {
-        return mensagem;
-    }
-
-    public void setMensagem(String mensagem) {
-        this.mensagem = mensagem;
+        this.error = error;
+        this.message = message;
+        this.path = path;
     }
 
     public Long getTimeStamp() {
@@ -32,9 +26,35 @@ public class StandardError implements Serializable {
         this.timeStamp = timeStamp;
     }
 
-    public StandardError(Integer status, String mensagem, Long timeStamp) {
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
         this.status = status;
-        this.mensagem = mensagem;
-        this.timeStamp = timeStamp;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }

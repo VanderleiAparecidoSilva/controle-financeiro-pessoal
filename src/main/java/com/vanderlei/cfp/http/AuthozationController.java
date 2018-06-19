@@ -42,6 +42,7 @@ public class AuthozationController {
         UsuarioSecurity usuarioSecurity = UsuarioSecurityGateway.authenticated();
         String token = jwtUtil.generateToken(usuarioSecurity.getUsername());
         response.addHeader("Authorization", "Bearer " + token);
+        response.addHeader("access-control-expose-headers", "Authorization");
         return ResponseEntity.noContent().build();
     }
 
