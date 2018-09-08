@@ -56,9 +56,4 @@ public class SwaggerConfig {
                 .version("1.0")
                 .build();
     }
-
-    @Bean
-    public UiConfiguration uiConfig() {
-        return new UiConfiguration(null);
-    }
 }

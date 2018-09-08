@@ -18,6 +18,7 @@ public class TestConfig {
     @Bean
     public boolean instantiateDatabase() {
         dbGateway.instantiateTestDatabase();
+
         return true;
     }
 
