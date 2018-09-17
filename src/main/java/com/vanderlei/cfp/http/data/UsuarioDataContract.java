@@ -10,73 +10,72 @@ import java.io.Serializable;
 
 public class UsuarioDataContract implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    @JsonIgnore
-    private String id;
+  @JsonIgnore private String id;
 
-    @NotEmpty(message = "Preenchimento obrigatório")
-    @Length(min = 5, max = 100, message = "O nome deve conter entre 5 e 100 caracteres")
-    private String nome;
+  @NotEmpty
+  @Length(min = 5, max = 100, message = "O nome deve conter entre 5 e 100 caracteres")
+  private String nome;
 
-    @Email
-    private String email;
+  @Email private String email;
 
-    @NotEmpty(message = "Preenchimento obrigatório")
-    private String senha;
+  @NotEmpty private String senha;
 
-    @NotNull(message = "Preenchimento obrigatório")
-    private Boolean permiteEmailLembrete;
+  @NotNull private Boolean permiteEmailLembrete;
 
-    public UsuarioDataContract() {
-    }
+  public UsuarioDataContract() {}
 
-    public UsuarioDataContract(final String id, final String nome, final String email, final String senha,
-                               final Boolean permiteEmailLembrete) {
-        this.id = id;
-        this.nome = nome;
-        this.email = email;
-        this.senha = senha;
-        this.permiteEmailLembrete = permiteEmailLembrete;
-    }
+  public UsuarioDataContract(
+      final String id,
+      final String nome,
+      final String email,
+      final String senha,
+      final Boolean permiteEmailLembrete) {
+    this.id = id;
+    this.nome = nome;
+    this.email = email;
+    this.senha = senha;
+    this.permiteEmailLembrete = permiteEmailLembrete;
+  }
 
-    public String getId() {
-        return id;
-    }
+  public String getId() {
+    return id;
+  }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+  public void setId(String id) {
+    this.id = id;
+  }
 
-    public String getNome() {
-        return nome;
-    }
+  public String getNome() {
+    return nome;
+  }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+  public void setNome(String nome) {
+    this.nome = nome;
+  }
 
-    public String getEmail() {
-        return email;
-    }
+  public String getEmail() {
+    return email;
+  }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-    public String getSenha() {
-        return senha;
-    }
+  public String getSenha() {
+    return senha;
+  }
 
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
+  public void setSenha(String senha) {
+    this.senha = senha;
+  }
 
-    public Boolean getPermiteEmailLembrete() {
-        return permiteEmailLembrete;
-    }
+  public Boolean getPermiteEmailLembrete() {
+    return permiteEmailLembrete;
+  }
 
-    public void setPermiteEmailLembrete(Boolean permiteEmailLembrete) {
-        this.permiteEmailLembrete = permiteEmailLembrete;
-    }
+  public void setPermiteEmailLembrete(Boolean permiteEmailLembrete) {
+    this.permiteEmailLembrete = permiteEmailLembrete;
+  }
 }

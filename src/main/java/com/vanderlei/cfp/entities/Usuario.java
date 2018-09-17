@@ -21,157 +21,146 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Document(collection = "usuario")
-@CompoundIndexes(
-        {
-                @CompoundIndex(name = "nome", def = "{'nome' : 1}"),
-                @CompoundIndex(name = "email", def = "{'email' : 1}"),
-                @CompoundIndex(name = "nome-email", def = "{'nome' : 1, 'email' : 1}")
-        }
-)
+@CompoundIndexes({
+  @CompoundIndex(name = "nome", def = "{'nome' : 1}"),
+  @CompoundIndex(name = "email", def = "{'email' : 1}"),
+  @CompoundIndex(name = "nome-email", def = "{'nome' : 1, 'email' : 1}")
+})
 public class Usuario implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    @Id
-    private String id;
+  @Id private String id;
 
-    @NotEmpty(message = "Preenchimento obrigatório")
-    private String nome;
+  @NotNull @NotEmpty private String nome;
 
-    @NotEmpty(message = "Preenchimento obrigatório")
-    @Column(unique = true)
-    private String email;
+  @NotNull
+  @NotEmpty
+  @Column(unique = true)
+  private String email;
 
-    @JsonIgnore
-    private String senha;
+  @JsonIgnore private String senha;
 
-    @NotNull(message = "Preenchimento obrigatório")
-    private Boolean permiteEmailLembrete;
+  @NotNull private Boolean permiteEmailLembrete;
 
-    @NotEmpty(message = "Preenchimento obrigatório")
-    private LocalDateTime dataInclusao;
+  @NotNull private LocalDateTime dataInclusao;
 
-    private LocalDateTime dataAlteracao;
+  private LocalDateTime dataAlteracao;
 
-    private LocalDateTime dataExclusao;
+  private LocalDateTime dataExclusao;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "PERFIS")
-    private Set<Integer> perfis;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "PERFIS")
+  private Set<Integer> perfis;
 
-    public Usuario() {
-        this.perfis = new HashSet<>();
-        this.permiteEmailLembrete = true;
-        addPerfil(Perfil.USUARIO);
-    }
+  public Usuario() {
+    this.perfis = new HashSet<>();
+    this.permiteEmailLembrete = true;
+    addPerfil(Perfil.USUARIO);
+  }
 
-    public Usuario(final String id, final String nome, final String email, final Boolean permiteEmailLembrete) {
-        this.perfis = new HashSet<>();
-        this.id = id;
-        this.nome = nome;
-        this.email = email;
-        this.permiteEmailLembrete = permiteEmailLembrete;
-        addPerfil(Perfil.USUARIO);
-    }
+  public Usuario(
+      final String id, final String nome, final String email, final Boolean permiteEmailLembrete) {
+    this.perfis = new HashSet<>();
+    this.id = id;
+    this.nome = nome;
+    this.email = email;
+    this.permiteEmailLembrete = permiteEmailLembrete;
+    addPerfil(Perfil.USUARIO);
+  }
 
-    public String getId() {
-        return id;
-    }
+  public String getId() {
+    return id;
+  }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+  public void setId(String id) {
+    this.id = id;
+  }
 
-    public String getNome() {
-        return nome;
-    }
+  public String getNome() {
+    return nome;
+  }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+  public void setNome(String nome) {
+    this.nome = nome;
+  }
 
-    public String getEmail() {
-        return email;
-    }
+  public String getEmail() {
+    return email;
+  }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-    public String getSenha() {
-        return senha;
-    }
+  public String getSenha() {
+    return senha;
+  }
 
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
+  public void setSenha(String senha) {
+    this.senha = senha;
+  }
 
-    public Boolean getPermiteEmailLembrete() {
-        return permiteEmailLembrete;
-    }
+  public Boolean getPermiteEmailLembrete() {
+    return permiteEmailLembrete;
+  }
 
-    public void setPermiteEmailLembrete(Boolean permiteEmailLembrete) {
-        this.permiteEmailLembrete = permiteEmailLembrete;
-    }
+  public void setPermiteEmailLembrete(Boolean permiteEmailLembrete) {
+    this.permiteEmailLembrete = permiteEmailLembrete;
+  }
 
-    public LocalDateTime getDataInclusao() {
-        return dataInclusao;
-    }
+  public LocalDateTime getDataInclusao() {
+    return dataInclusao;
+  }
 
-    public void setDataInclusao(LocalDateTime dataInclusao) {
-        this.dataInclusao = dataInclusao;
-    }
+  public void setDataInclusao(LocalDateTime dataInclusao) {
+    this.dataInclusao = dataInclusao;
+  }
 
-    public LocalDateTime getDataAlteracao() {
-        return dataAlteracao;
-    }
+  public LocalDateTime getDataAlteracao() {
+    return dataAlteracao;
+  }
 
-    public void setDataAlteracao(LocalDateTime dataAlteracao) {
-        this.dataAlteracao = dataAlteracao;
-    }
+  public void setDataAlteracao(LocalDateTime dataAlteracao) {
+    this.dataAlteracao = dataAlteracao;
+  }
 
-    public LocalDateTime getDataExclusao() {
-        return dataExclusao;
-    }
+  public LocalDateTime getDataExclusao() {
+    return dataExclusao;
+  }
 
-    public void setDataExclusao(LocalDateTime dataExclusao) {
-        this.dataExclusao = dataExclusao;
-    }
+  public void setDataExclusao(LocalDateTime dataExclusao) {
+    this.dataExclusao = dataExclusao;
+  }
 
-    public Set<Perfil> getPerfis() {
-        return perfis
-                .stream()
-                .map(x -> Perfil.toEnum(x))
-                .collect(Collectors.toSet());
-    }
+  public Set<Perfil> getPerfis() {
+    return perfis.stream().map(x -> Perfil.toEnum(x)).collect(Collectors.toSet());
+  }
 
-    public void addPerfil(Perfil perfil) {
-        perfis.add(perfil.getCodigo());
-    }
+  public void addPerfil(Perfil perfil) {
+    perfis.add(perfil.getCodigo());
+  }
 
-    @JsonIgnore
-    public boolean getAtivo() {
-        return this.dataExclusao == null;
-    }
+  @JsonIgnore
+  public boolean getAtivo() {
+    return this.dataExclusao == null;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Usuario usuario = (Usuario) o;
-        return Objects.equals(nome, usuario.nome) &&
-                Objects.equals(email, usuario.email);
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Usuario usuario = (Usuario) o;
+    return Objects.equals(nome, usuario.nome) && Objects.equals(email, usuario.email);
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(nome, email);
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(nome, email);
+  }
 
-    @Override
-    public String toString() {
-        return "[Usuário] - " +
-                "Nome = '" + nome + '\'' +
-                ", Email = '" + email + '\'';
-    }
+  @Override
+  public String toString() {
+    return "[Usuário] - " + "Nome = '" + nome + '\'' + ", Email = '" + email + '\'';
+  }
 }

@@ -22,8 +22,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.Collection;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -31,98 +29,88 @@ import java.util.stream.Collectors;
 @RequestMapping(UrlMapping.USUARIO)
 public class UsuarioController {
 
-    @Autowired
-    private UsuarioGateway gateway;
+  @Autowired private UsuarioGateway gateway;
 
-    @Autowired
-    private UsuarioDataContractConverter dataContractConverter;
+  @Autowired private UsuarioDataContractConverter dataContractConverter;
 
-    @Autowired
-    private UsuarioConverter converter;
+  @Autowired private UsuarioConverter converter;
 
-    @ApiOperation(value = "Buscar por codigo")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Sucesso")
-    })
-    @RequestMapping(value = "/id/{id}", method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> buscaPorId(@PathVariable final String id) {
-        Usuario obj = gateway.buscarPorCodigo(id);
-        final UsuarioDataContract dataContract = dataContractConverter.convert(obj);
-        return ResponseEntity
-                .ok().body(dataContract);
-    }
+  @ApiOperation(value = "Buscar por codigo")
+  @ApiResponses(value = {@ApiResponse(code = 200, message = "Sucesso")})
+  @RequestMapping(
+      value = "/id/{id}",
+      method = RequestMethod.GET,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Object> buscaPorId(@PathVariable final String id) {
+    Usuario obj = gateway.buscarPorCodigo(id);
+    final UsuarioDataContract dataContract = dataContractConverter.convert(obj);
+    return obj != null ? ResponseEntity.ok().body(dataContract) : ResponseEntity.notFound().build();
+  }
 
-    @ApiOperation(value = "Buscar por email")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Sucesso")
-    })
-    @RequestMapping(value = "/email", method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> buscaPorEmail(@RequestParam(value = "value") final String email) {
-        Usuario obj = gateway.buscarPorEmail(email);
-        final UsuarioDataContract dataContract = dataContractConverter.convert(obj);
-        return ResponseEntity
-                .ok().body(dataContract);
-    }
+  @ApiOperation(value = "Buscar por email")
+  @ApiResponses(value = {@ApiResponse(code = 200, message = "Sucesso")})
+  @RequestMapping(
+      value = "/email",
+      method = RequestMethod.GET,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Object> buscaPorEmail(@RequestParam(value = "value") final String email) {
+    Usuario obj = gateway.buscarPorEmail(email);
+    final UsuarioDataContract dataContract = dataContractConverter.convert(obj);
+    return ResponseEntity.ok().body(dataContract);
+  }
 
-    @ApiOperation(value = "Criar novo")
-    @ApiResponses( value = {
-            @ApiResponse(code = 201, message = "Inserido com sucesso")
-    })
-    @RequestMapping(method = RequestMethod.POST,
-        consumes = MediaType.APPLICATION_JSON_VALUE,
-        produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> inserir(@Valid @RequestBody final UsuarioDataContract dataContract) {
-        Usuario obj = converter.convert(dataContract);
-        gateway.inserir(obj);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(
-                obj.getId()).toUri();
-        return ResponseEntity.created(uri).build();
-    }
+  @ApiOperation(value = "Criar novo")
+  @ApiResponses(value = {@ApiResponse(code = 201, message = "Inserido com sucesso")})
+  @RequestMapping(
+      method = RequestMethod.POST,
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Void> inserir(@Valid @RequestBody final UsuarioDataContract dataContract) {
+    Usuario obj = converter.convert(dataContract);
+    gateway.inserir(obj);
+    URI uri =
+        ServletUriComponentsBuilder.fromCurrentRequest()
+            .path("/{id}")
+            .buildAndExpand(obj.getId())
+            .toUri();
+    return ResponseEntity.created(uri).build();
+  }
 
-    @ApiOperation(value = "Atualizar")
-    @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Atualizado com sucesso")
-    })
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Void> atualizar(@Valid @RequestBody final UsuarioDataContract dataContract,
-                                          @PathVariable final String id) {
-        Usuario obj = gateway.buscarPorCodigo(id);
-        Parsers.parse(id, obj, dataContract);
-        gateway.atualizar(obj);
-        return ResponseEntity.noContent().build();
-    }
+  @ApiOperation(value = "Atualizar")
+  @ApiResponses(value = {@ApiResponse(code = 204, message = "Atualizado com sucesso")})
+  @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+  public ResponseEntity<Void> atualizar(
+      @Valid @RequestBody final UsuarioDataContract dataContract, @PathVariable final String id) {
+    Usuario obj = gateway.buscarPorCodigo(id);
+    Parsers.parse(id, obj, dataContract);
+    gateway.atualizar(obj);
+    return ResponseEntity.noContent().build();
+  }
 
-    @PreAuthorize("hasAnyRole('ADMIN')")
-    @ApiOperation(value = "Ativar")
-    @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Ativado com sucesso")
-    })
-    @RequestMapping(value = "/ativar/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Void> ativar(@PathVariable final String id) {
-        gateway.ativar(id);
-        return ResponseEntity.noContent().build();
-    }
+  @PreAuthorize("hasAnyRole('ADMIN')")
+  @ApiOperation(value = "Ativar")
+  @ApiResponses(value = {@ApiResponse(code = 204, message = "Ativado com sucesso")})
+  @RequestMapping(value = "/ativar/{id}", method = RequestMethod.PUT)
+  public ResponseEntity<Void> ativar(@PathVariable final String id) {
+    gateway.ativar(id);
+    return ResponseEntity.noContent().build();
+  }
 
-    @PreAuthorize("hasAnyRole('ADMIN')")
-    @ApiOperation(value = "Desativar")
-    @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Desativado com sucesso")
-    })
-    @RequestMapping(value = "/desativar/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Void> desativar(@PathVariable final String id) {
-        gateway.desativar(id);
-        return ResponseEntity.noContent().build();
-    }
+  @PreAuthorize("hasAnyRole('ADMIN')")
+  @ApiOperation(value = "Desativar")
+  @ApiResponses(value = {@ApiResponse(code = 204, message = "Desativado com sucesso")})
+  @RequestMapping(value = "/desativar/{id}", method = RequestMethod.PUT)
+  public ResponseEntity<Void> desativar(@PathVariable final String id) {
+    gateway.desativar(id);
+    return ResponseEntity.noContent().build();
+  }
 
-    @ApiOperation(value = "Atualizar foto pessoal")
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Atualizado com sucesso")
-    })
-    @RequestMapping(value = "/foto", method = RequestMethod.POST)
-    public ResponseEntity<Void> uploadProfilePicture(@RequestParam(name = "arquivo") MultipartFile multipartFile) {
-        URI uri = gateway.atualizarFotoPessoal(multipartFile);
-        return ResponseEntity.created(uri).build();
-    }
+  @ApiOperation(value = "Atualizar foto pessoal")
+  @ApiResponses(value = {@ApiResponse(code = 201, message = "Atualizado com sucesso")})
+  @RequestMapping(value = "/foto", method = RequestMethod.POST)
+  public ResponseEntity<Void> uploadProfilePicture(
+      @RequestParam(name = "arquivo") MultipartFile multipartFile) {
+    URI uri = gateway.atualizarFotoPessoal(multipartFile);
+    return ResponseEntity.created(uri).build();
+  }
 }

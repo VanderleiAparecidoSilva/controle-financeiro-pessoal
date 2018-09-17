@@ -3,7 +3,6 @@ package com.vanderlei.cfp.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vanderlei.cfp.entities.enums.Status;
 import com.vanderlei.cfp.entities.enums.Tipo;
-import org.hibernate.validator.constraints.Length;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
@@ -20,255 +19,253 @@ import java.util.Locale;
 import java.util.UUID;
 
 @Document(collection = "lancamento")
-@CompoundIndexes(
-        {
-                @CompoundIndex(name = "nome", def = "{'nome' : 1}"),
-                @CompoundIndex(name = "tipo", def = "{'tipo' : 1}"),
-                @CompoundIndex(name = "status", def = "{'status' : 1}"),
-                @CompoundIndex(name = "nome-usuarionome", def = "{'nome' : 1, 'usuario.nome' : 1}"),
-                @CompoundIndex(name = "nome-usuarioemail", def = "{'nome' : 1, 'usuario.email' : 1}")
-        }
-)
+@CompoundIndexes({
+  @CompoundIndex(name = "nome", def = "{'nome' : 1}"),
+  @CompoundIndex(name = "tipo", def = "{'tipo' : 1}"),
+  @CompoundIndex(name = "status", def = "{'status' : 1}"),
+  @CompoundIndex(name = "nome-usuarionome", def = "{'nome' : 1, 'usuario.nome' : 1}"),
+  @CompoundIndex(name = "nome-usuarioemail", def = "{'nome' : 1, 'usuario.email' : 1}")
+})
 public class Lancamento implements Serializable {
 
-    public static final long serialVersionUID = 1L;
+  public static final long serialVersionUID = 1L;
 
-    @Id
-    private String id;
+  @Id private String id;
 
-    @NotNull(message = "Preenchimento obrigatório")
-    private UUID uuid;
+  @NotNull private UUID uuid;
 
-    @NotNull(message = "Preenchimento obrigatório")
-    private TituloLancamento nome;
+  @NotNull private TituloLancamento nome;
 
-    @NotNull(message = "Preenchimento obrigatório")
-    private CentroCusto centroCusto;
+  @NotNull private CentroCusto centroCusto;
 
-    @NotNull(message = "Preenchimento obrigatório")
-    private LocalDate vencimento;
+  @NotNull private LocalDate vencimento;
 
-    @NotNull(message = "Preenchimento obrigatório")
-    private Double valorParcela;
+  @NotNull private Double valorParcela;
 
-    @NotNull(message = "Preenchimento obrigatório")
-    private int quantidadeParcelas;
+  @NotNull private int quantidadeParcelas;
 
-    @JsonIgnore
-    private int parcela;
+  @JsonIgnore private int parcela;
 
-    private boolean gerarParcelaUnica;
+  private boolean gerarParcelaUnica;
 
-    private ContaBancaria contaBancaria;
+  private ContaBancaria contaBancaria;
 
-    private String observacao;
+  private String observacao;
 
-    @NotNull(message = "Preenchimento obrigatório")
-    private Status status;
+  @NotNull private Status status;
 
-    @NotNull(message = "Preenchimento obrigatório")
-    private Tipo tipo;
+  @NotNull private Tipo tipo;
 
-    @NotNull(message = "O usuario deve ser informado")
-    private Usuario usuario;
+  @NotNull private Usuario usuario;
 
-    private Baixa baixa;
+  private Baixa baixa;
 
-    @NotEmpty(message = "Preenchimento obrigatório")
-    private LocalDateTime dataInclusao;
+  @NotEmpty private LocalDateTime dataInclusao;
 
-    private LocalDateTime dataAlteracao;
+  private LocalDateTime dataAlteracao;
 
-    private LocalDateTime dataExclusao;
+  private LocalDateTime dataExclusao;
 
-    public Lancamento() {
-        this.tipo = Tipo.DESPESA;
-    }
+  public Lancamento() {
+    this.tipo = Tipo.DESPESA;
+  }
 
-    public Lancamento(final String id, final UUID uuid, final TituloLancamento nome, final CentroCusto centroCusto,
-                      final LocalDate vencimento, final Double valorParcela, final int quantidadeParcelas, final int parcela,
-                      final boolean gerarParcelaUnica, final ContaBancaria contaBancaria, final String observacao,
-                      final Status status, final Tipo tipo, final Usuario usuario, final Baixa baixa) {
-        this.id = id;
-        this.uuid = uuid;
-        this.nome = nome;
-        this.centroCusto = centroCusto;
-        this.vencimento = vencimento;
-        this.valorParcela = valorParcela;
-        this.quantidadeParcelas = quantidadeParcelas;
-        this.parcela = parcela;
-        this.gerarParcelaUnica = gerarParcelaUnica;
-        this.contaBancaria = contaBancaria;
-        this.observacao = observacao;
-        this.status = status;
-        this.tipo = tipo;
-        this.usuario = usuario;
-        this.baixa = baixa;
-    }
+  public Lancamento(
+      final String id,
+      final UUID uuid,
+      final TituloLancamento nome,
+      final CentroCusto centroCusto,
+      final LocalDate vencimento,
+      final Double valorParcela,
+      final int quantidadeParcelas,
+      final int parcela,
+      final boolean gerarParcelaUnica,
+      final ContaBancaria contaBancaria,
+      final String observacao,
+      final Status status,
+      final Tipo tipo,
+      final Usuario usuario,
+      final Baixa baixa) {
+    this.id = id;
+    this.uuid = uuid;
+    this.nome = nome;
+    this.centroCusto = centroCusto;
+    this.vencimento = vencimento;
+    this.valorParcela = valorParcela;
+    this.quantidadeParcelas = quantidadeParcelas;
+    this.parcela = parcela;
+    this.gerarParcelaUnica = gerarParcelaUnica;
+    this.contaBancaria = contaBancaria;
+    this.observacao = observacao;
+    this.status = status;
+    this.tipo = tipo;
+    this.usuario = usuario;
+    this.baixa = baixa;
+  }
 
-    public String getId() {
-        return id;
-    }
+  public String getId() {
+    return id;
+  }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+  public void setId(String id) {
+    this.id = id;
+  }
 
-    public UUID getUuid() {
-        return uuid;
-    }
+  public UUID getUuid() {
+    return uuid;
+  }
 
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
+  public void setUuid(UUID uuid) {
+    this.uuid = uuid;
+  }
 
-    public TituloLancamento getNome() {
-        return nome;
-    }
+  public TituloLancamento getNome() {
+    return nome;
+  }
 
-    public void setNome(TituloLancamento nome) {
-        this.nome = nome;
-    }
+  public void setNome(TituloLancamento nome) {
+    this.nome = nome;
+  }
 
-    public CentroCusto getCentroCusto() {
-        return centroCusto;
-    }
+  public CentroCusto getCentroCusto() {
+    return centroCusto;
+  }
 
-    public void setCentroCusto(CentroCusto centroCusto) {
-        this.centroCusto = centroCusto;
-    }
+  public void setCentroCusto(CentroCusto centroCusto) {
+    this.centroCusto = centroCusto;
+  }
 
-    public LocalDate getVencimento() {
-        return vencimento;
-    }
+  public LocalDate getVencimento() {
+    return vencimento;
+  }
 
-    public void setVencimento(LocalDate vencimento) {
-        this.vencimento = vencimento;
-    }
+  public void setVencimento(LocalDate vencimento) {
+    this.vencimento = vencimento;
+  }
 
-    public Double getValorParcela() {
-        return valorParcela;
-    }
+  public Double getValorParcela() {
+    return valorParcela;
+  }
 
-    public void setValorParcela(Double valorParcela) {
-        this.valorParcela = valorParcela;
-    }
+  public void setValorParcela(Double valorParcela) {
+    this.valorParcela = valorParcela;
+  }
 
-    public int getQuantidadeParcelas() {
-        return quantidadeParcelas;
-    }
+  public int getQuantidadeParcelas() {
+    return quantidadeParcelas;
+  }
 
-    public void setQuantidadeParcelas(int quantidadeParcelas) {
-        this.quantidadeParcelas = quantidadeParcelas;
-    }
+  public void setQuantidadeParcelas(int quantidadeParcelas) {
+    this.quantidadeParcelas = quantidadeParcelas;
+  }
 
-    public int getParcela() {
-        return parcela;
-    }
+  public int getParcela() {
+    return parcela;
+  }
 
-    public void setParcela(int parcela) {
-        this.parcela = parcela;
-    }
+  public void setParcela(int parcela) {
+    this.parcela = parcela;
+  }
 
-    public boolean isGerarParcelaUnica() {
-        return gerarParcelaUnica;
-    }
+  public boolean isGerarParcelaUnica() {
+    return gerarParcelaUnica;
+  }
 
-    public void setGerarParcelaUnica(boolean gerarParcelaUnica) {
-        this.gerarParcelaUnica = gerarParcelaUnica;
-    }
+  public void setGerarParcelaUnica(boolean gerarParcelaUnica) {
+    this.gerarParcelaUnica = gerarParcelaUnica;
+  }
 
-    public String getParcelaAtualTotalParcela() {
-        return this.parcela + "/" + this.quantidadeParcelas;
-    }
+  public String getParcelaAtualTotalParcela() {
+    return this.parcela + "/" + this.quantidadeParcelas;
+  }
 
-    public ContaBancaria getContaBancaria() {
-        return contaBancaria;
-    }
+  public ContaBancaria getContaBancaria() {
+    return contaBancaria;
+  }
 
-    public void setContaBancaria(ContaBancaria contaBancaria) {
-        this.contaBancaria = contaBancaria;
-    }
+  public void setContaBancaria(ContaBancaria contaBancaria) {
+    this.contaBancaria = contaBancaria;
+  }
 
-    public String getObservacao() {
-        return observacao;
-    }
+  public String getObservacao() {
+    return observacao;
+  }
 
-    public void setObservacao(String observacao) {
-        this.observacao = observacao;
-    }
+  public void setObservacao(String observacao) {
+    this.observacao = observacao;
+  }
 
-    public Status getStatus() {
-        return status;
-    }
+  public Status getStatus() {
+    return status;
+  }
 
-    public void setStatus(Status status) {
-        this.status = status;
-    }
+  public void setStatus(Status status) {
+    this.status = status;
+  }
 
-    public Tipo getTipo() {
-        return tipo;
-    }
+  public Tipo getTipo() {
+    return tipo;
+  }
 
-    public void setTipo(Tipo tipo) {
-        this.tipo = tipo;
-    }
+  public void setTipo(Tipo tipo) {
+    this.tipo = tipo;
+  }
 
-    public Usuario getUsuario() {
-        return usuario;
-    }
+  public Usuario getUsuario() {
+    return usuario;
+  }
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
+  public void setUsuario(Usuario usuario) {
+    this.usuario = usuario;
+  }
 
-    public Baixa getBaixa() {
-        return baixa;
-    }
+  public Baixa getBaixa() {
+    return baixa;
+  }
 
-    public void setBaixa(Baixa baixa) {
-        this.baixa = baixa;
-    }
+  public void setBaixa(Baixa baixa) {
+    this.baixa = baixa;
+  }
 
-    public LocalDateTime getDataInclusao() {
-        return dataInclusao;
-    }
+  public LocalDateTime getDataInclusao() {
+    return dataInclusao;
+  }
 
-    public void setDataInclusao(LocalDateTime dataInclusao) {
-        this.dataInclusao = dataInclusao;
-    }
+  public void setDataInclusao(LocalDateTime dataInclusao) {
+    this.dataInclusao = dataInclusao;
+  }
 
-    public LocalDateTime getDataAlteracao() {
-        return dataAlteracao;
-    }
+  public LocalDateTime getDataAlteracao() {
+    return dataAlteracao;
+  }
 
-    public void setDataAlteracao(LocalDateTime dataAlteracao) {
-        this.dataAlteracao = dataAlteracao;
-    }
+  public void setDataAlteracao(LocalDateTime dataAlteracao) {
+    this.dataAlteracao = dataAlteracao;
+  }
 
-    public LocalDateTime getDataExclusao() {
-        return dataExclusao;
-    }
+  public LocalDateTime getDataExclusao() {
+    return dataExclusao;
+  }
 
-    public void setDataExclusao(LocalDateTime dataExclusao) {
-        this.dataExclusao = dataExclusao;
-    }
+  public void setDataExclusao(LocalDateTime dataExclusao) {
+    this.dataExclusao = dataExclusao;
+  }
 
-    @Override
-    public String toString() {
-        NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
-        final StringBuilder sb = new StringBuilder("Lancamento{");
-        sb.append("Vencimento: ");
-        sb.append(getVencimento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        sb.append(", Descrição: ");
-        sb.append(getNome().getNome());
-        sb.append(", Valor: ");
-        sb.append(nf.format(getValorParcela()));
-        sb.append(", Parcela: ");
-        sb.append(getParcelaAtualTotalParcela());
-        sb.append(", Observação: ");
-        sb.append(getObservacao());
-        sb.append("\n");
-        return sb.toString();
-    }
+  @Override
+  public String toString() {
+    NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+    final StringBuilder sb = new StringBuilder("Lancamento{");
+    sb.append("Vencimento: ");
+    sb.append(getVencimento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+    sb.append(", Descrição: ");
+    sb.append(getNome().getNome());
+    sb.append(", Valor: ");
+    sb.append(nf.format(getValorParcela()));
+    sb.append(", Parcela: ");
+    sb.append(getParcelaAtualTotalParcela());
+    sb.append(", Observação: ");
+    sb.append(getObservacao());
+    sb.append("\n");
+    return sb.toString();
+  }
 }

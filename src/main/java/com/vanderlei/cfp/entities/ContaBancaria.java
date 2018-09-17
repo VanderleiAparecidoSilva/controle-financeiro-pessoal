@@ -13,165 +13,164 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Document(collection = "contaBancaria")
-@CompoundIndexes(
-        {
-                @CompoundIndex(name = "nome", def = "{'nome' : 1}"),
-                @CompoundIndex(name = "numerocontabancaria", def = "{'numeroContaBancaria' : 1}"),
-                @CompoundIndex(name = "nome-usuarionome", def = "{'nome' : 1, 'usuario.nome' : 1}"),
-                @CompoundIndex(name = "nome-usuarioemail", def = "{'nome' : 1, 'usuario.email' : 1}")
-        }
-)
+@CompoundIndexes({
+  @CompoundIndex(name = "nome", def = "{'nome' : 1}"),
+  @CompoundIndex(name = "numerocontabancaria", def = "{'numeroContaBancaria' : 1}"),
+  @CompoundIndex(name = "nome-usuarionome", def = "{'nome' : 1, 'usuario.nome' : 1}"),
+  @CompoundIndex(name = "nome-usuarioemail", def = "{'nome' : 1, 'usuario.email' : 1}")
+})
 public class ContaBancaria implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    @Id
-    private String id;
+  @Id private String id;
 
-    @NotEmpty(message = "Preenchimento obrigatório")
-    @Length(min = 5, max = 100, message = "O nome deve conter entre 5 e 100 caracteres")
-    private String nome;
+  @NotEmpty
+  @Length(min = 5, max = 100, message = "O nome deve conter entre 5 e 100 caracteres")
+  private String nome;
 
-    private String numeroContaBancaria;
+  private String numeroContaBancaria;
 
-    private Double limiteContaBancaria;
+  private Double limiteContaBancaria;
 
-    private Double saldoContaBancaria;
+  private Double saldoContaBancaria;
 
-    private Boolean vincularSaldoBancarioNoTotalReceita;
+  private Boolean vincularSaldoBancarioNoTotalReceita;
 
-    private Boolean atualizarSaldoBancarioNaBaixaTitulo;
+  private Boolean atualizarSaldoBancarioNaBaixaTitulo;
 
-    @NotNull(message = "O usuario deve ser informado")
-    private Usuario usuario;
+  @NotNull private Usuario usuario;
 
-    @NotEmpty(message = "Preenchimento obrigatório")
-    private LocalDateTime dataInclusao;
+  @NotEmpty private LocalDateTime dataInclusao;
 
-    private LocalDateTime dataAlteracao;
+  private LocalDateTime dataAlteracao;
 
-    private LocalDateTime dataExclusao;
+  private LocalDateTime dataExclusao;
 
-    public ContaBancaria() {
-    }
+  public ContaBancaria() {}
 
-    public ContaBancaria(final String id, final String nome, final String numeroContaBancaria,
-                         final Double limiteContaBancaria, final Double saldoContaBancaria,
-                         final Boolean vincularSaldoBancarioNoTotalReceita,
-                         final Boolean atualizarSaldoBancarioNaBaixaTitulo, final Usuario usuario) {
-        this.id = id;
-        this.nome = nome;
-        this.numeroContaBancaria = numeroContaBancaria;
-        this.limiteContaBancaria = limiteContaBancaria;
-        this.saldoContaBancaria = saldoContaBancaria;
-        this.vincularSaldoBancarioNoTotalReceita = vincularSaldoBancarioNoTotalReceita;
-        this.atualizarSaldoBancarioNaBaixaTitulo = atualizarSaldoBancarioNaBaixaTitulo;
-        this.usuario = usuario;
-    }
+  public ContaBancaria(
+      final String id,
+      final String nome,
+      final String numeroContaBancaria,
+      final Double limiteContaBancaria,
+      final Double saldoContaBancaria,
+      final Boolean vincularSaldoBancarioNoTotalReceita,
+      final Boolean atualizarSaldoBancarioNaBaixaTitulo,
+      final Usuario usuario) {
+    this.id = id;
+    this.nome = nome;
+    this.numeroContaBancaria = numeroContaBancaria;
+    this.limiteContaBancaria = limiteContaBancaria;
+    this.saldoContaBancaria = saldoContaBancaria;
+    this.vincularSaldoBancarioNoTotalReceita = vincularSaldoBancarioNoTotalReceita;
+    this.atualizarSaldoBancarioNaBaixaTitulo = atualizarSaldoBancarioNaBaixaTitulo;
+    this.usuario = usuario;
+  }
 
-    public String getId() {
-        return id;
-    }
+  public String getId() {
+    return id;
+  }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+  public void setId(String id) {
+    this.id = id;
+  }
 
-    public String getNome() {
-        return nome;
-    }
+  public String getNome() {
+    return nome;
+  }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+  public void setNome(String nome) {
+    this.nome = nome;
+  }
 
-    public String getNumeroContaBancaria() {
-        return numeroContaBancaria;
-    }
+  public String getNumeroContaBancaria() {
+    return numeroContaBancaria;
+  }
 
-    public void setNumeroContaBancaria(String numeroContaBancaria) {
-        this.numeroContaBancaria = numeroContaBancaria;
-    }
+  public void setNumeroContaBancaria(String numeroContaBancaria) {
+    this.numeroContaBancaria = numeroContaBancaria;
+  }
 
-    public Double getLimiteContaBancaria() {
-        return limiteContaBancaria;
-    }
+  public Double getLimiteContaBancaria() {
+    return limiteContaBancaria;
+  }
 
-    public void setLimiteContaBancaria(Double limiteContaBancaria) {
-        this.limiteContaBancaria = limiteContaBancaria;
-    }
+  public void setLimiteContaBancaria(Double limiteContaBancaria) {
+    this.limiteContaBancaria = limiteContaBancaria;
+  }
 
-    public Double getSaldoContaBancaria() {
-        return saldoContaBancaria;
-    }
+  public Double getSaldoContaBancaria() {
+    return saldoContaBancaria;
+  }
 
-    public void setSaldoContaBancaria(Double saldoContaBancaria) {
-        this.saldoContaBancaria = saldoContaBancaria;
-    }
+  public void setSaldoContaBancaria(Double saldoContaBancaria) {
+    this.saldoContaBancaria = saldoContaBancaria;
+  }
 
-    public Boolean getVincularSaldoBancarioNoTotalReceita() {
-        return vincularSaldoBancarioNoTotalReceita;
-    }
+  public Boolean getVincularSaldoBancarioNoTotalReceita() {
+    return vincularSaldoBancarioNoTotalReceita;
+  }
 
-    public void setVincularSaldoBancarioNoTotalReceita(Boolean vincularSaldoBancarioNoTotalReceita) {
-        this.vincularSaldoBancarioNoTotalReceita = vincularSaldoBancarioNoTotalReceita;
-    }
+  public void setVincularSaldoBancarioNoTotalReceita(Boolean vincularSaldoBancarioNoTotalReceita) {
+    this.vincularSaldoBancarioNoTotalReceita = vincularSaldoBancarioNoTotalReceita;
+  }
 
-    public Boolean getAtualizarSaldoBancarioNaBaixaTitulo() {
-        return atualizarSaldoBancarioNaBaixaTitulo;
-    }
+  public Boolean getAtualizarSaldoBancarioNaBaixaTitulo() {
+    return atualizarSaldoBancarioNaBaixaTitulo;
+  }
 
-    public void setAtualizarSaldoBancarioNaBaixaTitulo(Boolean atualizarSaldoBancarioNaBaixaTitulo) {
-        this.atualizarSaldoBancarioNaBaixaTitulo = atualizarSaldoBancarioNaBaixaTitulo;
-    }
+  public void setAtualizarSaldoBancarioNaBaixaTitulo(Boolean atualizarSaldoBancarioNaBaixaTitulo) {
+    this.atualizarSaldoBancarioNaBaixaTitulo = atualizarSaldoBancarioNaBaixaTitulo;
+  }
 
-    public Usuario getUsuario() {
-        return usuario;
-    }
+  public Usuario getUsuario() {
+    return usuario;
+  }
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
+  public void setUsuario(Usuario usuario) {
+    this.usuario = usuario;
+  }
 
-    public LocalDateTime getDataInclusao() {
-        return dataInclusao;
-    }
+  public LocalDateTime getDataInclusao() {
+    return dataInclusao;
+  }
 
-    public void setDataInclusao(LocalDateTime dataInclusao) {
-        this.dataInclusao = dataInclusao;
-    }
+  public void setDataInclusao(LocalDateTime dataInclusao) {
+    this.dataInclusao = dataInclusao;
+  }
 
-    public LocalDateTime getDataAlteracao() {
-        return dataAlteracao;
-    }
+  public LocalDateTime getDataAlteracao() {
+    return dataAlteracao;
+  }
 
-    public void setDataAlteracao(LocalDateTime dataAlteracao) {
-        this.dataAlteracao = dataAlteracao;
-    }
+  public void setDataAlteracao(LocalDateTime dataAlteracao) {
+    this.dataAlteracao = dataAlteracao;
+  }
 
-    public LocalDateTime getDataExclusao() {
-        return dataExclusao;
-    }
+  public LocalDateTime getDataExclusao() {
+    return dataExclusao;
+  }
 
-    public void setDataExclusao(LocalDateTime dataExclusao) {
-        this.dataExclusao = dataExclusao;
-    }
+  public void setDataExclusao(LocalDateTime dataExclusao) {
+    this.dataExclusao = dataExclusao;
+  }
 
-    public boolean getAtivo() {
-        return this.dataExclusao == null;
-    }
+  public boolean getAtivo() {
+    return this.dataExclusao == null;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ContaBancaria that = (ContaBancaria) o;
-        return Objects.equals(id, that.id);
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    ContaBancaria that = (ContaBancaria) o;
+    return Objects.equals(id, that.id);
+  }
 
-    @Override
-    public int hashCode() {
+  @Override
+  public int hashCode() {
 
-        return Objects.hash(id);
-    }
+    return Objects.hash(id);
+  }
 }

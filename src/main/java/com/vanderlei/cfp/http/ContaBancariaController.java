@@ -29,125 +29,129 @@ import java.util.stream.Collectors;
 @RequestMapping(UrlMapping.CONTA_BANCARIA)
 public class ContaBancariaController {
 
-    @Autowired
-    private ContaBancariaGateway gateway;
+  @Autowired private ContaBancariaGateway gateway;
 
-    @Autowired
-    private ContaBancariaDataContractConverter dataContractConverter;
+  @Autowired private ContaBancariaDataContractConverter dataContractConverter;
 
-    @Autowired
-    private ContaBancariaConverter converter;
+  @Autowired private ContaBancariaConverter converter;
 
-    @Autowired
-    private UsuarioDataContractConverter usuarioDataContractConverter;
+  @Autowired private UsuarioDataContractConverter usuarioDataContractConverter;
 
-    @ApiOperation(value = "Buscar por codigo")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Sucesso")
-    })
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> buscaPorId(@PathVariable final String id) {
-        ContaBancaria obj = gateway.buscarPorCodigo(id);
-        final ContaBancariaDataContract dataContract = dataContractConverter.convert(obj);
-        return ResponseEntity
-                .ok().body(dataContract);
-    }
+  @ApiOperation(value = "Buscar por codigo")
+  @ApiResponses(value = {@ApiResponse(code = 200, message = "Sucesso")})
+  @RequestMapping(
+      value = "/{id}",
+      method = RequestMethod.GET,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Object> buscaPorId(@PathVariable final String id) {
+    ContaBancaria obj = gateway.buscarPorCodigo(id);
+    final ContaBancariaDataContract dataContract = dataContractConverter.convert(obj);
+    return obj != null ? ResponseEntity.ok().body(dataContract) : ResponseEntity.notFound().build();
+  }
 
-    @ApiOperation(value = "Buscar todos por usuário")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Sucesso")
-    })
-    @RequestMapping(method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<ContaBancariaDataContract>> buscaTodos() {
-        Collection<ContaBancaria> objList = gateway.buscarTodosPorUsuario();
-        Collection<ContaBancariaDataContract> dataContractList = objList
-                .stream()
-                .map(obj -> new ContaBancariaDataContract(obj.getId(), obj.getNome(),
-                        obj.getNumeroContaBancaria(), obj.getLimiteContaBancaria(), obj.getSaldoContaBancaria(),
-                        obj.getVincularSaldoBancarioNoTotalReceita(), obj.getAtualizarSaldoBancarioNaBaixaTitulo(),
+  @ApiOperation(value = "Buscar todos por usuário")
+  @ApiResponses(value = {@ApiResponse(code = 200, message = "Sucesso")})
+  @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Collection<ContaBancariaDataContract>> buscaTodos() {
+    Collection<ContaBancaria> objList = gateway.buscarTodosPorUsuario();
+    Collection<ContaBancariaDataContract> dataContractList =
+        objList
+            .stream()
+            .map(
+                obj ->
+                    new ContaBancariaDataContract(
+                        obj.getId(),
+                        obj.getNome(),
+                        obj.getNumeroContaBancaria(),
+                        obj.getLimiteContaBancaria(),
+                        obj.getSaldoContaBancaria(),
+                        obj.getVincularSaldoBancarioNoTotalReceita(),
+                        obj.getAtualizarSaldoBancarioNaBaixaTitulo(),
                         usuarioDataContractConverter.convert(obj.getUsuario())))
-                .collect(Collectors.toList());
-        return ResponseEntity
-                .ok().body(dataContractList);
-    }
+            .collect(Collectors.toList());
+    return ResponseEntity.ok().body(dataContractList);
+  }
 
-    @ApiOperation(value = "Buscar todos ativos por usuário")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Sucesso")
-    })
-    @RequestMapping(value = "/ativos", method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<ContaBancariaDataContract>> buscaTodosAtivos() {
-        Collection<ContaBancaria> objList = gateway.buscarTodosAtivosPorUsuario();
-        Collection<ContaBancariaDataContract> dataContractList = objList
-                .stream()
-                .map(obj -> new ContaBancariaDataContract(obj.getId(), obj.getNome(),
-                        obj.getNumeroContaBancaria(), obj.getLimiteContaBancaria(), obj.getSaldoContaBancaria(),
-                        obj.getVincularSaldoBancarioNoTotalReceita(), obj.getAtualizarSaldoBancarioNaBaixaTitulo(),
+  @ApiOperation(value = "Buscar todos ativos por usuário")
+  @ApiResponses(value = {@ApiResponse(code = 200, message = "Sucesso")})
+  @RequestMapping(
+      value = "/ativos",
+      method = RequestMethod.GET,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Collection<ContaBancariaDataContract>> buscaTodosAtivos() {
+    Collection<ContaBancaria> objList = gateway.buscarTodosAtivosPorUsuario();
+    Collection<ContaBancariaDataContract> dataContractList =
+        objList
+            .stream()
+            .map(
+                obj ->
+                    new ContaBancariaDataContract(
+                        obj.getId(),
+                        obj.getNome(),
+                        obj.getNumeroContaBancaria(),
+                        obj.getLimiteContaBancaria(),
+                        obj.getSaldoContaBancaria(),
+                        obj.getVincularSaldoBancarioNoTotalReceita(),
+                        obj.getAtualizarSaldoBancarioNaBaixaTitulo(),
                         usuarioDataContractConverter.convert(obj.getUsuario())))
-                .collect(Collectors.toList());
-        return ResponseEntity
-                .ok().body(dataContractList);
-    }
+            .collect(Collectors.toList());
+    return ResponseEntity.ok().body(dataContractList);
+  }
 
-    @ApiOperation(value = "Criar novo")
-    @ApiResponses( value = {
-            @ApiResponse(code = 201, message = "Inserido com sucesso")
-    })
-    @RequestMapping(method = RequestMethod.POST,
-        consumes = MediaType.APPLICATION_JSON_VALUE,
-        produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> inserir(@Valid @RequestBody final ContaBancariaDataContract dataContract) {
-        ContaBancaria obj = converter.convert(dataContract);
-        gateway.inserir(obj);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(
-                obj.getId()).toUri();
-        return ResponseEntity.created(uri).build();
-    }
+  @ApiOperation(value = "Criar novo")
+  @ApiResponses(value = {@ApiResponse(code = 201, message = "Inserido com sucesso")})
+  @RequestMapping(
+      method = RequestMethod.POST,
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Void> inserir(
+      @Valid @RequestBody final ContaBancariaDataContract dataContract) {
+    ContaBancaria obj = converter.convert(dataContract);
+    gateway.inserir(obj);
+    URI uri =
+        ServletUriComponentsBuilder.fromCurrentRequest()
+            .path("/{id}")
+            .buildAndExpand(obj.getId())
+            .toUri();
+    return ResponseEntity.created(uri).build();
+  }
 
-    @ApiOperation(value = "Atualizar")
-    @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Atualizado com sucesso")
-    })
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Void> atualizar(@Valid @RequestBody final ContaBancariaDataContract dataContract,
-                                          @PathVariable final String id) {
-        ContaBancaria obj = gateway.buscarPorCodigo(id);
-        Parsers.parse(id, obj, dataContract);
-        gateway.atualizar(obj);
-        return ResponseEntity.noContent().build();
-    }
+  @ApiOperation(value = "Atualizar")
+  @ApiResponses(value = {@ApiResponse(code = 204, message = "Atualizado com sucesso")})
+  @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+  public ResponseEntity<Void> atualizar(
+      @Valid @RequestBody final ContaBancariaDataContract dataContract,
+      @PathVariable final String id) {
+    ContaBancaria obj = gateway.buscarPorCodigo(id);
+    Parsers.parse(id, obj, dataContract);
+    gateway.atualizar(obj);
+    return ResponseEntity.noContent().build();
+  }
 
-    @ApiOperation(value = "Ativar")
-    @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Ativado com sucesso")
-    })
-    @RequestMapping(value = "/ativar/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Void> ativar(@PathVariable final String id) {
-        gateway.ativar(id);
-        return ResponseEntity.noContent().build();
-    }
+  @ApiOperation(value = "Ativar")
+  @ApiResponses(value = {@ApiResponse(code = 204, message = "Ativado com sucesso")})
+  @RequestMapping(value = "/ativar/{id}", method = RequestMethod.PUT)
+  public ResponseEntity<Void> ativar(@PathVariable final String id) {
+    gateway.ativar(id);
+    return ResponseEntity.noContent().build();
+  }
 
-    @ApiOperation(value = "Desativar")
-    @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Desativado com sucesso")
-    })
-    @RequestMapping(value = "/desativar/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Void> desativar(@PathVariable final String id) {
-        gateway.desativar(id);
-        return ResponseEntity.noContent().build();
-    }
+  @ApiOperation(value = "Desativar")
+  @ApiResponses(value = {@ApiResponse(code = 204, message = "Desativado com sucesso")})
+  @RequestMapping(value = "/desativar/{id}", method = RequestMethod.PUT)
+  public ResponseEntity<Void> desativar(@PathVariable final String id) {
+    gateway.desativar(id);
+    return ResponseEntity.noContent().build();
+  }
 
-    @ApiOperation(value = "Atualizar Saldo")
-    @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Saldo atualizado com sucesso")
-    })
-    @RequestMapping(value = "/saldo/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Void> saldo(@PathVariable final String id, @PathVariable final Double valor,
-                                      @PathVariable final Operacao operacao) {
-        gateway.atualizarSaldo(id, valor, operacao);
-        return ResponseEntity.noContent().build();
-    }
+  @ApiOperation(value = "Atualizar Saldo")
+  @ApiResponses(value = {@ApiResponse(code = 204, message = "Saldo atualizado com sucesso")})
+  @RequestMapping(value = "/saldo/{id}", method = RequestMethod.PUT)
+  public ResponseEntity<Void> saldo(
+      @PathVariable final String id,
+      @PathVariable final Double valor,
+      @PathVariable final Operacao operacao) {
+    gateway.atualizarSaldo(id, valor, operacao);
+    return ResponseEntity.noContent().build();
+  }
 }
