@@ -1,6 +1,7 @@
 package com.vanderlei.cfp.http;
 
 import com.vanderlei.cfp.entities.Usuario;
+import com.vanderlei.cfp.events.ResourceEvent;
 import com.vanderlei.cfp.gateways.UsuarioGateway;
 import com.vanderlei.cfp.gateways.converters.Parsers;
 import com.vanderlei.cfp.gateways.converters.UsuarioConverter;
@@ -13,13 +14,15 @@ import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.net.URI;
 
@@ -34,6 +37,8 @@ public class UsuarioController {
   @Autowired private UsuarioDataContractConverter dataContractConverter;
 
   @Autowired private UsuarioConverter converter;
+
+  @Autowired private ApplicationEventPublisher publisher;
 
   @ApiOperation(value = "Buscar por codigo")
   @ApiResponses(value = {@ApiResponse(code = 200, message = "Sucesso")})
@@ -65,15 +70,12 @@ public class UsuarioController {
       method = RequestMethod.POST,
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Void> inserir(@Valid @RequestBody final UsuarioDataContract dataContract) {
+  public ResponseEntity<Usuario> inserir(
+      @Valid @RequestBody final UsuarioDataContract dataContract, HttpServletResponse response) {
     Usuario obj = converter.convert(dataContract);
     gateway.inserir(obj);
-    URI uri =
-        ServletUriComponentsBuilder.fromCurrentRequest()
-            .path("/{id}")
-            .buildAndExpand(obj.getId())
-            .toUri();
-    return ResponseEntity.created(uri).build();
+    publisher.publishEvent(new ResourceEvent(this, response, obj.getId()));
+    return ResponseEntity.status(HttpStatus.CREATED).body(obj);
   }
 
   @ApiOperation(value = "Atualizar")

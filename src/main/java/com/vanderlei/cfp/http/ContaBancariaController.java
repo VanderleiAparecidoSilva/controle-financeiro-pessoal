@@ -2,6 +2,7 @@ package com.vanderlei.cfp.http;
 
 import com.vanderlei.cfp.entities.ContaBancaria;
 import com.vanderlei.cfp.entities.enums.Operacao;
+import com.vanderlei.cfp.events.ResourceEvent;
 import com.vanderlei.cfp.gateways.ContaBancariaGateway;
 import com.vanderlei.cfp.gateways.converters.ContaBancariaConverter;
 import com.vanderlei.cfp.gateways.converters.ContaBancariaDataContractConverter;
@@ -14,13 +15,14 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -36,6 +38,8 @@ public class ContaBancariaController {
   @Autowired private ContaBancariaConverter converter;
 
   @Autowired private UsuarioDataContractConverter usuarioDataContractConverter;
+
+  @Autowired private ApplicationEventPublisher publisher;
 
   @ApiOperation(value = "Buscar por codigo")
   @ApiResponses(value = {@ApiResponse(code = 200, message = "Sucesso")})
@@ -104,16 +108,13 @@ public class ContaBancariaController {
       method = RequestMethod.POST,
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Void> inserir(
-      @Valid @RequestBody final ContaBancariaDataContract dataContract) {
+  public ResponseEntity<ContaBancaria> inserir(
+      @Valid @RequestBody final ContaBancariaDataContract dataContract,
+      HttpServletResponse response) {
     ContaBancaria obj = converter.convert(dataContract);
     gateway.inserir(obj);
-    URI uri =
-        ServletUriComponentsBuilder.fromCurrentRequest()
-            .path("/{id}")
-            .buildAndExpand(obj.getId())
-            .toUri();
-    return ResponseEntity.created(uri).build();
+    publisher.publishEvent(new ResourceEvent(this, response, obj.getId()));
+    return ResponseEntity.status(HttpStatus.CREATED).body(obj);
   }
 
   @ApiOperation(value = "Atualizar")
