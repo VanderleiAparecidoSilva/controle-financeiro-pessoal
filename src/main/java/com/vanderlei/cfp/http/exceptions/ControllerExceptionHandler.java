@@ -5,6 +5,7 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.vanderlei.cfp.exceptions.*;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -36,7 +37,7 @@ public class ControllerExceptionHandler {
             System.currentTimeMillis(),
             HttpStatus.CONFLICT.value(),
             mensagemUsuario,
-            e.getMessage(),
+            ExceptionUtils.getRootCauseMessage(e),
             request.getRequestURI());
     return ResponseEntity.status(HttpStatus.CONFLICT).body(standardError);
   }
@@ -52,7 +53,7 @@ public class ControllerExceptionHandler {
             System.currentTimeMillis(),
             HttpStatus.BAD_REQUEST.value(),
             mensagemUsuario,
-            e.getMessage(),
+            ExceptionUtils.getRootCauseMessage(e),
             request.getRequestURI());
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(standardError);
   }
@@ -69,7 +70,7 @@ public class ControllerExceptionHandler {
             System.currentTimeMillis(),
             HttpStatus.NOT_FOUND.value(),
             mensagemUsuario,
-            e.getMessage(),
+            ExceptionUtils.getRootCauseMessage(e),
             request.getRequestURI());
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(standardError);
   }
@@ -86,7 +87,7 @@ public class ControllerExceptionHandler {
             System.currentTimeMillis(),
             HttpStatus.BAD_REQUEST.value(),
             mensagemUsuario,
-            e.getMessage(),
+            ExceptionUtils.getRootCauseMessage(e),
             request.getRequestURI());
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(standardError);
   }
@@ -102,7 +103,7 @@ public class ControllerExceptionHandler {
             System.currentTimeMillis(),
             HttpStatus.UNPROCESSABLE_ENTITY.value(),
             mensagemUsuario,
-            e.getMessage(),
+            ExceptionUtils.getRootCauseMessage(e),
             request.getRequestURI());
     for (FieldError fieldError : e.getBindingResult().getFieldErrors()) {
       validationError.addError(
@@ -123,7 +124,7 @@ public class ControllerExceptionHandler {
             System.currentTimeMillis(),
             HttpStatus.FORBIDDEN.value(),
             mensagemUsuario,
-            e.getMessage(),
+            ExceptionUtils.getRootCauseMessage(e),
             request.getRequestURI());
     return ResponseEntity.status(HttpStatus.FORBIDDEN).body(standardError);
   }
@@ -138,7 +139,7 @@ public class ControllerExceptionHandler {
             System.currentTimeMillis(),
             HttpStatus.BAD_REQUEST.value(),
             mensagemUsuario,
-            e.getMessage(),
+            ExceptionUtils.getRootCauseMessage(e),
             request.getRequestURI());
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(standardError);
   }
@@ -156,7 +157,7 @@ public class ControllerExceptionHandler {
             System.currentTimeMillis(),
             code.value(),
             mensagemUsuario,
-            e.getMessage(),
+            ExceptionUtils.getRootCauseMessage(e),
             request.getRequestURI());
     return ResponseEntity.status(code).body(standardError);
   }
@@ -173,7 +174,7 @@ public class ControllerExceptionHandler {
             System.currentTimeMillis(),
             HttpStatus.BAD_REQUEST.value(),
             mensagemUsuario,
-            e.getMessage(),
+            ExceptionUtils.getRootCauseMessage(e),
             request.getRequestURI());
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(standardError);
   }
@@ -188,7 +189,7 @@ public class ControllerExceptionHandler {
             System.currentTimeMillis(),
             HttpStatus.BAD_REQUEST.value(),
             mensagemUsuario,
-            e.getMessage(),
+            ExceptionUtils.getRootCauseMessage(e),
             request.getRequestURI());
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(standardError);
   }
