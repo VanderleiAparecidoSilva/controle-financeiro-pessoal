@@ -51,7 +51,7 @@ public class SwaggerConfig {
             .build(),
         new ResponseMessageBuilder()
             .code(BAD_GATEWAY.value())
-            .message("Comunicação entre the controle financeiro pessoal e upstream server falhou")
+            .message("Comunicação entre o controle financeiro pessoal e o upstream server falhou")
             .build());
   }
 
