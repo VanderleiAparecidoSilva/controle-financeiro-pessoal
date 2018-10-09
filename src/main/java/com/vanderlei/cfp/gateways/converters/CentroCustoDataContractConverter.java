@@ -5,7 +5,10 @@ import com.vanderlei.cfp.http.data.CentroCustoDataContract;
 import com.vanderlei.cfp.http.data.UsuarioDataContract;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+
+import java.util.stream.Collectors;
 
 @Component
 public class CentroCustoDataContractConverter implements Converter<CentroCusto, CentroCustoDataContract> {
@@ -17,5 +20,10 @@ public class CentroCustoDataContractConverter implements Converter<CentroCusto, 
         objDataContract.setUsuario(new UsuarioDataContract(null, obj.getUsuario().getNome(),
                 obj.getUsuario().getEmail(), null, obj.getUsuario().getPermiteEmailLembrete()));
         return objDataContract;
+    }
+
+    public Page<CentroCustoDataContract> convert(final Page<CentroCusto> objList) {
+        return objList
+                .map(obj -> this.convert(obj));
     }
 }

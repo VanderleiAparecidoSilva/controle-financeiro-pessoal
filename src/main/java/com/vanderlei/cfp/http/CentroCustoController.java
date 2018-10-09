@@ -15,6 +15,7 @@ import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +23,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.Collection;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -40,7 +39,7 @@ public class CentroCustoController {
 
   @Autowired private ApplicationEventPublisher publisher;
 
-  @ApiOperation(value = "Buscar por codigo")
+  @ApiOperation(value = "Buscar por codigo e usuário")
   @ApiResponses(value = {@ApiResponse(code = 200, message = "Sucesso")})
   @RequestMapping(
       value = "/{id}",
@@ -52,46 +51,34 @@ public class CentroCustoController {
     return obj != null ? ResponseEntity.ok().body(dataContract) : ResponseEntity.notFound().build();
   }
 
-  @ApiOperation(value = "Buscar todos por usuário")
+  @ApiOperation(value = "Buscar todos paginados por usuário")
   @ApiResponses(value = {@ApiResponse(code = 200, message = "Sucesso")})
   @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Collection<CentroCustoDataContract>> buscaTodos() {
-    Collection<CentroCusto> objList = gateway.buscarTodosPorUsuario();
-    Collection<CentroCustoDataContract> dataContractList =
-        objList
-            .stream()
-            .map(
-                obj ->
-                    new CentroCustoDataContract(
-                        obj.getId(),
-                        obj.getNome(),
-                        obj.getAplicarNaDespesa(),
-                        obj.getAplicarNaReceita(),
-                        usuarioDataContractConverter.convert(obj.getUsuario())))
-            .collect(Collectors.toList());
+  public ResponseEntity<Page<CentroCustoDataContract>> buscaTodosPorPagina(
+      @RequestParam(value = "page", defaultValue = "0") final Integer page,
+      @RequestParam(value = "linesPerPage", defaultValue = "24") final Integer linesPerPage,
+      @RequestParam(value = "orderBy", defaultValue = "instante") final String orderBy,
+      @RequestParam(value = "direction", defaultValue = "DESC") final String direction) {
+    Page<CentroCustoDataContract> dataContractList =
+        dataContractConverter.convert(
+            gateway.buscarTodosPorUsuarioPaginado(page, linesPerPage, orderBy, direction));
     return ResponseEntity.ok().body(dataContractList);
   }
 
-  @ApiOperation(value = "Buscar todos ativos por usuário")
+  @ApiOperation(value = "Buscar todos ativos paginados por usuário")
   @ApiResponses(value = {@ApiResponse(code = 200, message = "Sucesso")})
   @RequestMapping(
       value = "/ativos",
       method = RequestMethod.GET,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Collection<CentroCustoDataContract>> buscaTodosAtivos() {
-    Collection<CentroCusto> objList = gateway.buscarTodosAtivosPorUsuario();
-    Collection<CentroCustoDataContract> dataContractList =
-        objList
-            .stream()
-            .map(
-                obj ->
-                    new CentroCustoDataContract(
-                        obj.getId(),
-                        obj.getNome(),
-                        obj.getAplicarNaDespesa(),
-                        obj.getAplicarNaReceita(),
-                        usuarioDataContractConverter.convert(obj.getUsuario())))
-            .collect(Collectors.toList());
+  public ResponseEntity<Page<CentroCustoDataContract>> buscaTodosAtivosPorPagina(
+      @RequestParam(value = "page", defaultValue = "0") final Integer page,
+      @RequestParam(value = "linesPerPage", defaultValue = "24") final Integer linesPerPage,
+      @RequestParam(value = "orderBy", defaultValue = "instante") final String orderBy,
+      @RequestParam(value = "direction", defaultValue = "DESC") final String direction) {
+    Page<CentroCustoDataContract> dataContractList =
+        dataContractConverter.convert(
+            gateway.buscarTodosAtivosPorUsuarioPaginado(page, linesPerPage, orderBy, direction));
     return ResponseEntity.ok().body(dataContractList);
   }
 
