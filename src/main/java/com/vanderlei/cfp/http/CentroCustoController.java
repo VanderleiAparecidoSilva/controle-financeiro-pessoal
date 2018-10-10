@@ -31,7 +31,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RestController
 @RequestMapping(UrlMapping.CENTRO_CUSTO)
 public class CentroCustoController {
-
   @Autowired private CentroCustoGateway gateway;
 
   @Autowired private CentroCustoDataContractConverter dataContractConverter;
@@ -43,7 +42,7 @@ public class CentroCustoController {
   @Autowired private ApplicationEventPublisher publisher;
 
   @ApiOperation(
-      value = "Busca os centro de custos por código e usuário",
+      value = "Busca centro de custo por código e usuário",
       response = CentroCustoDataContract.class,
       tags = {
         "centro-custo-controller",
@@ -52,9 +51,8 @@ public class CentroCustoController {
       value = {
         @ApiResponse(
             code = 200,
-            message = "Centro de custos encontrado",
-            response = CentroCustoDataContract.class,
-            responseContainer = "List"),
+            message = "Centro de custo encontrado",
+            response = CentroCustoDataContract.class),
         @ApiResponse(code = 400, message = "Request inválido"),
         @ApiResponse(code = 404, message = "Centro de custo não encontrado")
       })
@@ -96,9 +94,9 @@ public class CentroCustoController {
       @ApiParam(value = "Quantidade de linhas por página")
           @RequestParam(value = "linesPerPage", defaultValue = "24")
           final Integer linesPerPage,
-      @ApiParam(value = "Ordenação") @RequestParam(value = "orderBy", defaultValue = "instante")
+      @ApiParam(value = "Ordenação") @RequestParam(value = "orderBy", defaultValue = "nome")
           final String orderBy,
-      @ApiParam(value = "Direção") @RequestParam(value = "direction", defaultValue = "DESC")
+      @ApiParam(value = "Direção") @RequestParam(value = "direction", defaultValue = "ASC")
           final String direction) {
     Page<CentroCustoDataContract> dataContractList =
         dataContractConverter.convert(
@@ -109,9 +107,9 @@ public class CentroCustoController {
   }
 
   @ApiOperation(
-      value = "Busca todos os centro de custos ativados por usuário (paginado)",
+      value = "Busca todos os centro de custos ativos por usuário (paginado)",
       response = CentroCustoDataContract.class,
-      responseContainer = "List",
+      responseContainer = "Page",
       tags = {
         "centro-custo-controller",
       })
@@ -135,9 +133,9 @@ public class CentroCustoController {
       @ApiParam(value = "Quantidade de linhas por página")
           @RequestParam(value = "linesPerPage", defaultValue = "24")
           final Integer linesPerPage,
-      @ApiParam(value = "Ordenação") @RequestParam(value = "orderBy", defaultValue = "instante")
+      @ApiParam(value = "Ordenação") @RequestParam(value = "orderBy", defaultValue = "nome")
           final String orderBy,
-      @ApiParam(value = "Direção") @RequestParam(value = "direction", defaultValue = "DESC")
+      @ApiParam(value = "Direção") @RequestParam(value = "direction", defaultValue = "ASC")
           final String direction) {
     Page<CentroCustoDataContract> dataContractList =
         dataContractConverter.convert(
