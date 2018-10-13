@@ -55,7 +55,8 @@ public class UsuarioGateway {
 
   public Usuario buscarPorEmail(final String email) {
     if (UsuarioSecurityGateway.userAuthenticatedByEmail(email)) {
-      Optional<Usuario> obj = repository.findByEmail(email);
+      Optional<Usuario> obj = repository.findByEmail(email)
+              .filter(usuario -> usuario.getAtivo());
       return obj.orElseThrow(
           () ->
               new ObjectNotFoundException(
