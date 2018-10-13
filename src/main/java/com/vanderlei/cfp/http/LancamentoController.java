@@ -126,4 +126,6 @@ public class LancamentoController {
     gateway.desativar(id);
     return ResponseEntity.noContent().build();
   }
+
+  //TODO Adicionar consultas por periodo de / ate para os lancamentos
 }
