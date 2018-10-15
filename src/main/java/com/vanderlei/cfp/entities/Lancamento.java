@@ -42,7 +42,7 @@ public class Lancamento implements Serializable {
 
   @NotNull private Double valorParcela;
 
-  @NotNull private int quantidadeParcelas;
+  @NotNull private int quantidadeTotalParcelas;
 
   @JsonIgnore private int parcela;
 
@@ -77,7 +77,7 @@ public class Lancamento implements Serializable {
       final CentroCusto centroCusto,
       final LocalDate vencimento,
       final Double valorParcela,
-      final int quantidadeParcelas,
+      final int quantidadeTotalParcelas,
       final int parcela,
       final boolean gerarParcelaUnica,
       final ContaBancaria contaBancaria,
@@ -92,7 +92,7 @@ public class Lancamento implements Serializable {
     this.centroCusto = centroCusto;
     this.vencimento = vencimento;
     this.valorParcela = valorParcela;
-    this.quantidadeParcelas = quantidadeParcelas;
+    this.quantidadeTotalParcelas = quantidadeTotalParcelas;
     this.parcela = parcela;
     this.gerarParcelaUnica = gerarParcelaUnica;
     this.contaBancaria = contaBancaria;
@@ -151,12 +151,12 @@ public class Lancamento implements Serializable {
     this.valorParcela = valorParcela;
   }
 
-  public int getQuantidadeParcelas() {
-    return quantidadeParcelas;
+  public int getQuantidadeTotalParcelas() {
+    return quantidadeTotalParcelas;
   }
 
-  public void setQuantidadeParcelas(int quantidadeParcelas) {
-    this.quantidadeParcelas = quantidadeParcelas;
+  public void setQuantidadeTotalParcelas(int quantidadeTotalParcelas) {
+    this.quantidadeTotalParcelas = quantidadeTotalParcelas;
   }
 
   public int getParcela() {
@@ -176,7 +176,7 @@ public class Lancamento implements Serializable {
   }
 
   public String getParcelaAtualTotalParcela() {
-    return this.parcela + "/" + this.quantidadeParcelas;
+    return this.parcela + "/" + this.quantidadeTotalParcelas;
   }
 
   public ContaBancaria getContaBancaria() {

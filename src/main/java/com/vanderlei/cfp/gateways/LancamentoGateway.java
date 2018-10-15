@@ -11,6 +11,9 @@ import com.vanderlei.cfp.gateways.converters.LancamentoConverter;
 import com.vanderlei.cfp.gateways.repository.LancamentoRepository;
 import com.vanderlei.cfp.security.UsuarioSecurity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -51,12 +54,42 @@ public class LancamentoGateway {
 
   @Autowired private LancamentoConverter lancamentoConverter;
 
-  public Collection<Lancamento> buscarTodosPorUsuario() {
+  public Page<Lancamento> buscarTodosPorUsuarioPaginado(
+      final Tipo tipo,
+      final Integer page,
+      final Integer linesPerPage,
+      final String orderBy,
+      final String direction) {
     UsuarioSecurity objSecurity = UsuarioSecurityGateway.authenticated();
     if (objSecurity == null) {
       throw new AuthorizationException("Acesso negado");
     }
-    return repository.findByUsuarioEmail(objSecurity.getUsername());
+    PageRequest pageRequest =
+        PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
+    return repository.findByTipoAndUsuarioEmail(tipo, objSecurity.getUsername(), pageRequest);
+  }
+
+  public Page<Lancamento> buscarTodosPorPeriodoUsuarioPaginado(
+      final LocalDate from,
+      final LocalDate to,
+      final Tipo tipo,
+      final Integer page,
+      final Integer linesPerPage,
+      final String orderBy,
+      final String direction) {
+    UsuarioSecurity objSecurity = UsuarioSecurityGateway.authenticated();
+    if (objSecurity == null) {
+      throw new AuthorizationException("Acesso negado");
+    }
+    PageRequest pageRequest =
+        PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
+
+    return repository.findByTipoAndUsuarioEmailAndVencimentoBetween(
+        tipo,
+        objSecurity.getUsername(),
+        from.minusDays(1).atTime(23, 59, 59),
+        to.plusDays(1).atStartOfDay(),
+        pageRequest);
   }
 
   public Lancamento buscarPorCodigo(final String id) {
@@ -77,16 +110,27 @@ public class LancamentoGateway {
     return null;
   }
 
-  public Collection<Lancamento> buscarParcelasLancamentoAberto(final String id) {
+  public Page<Lancamento> buscarParcelasLancamentoAbertoPaginado(
+      final String id,
+      final Integer page,
+      final Integer linesPerPage,
+      final String orderBy,
+      final String direction) {
     UsuarioSecurity objSecurity = UsuarioSecurityGateway.authenticated();
     if (objSecurity == null) {
       throw new AuthorizationException("Acesso negado");
     }
     Lancamento obj = this.buscarPorCodigo(id);
     if (UsuarioSecurityGateway.userAuthenticatedByEmail(obj.getUsuario().getEmail())) {
-      Collection<Lancamento> objList =
+      PageRequest pageRequest =
+          PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
+      Page<Lancamento> objList =
           repository.findByStatusAndUsuarioEmailAndUuidAndParcelaGreaterThanOrderByParcela(
-              Status.ABERTO, obj.getUsuario().getEmail(), obj.getUuid(), obj.getParcela());
+              Status.ABERTO,
+              obj.getUsuario().getEmail(),
+              obj.getUuid(),
+              obj.getParcela(),
+              pageRequest);
       return objList;
     }
 
@@ -142,7 +186,7 @@ public class LancamentoGateway {
                 + Lancamento.class.getName());
       }
 
-      final int qtdParcelas = obj.getQuantidadeParcelas();
+      final int qtdParcelas = obj.getQuantidadeTotalParcelas();
       LocalDate vencimento = obj.getVencimento();
       final UUID uuid = UUID.randomUUID();
       for (int i = 0; i < qtdParcelas; i++) {
@@ -152,7 +196,7 @@ public class LancamentoGateway {
         if (!obj.isGerarParcelaUnica()) {
           obj.setParcela(i + 1);
         } else {
-          obj.setQuantidadeParcelas(1);
+          obj.setQuantidadeTotalParcelas(1);
           obj.setParcela(1);
         }
         if (i > 0) {

@@ -7,53 +7,63 @@ import org.springframework.stereotype.Component;
 @Component
 public class Parsers {
 
-    public static void parse(final String id, final CentroCusto obj, final CentroCustoDataContract dataContract) {
-        obj.setId(id);
-        obj.setNome(dataContract.getNome());
-        obj.setAplicarNaDespesa(dataContract.getAplicarNaDespesa());
-        obj.setAplicarNaReceita(dataContract.getAplicarNaReceita());
-    }
+  public static void parse(
+      final String id, final CentroCusto obj, final CentroCustoDataContract dataContract) {
+    obj.setId(id);
+    obj.setNome(dataContract.getNome());
+    obj.setAplicarNaDespesa(dataContract.getAplicarNaDespesa());
+    obj.setAplicarNaReceita(dataContract.getAplicarNaReceita());
+  }
 
-    public static void parse(final String id, final Usuario obj, final UsuarioDataContract dataContract) {
-        obj.setId(id);
-        obj.setNome(dataContract.getNome());
-        obj.setEmail(dataContract.getEmail());
-    }
+  public static void parse(
+      final String id, final Usuario obj, final UsuarioDataContract dataContract) {
+    obj.setId(id);
+    obj.setNome(dataContract.getNome());
+    obj.setEmail(dataContract.getEmail());
+  }
 
-    public static void parse(final String id, final ContaBancaria obj, final ContaBancariaDataContract dataContract) {
-        obj.setId(id);
-        obj.setNome(dataContract.getNome());
-        obj.setNumeroContaBancaria(dataContract.getNumeroContaBancaria());
-        obj.setAtualizarSaldoBancarioNaBaixaTitulo(dataContract.getAtualizarSaldoBancarioNaBaixaTitulo());
-        obj.setVincularSaldoBancarioNoTotalReceita(dataContract.getVincularSaldoBancarioNoTotalReceita());
-        obj.setLimiteContaBancaria(dataContract.getLimiteContaBancaria());
-        obj.setSaldoContaBancaria(dataContract.getSaldoContaBancaria());
-    }
+  public static void parse(
+      final String id, final ContaBancaria obj, final ContaBancariaDataContract dataContract) {
+    obj.setId(id);
+    obj.setNome(dataContract.getNome());
+    obj.setNumeroContaBancaria(dataContract.getNumeroContaBancaria());
+    obj.setAtualizarSaldoBancarioNaBaixaTitulo(
+        dataContract.getAtualizarSaldoBancarioNaBaixaTitulo());
+    obj.setVincularSaldoBancarioNoTotalReceita(
+        dataContract.getVincularSaldoBancarioNoTotalReceita());
+    obj.setLimiteContaBancaria(dataContract.getLimiteContaBancaria());
+    obj.setSaldoContaBancaria(dataContract.getSaldoContaBancaria());
+  }
 
-    public static void parse(final String id, final TituloLancamento obj, final TituloLancamentoDataContract dataContract) {
-        obj.setId(id);
-        obj.setNome(dataContract.getNome());
-        obj.setDiaVencimento(dataContract.getDiaVencimento());
-        obj.setAplicarNaDespesa(dataContract.getAplicarNaDespesa());
-        obj.setAplicarNaReceita(dataContract.getAplicarNaReceita());
-    }
+  public static void parse(
+      final String id,
+      final TituloLancamento obj,
+      final TituloLancamentoDataContract dataContract) {
+    obj.setId(id);
+    obj.setNome(dataContract.getNome());
+    obj.setDiaVencimento(dataContract.getDiaVencimento());
+    obj.setAplicarNaDespesa(dataContract.getAplicarNaDespesa());
+    obj.setAplicarNaReceita(dataContract.getAplicarNaReceita());
+  }
 
-    public static void parse(final String id, final Lancamento obj, final LancamentoDataContract dataContract) {
-        TituloLancamentoConverter tituloLancamentoConverter = new TituloLancamentoConverter();
-        CentroCustoConverter centroCustoConverter = new CentroCustoConverter();
-        ContaBancariaConverter contaBancariaConverter = new ContaBancariaConverter();
-        UsuarioConverter usuarioConverter = new UsuarioConverter();
+  public static void parse(
+      final String id, final Lancamento obj, final LancamentoDataContract dataContract) {
+    TituloLancamentoConverter tituloLancamentoConverter = new TituloLancamentoConverter();
+    CentroCustoConverter centroCustoConverter = new CentroCustoConverter();
+    ContaBancariaConverter contaBancariaConverter = new ContaBancariaConverter();
+    UsuarioConverter usuarioConverter = new UsuarioConverter();
 
-        obj.setId(id);
-        obj.setNome(tituloLancamentoConverter.convert(dataContract.getNome()));
-        obj.setCentroCusto(centroCustoConverter.convert(dataContract.getCentroCusto()));
-        obj.setVencimento(dataContract.getVencimento());
-        obj.setValorParcela(dataContract.getValorParcela());
-        obj.setQuantidadeParcelas(dataContract.getQuantidadeParcelas());
-        obj.setContaBancaria(contaBancariaConverter.convert(dataContract.getContaBancaria()));
-        obj.setObservacao(dataContract.getObservacao());
-        obj.setStatus(dataContract.getStatus());
-        obj.setTipo(dataContract.getTipo());
-        obj.setUsuario(usuarioConverter.convert(dataContract.getUsuario()));
-    }
+    obj.setId(id);
+    obj.setNome(tituloLancamentoConverter.convert(dataContract.getNome()));
+    obj.setCentroCusto(centroCustoConverter.convert(dataContract.getCentroCusto()));
+    obj.setVencimento(dataContract.getVencimento());
+    obj.setValorParcela(dataContract.getValorParcela());
+    obj.setParcela(dataContract.getParcela());
+    obj.setQuantidadeTotalParcelas(dataContract.getQuantidadeTotalParcelas());
+    obj.setContaBancaria(contaBancariaConverter.convert(dataContract.getContaBancaria()));
+    obj.setObservacao(dataContract.getObservacao());
+    obj.setStatus(dataContract.getStatus());
+    obj.setTipo(dataContract.getTipo());
+    obj.setUsuario(usuarioConverter.convert(dataContract.getUsuario()));
+  }
 }

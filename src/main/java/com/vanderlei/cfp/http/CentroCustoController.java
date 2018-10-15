@@ -101,7 +101,7 @@ public class CentroCustoController {
     Page<CentroCustoDataContract> dataContractList =
         dataContractConverter.convert(
             gateway.buscarTodosPorUsuarioPaginado(page, linesPerPage, orderBy, direction));
-    return dataContractList.getSize() > 0
+    return dataContractList.getTotalElements() > 0
         ? ResponseEntity.ok().body(dataContractList)
         : ResponseEntity.notFound().build();
   }
@@ -140,7 +140,7 @@ public class CentroCustoController {
     Page<CentroCustoDataContract> dataContractList =
         dataContractConverter.convert(
             gateway.buscarTodosAtivosPorUsuarioPaginado(page, linesPerPage, orderBy, direction));
-    return dataContractList.getSize() > 0
+    return dataContractList.getTotalElements() > 0
         ? ResponseEntity.ok().body(dataContractList)
         : ResponseEntity.notFound().build();
   }

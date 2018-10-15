@@ -9,12 +9,15 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.UUID;
 
 public class LancamentoDataContract implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  @JsonIgnore private String id;
+  private String id;
+
+  @JsonIgnore private UUID uuid;
 
   @NotNull private TituloLancamentoDataContract nome;
 
@@ -27,7 +30,9 @@ public class LancamentoDataContract implements Serializable {
 
   @NotNull private Double valorParcela;
 
-  @NotNull private int quantidadeParcelas;
+  @NotNull private int parcela;
+
+  @NotNull private int quantidadeTotalParcelas;
 
   private boolean gerarParcelaUnica;
 
@@ -55,10 +60,12 @@ public class LancamentoDataContract implements Serializable {
 
   public LancamentoDataContract(
       final String id,
+      final UUID uuid,
       final TituloLancamentoDataContract nome,
       final CentroCustoDataContract centroCusto,
       final LocalDate vencimento,
       final Double valorParcela,
+      final int parcela,
       final int quantidadeParcelas,
       final boolean gerarParcelaUnica,
       final ContaBancariaDataContract contaBancaria,
@@ -68,11 +75,13 @@ public class LancamentoDataContract implements Serializable {
       final UsuarioDataContract usuario,
       final BaixaDataContract baixa) {
     this.id = id;
+    this.uuid = uuid;
     this.nome = nome;
     this.centroCusto = centroCusto;
     this.vencimento = vencimento;
     this.valorParcela = valorParcela;
-    this.quantidadeParcelas = quantidadeParcelas;
+    this.parcela = parcela;
+    this.quantidadeTotalParcelas = quantidadeParcelas;
     this.gerarParcelaUnica = gerarParcelaUnica;
     this.contaBancaria = contaBancaria;
     this.observacao = observacao;
@@ -89,6 +98,14 @@ public class LancamentoDataContract implements Serializable {
 
   public void setId(String id) {
     this.id = id;
+  }
+
+  public UUID getUuid() {
+    return uuid;
+  }
+
+  public void setUuid(UUID uuid) {
+    this.uuid = uuid;
   }
 
   public TituloLancamentoDataContract getNome() {
@@ -123,12 +140,20 @@ public class LancamentoDataContract implements Serializable {
     this.valorParcela = valorParcela;
   }
 
-  public int getQuantidadeParcelas() {
-    return quantidadeParcelas;
+  public int getParcela() {
+    return parcela;
   }
 
-  public void setQuantidadeParcelas(int quantidadeParcelas) {
-    this.quantidadeParcelas = quantidadeParcelas;
+  public void setParcela(int parcela) {
+    this.parcela = parcela;
+  }
+
+  public int getQuantidadeTotalParcelas() {
+    return quantidadeTotalParcelas;
+  }
+
+  public void setQuantidadeTotalParcelas(int quantidadeTotalParcelas) {
+    this.quantidadeTotalParcelas = quantidadeTotalParcelas;
   }
 
   public boolean isGerarParcelaUnica() {
