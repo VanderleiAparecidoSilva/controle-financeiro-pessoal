@@ -34,6 +34,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RestController
 @RequestMapping(UrlMapping.USUARIO)
 public class UsuarioController {
+  static final String TAG_CONTROLLER = "usuario-controller";
 
   @Autowired private UsuarioGateway gateway;
 
@@ -47,7 +48,7 @@ public class UsuarioController {
       value = "Busca usuário por código",
       response = UsuarioDataContract.class,
       tags = {
-        "usuario-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -74,7 +75,7 @@ public class UsuarioController {
       value = "Busca usuário por email",
       response = UsuarioDataContract.class,
       tags = {
-        "usuario-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -101,7 +102,7 @@ public class UsuarioController {
       value = "Cadastrar novo usuário",
       response = Usuario.class,
       tags = {
-        "usuario-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -124,7 +125,7 @@ public class UsuarioController {
   @ApiOperation(
       value = "Atualizar usuário",
       tags = {
-        "usuario-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -145,7 +146,7 @@ public class UsuarioController {
   @ApiOperation(
       value = "Ativar usuário",
       tags = {
-        "usuario-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -163,7 +164,7 @@ public class UsuarioController {
   @ApiOperation(
       value = "Desativar usuário",
       tags = {
-        "usuario-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -180,7 +181,7 @@ public class UsuarioController {
   @ApiOperation(
       value = "Atualizar foto pessoal do usuário",
       tags = {
-        "usuario-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {

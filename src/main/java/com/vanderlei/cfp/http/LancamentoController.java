@@ -33,6 +33,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RestController
 @RequestMapping(UrlMapping.LANCAMENTO)
 public class LancamentoController {
+  static final String TAG_CONTROLLER = "lancamento-controller";
 
   @Autowired private LancamentoGateway gateway;
 
@@ -57,7 +58,7 @@ public class LancamentoController {
       response = LancamentoDataContract.class,
       responseContainer = "List",
       tags = {
-        "lancamento-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -97,7 +98,7 @@ public class LancamentoController {
       response = LancamentoDataContract.class,
       responseContainer = "List",
       tags = {
-        "lancamento-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -145,7 +146,7 @@ public class LancamentoController {
       response = LancamentoDataContract.class,
       responseContainer = "List",
       tags = {
-        "lancamento-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -185,7 +186,7 @@ public class LancamentoController {
       response = LancamentoDataContract.class,
       responseContainer = "List",
       tags = {
-        "lancamento-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -233,7 +234,7 @@ public class LancamentoController {
       response = LancamentoDataContract.class,
       responseContainer = "List",
       tags = {
-        "lancamento-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -273,7 +274,7 @@ public class LancamentoController {
       value = "Cadastrar novo lançamento",
       response = Lancamento.class,
       tags = {
-        "lancamento-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -296,7 +297,7 @@ public class LancamentoController {
   @ApiOperation(
       value = "Alterar o tipo do lançamento",
       tags = {
-        "lancamento-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -313,7 +314,7 @@ public class LancamentoController {
   @ApiOperation(
       value = "Efetuar a baixa do lançamento",
       tags = {
-        "lancamento-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -333,7 +334,7 @@ public class LancamentoController {
   @ApiOperation(
       value = "Efetuar o estorno do lançamento",
       tags = {
-        "lancamento-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -353,7 +354,7 @@ public class LancamentoController {
   @ApiOperation(
       value = "Ativar lançamento",
       tags = {
-        "lancamento-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -370,7 +371,7 @@ public class LancamentoController {
   @ApiOperation(
       value = "Desativar lançamento",
       tags = {
-        "lancamento-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {

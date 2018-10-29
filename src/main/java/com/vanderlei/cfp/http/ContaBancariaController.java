@@ -32,6 +32,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RestController
 @RequestMapping(UrlMapping.CONTA_BANCARIA)
 public class ContaBancariaController {
+  static final String TAG_CONTROLLER = "conta-bancaria-controller";
 
   @Autowired private ContaBancariaGateway gateway;
 
@@ -47,7 +48,7 @@ public class ContaBancariaController {
       value = "Busca conta bancária por código e usuário",
       response = ContaBancariaDataContract.class,
       tags = {
-        "conta-bancaria-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -75,7 +76,7 @@ public class ContaBancariaController {
       response = ContaBancariaDataContract.class,
       responseContainer = "List",
       tags = {
-        "conta-bancaria-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -113,7 +114,7 @@ public class ContaBancariaController {
       response = ContaBancariaDataContract.class,
       responseContainer = "Page",
       tags = {
-        "conta-bancaria-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -151,7 +152,7 @@ public class ContaBancariaController {
       value = "Cadastrar nova conta bancária",
       response = ContaBancaria.class,
       tags = {
-        "conta-bancaria-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -178,7 +179,7 @@ public class ContaBancariaController {
   @ApiOperation(
       value = "Atualizar conta bancária",
       tags = {
-        "conta-bancaria-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -199,7 +200,7 @@ public class ContaBancariaController {
   @ApiOperation(
       value = "Ativar conta bancária",
       tags = {
-        "conta-bancaria-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -216,7 +217,7 @@ public class ContaBancariaController {
   @ApiOperation(
       value = "Desativar conta bancária",
       tags = {
-        "conta-bancaria-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -233,7 +234,7 @@ public class ContaBancariaController {
   @ApiOperation(
       value = "Atualizar saldo da conta bancária",
       tags = {
-        "conta-bancaria-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {

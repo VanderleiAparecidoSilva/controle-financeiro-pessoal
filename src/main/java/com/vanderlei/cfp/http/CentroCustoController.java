@@ -31,6 +31,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RestController
 @RequestMapping(UrlMapping.CENTRO_CUSTO)
 public class CentroCustoController {
+  static final String TAG_CONTROLLER = "centro-custo-controller";
+
   @Autowired private CentroCustoGateway gateway;
 
   @Autowired private CentroCustoDataContractConverter dataContractConverter;
@@ -45,7 +47,7 @@ public class CentroCustoController {
       value = "Busca centro de custo por código e usuário",
       response = CentroCustoDataContract.class,
       tags = {
-        "centro-custo-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -73,7 +75,7 @@ public class CentroCustoController {
       response = CentroCustoDataContract.class,
       responseContainer = "List",
       tags = {
-        "centro-custo-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -111,7 +113,7 @@ public class CentroCustoController {
       response = CentroCustoDataContract.class,
       responseContainer = "Page",
       tags = {
-        "centro-custo-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -149,7 +151,7 @@ public class CentroCustoController {
       value = "Cadastrar novo centro de custo",
       response = CentroCusto.class,
       tags = {
-        "centro-custo-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -173,7 +175,7 @@ public class CentroCustoController {
   @ApiOperation(
       value = "Atualizar centro de custo",
       tags = {
-        "centro-custo-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -194,7 +196,7 @@ public class CentroCustoController {
   @ApiOperation(
       value = "Ativar centro de custo",
       tags = {
-        "centro-custo-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -211,7 +213,7 @@ public class CentroCustoController {
   @ApiOperation(
       value = "Desativar centro de custo",
       tags = {
-        "centro-custo-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {

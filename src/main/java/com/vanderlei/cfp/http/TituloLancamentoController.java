@@ -31,6 +31,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RestController
 @RequestMapping(UrlMapping.TITULO_LANCAMENTO)
 public class TituloLancamentoController {
+  static final String TAG_CONTROLLER = "titulo-lancamento-controller";
 
   @Autowired private TituloLancamentoGateway gateway;
 
@@ -46,7 +47,7 @@ public class TituloLancamentoController {
       value = "Busca título de lançamento por código e usuário",
       response = TituloLancamentoDataContract.class,
       tags = {
-        "titulo-lancamento-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -75,7 +76,7 @@ public class TituloLancamentoController {
       response = TituloLancamentoDataContract.class,
       responseContainer = "List",
       tags = {
-        "titulo-lancamento-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -113,7 +114,7 @@ public class TituloLancamentoController {
       response = TituloLancamentoDataContract.class,
       responseContainer = "Page",
       tags = {
-        "titulo-lancamento-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -151,7 +152,7 @@ public class TituloLancamentoController {
       value = "Cadastrar novo título de lançamento",
       response = TituloLancamento.class,
       tags = {
-        "titulo-lancamento-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -178,7 +179,7 @@ public class TituloLancamentoController {
   @ApiOperation(
       value = "Atualizar título de lançamento",
       tags = {
-        "titulo-lancamento-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -200,7 +201,7 @@ public class TituloLancamentoController {
   @ApiOperation(
       value = "Ativar título de lançamento",
       tags = {
-        "titulo-lancamento-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
@@ -218,7 +219,7 @@ public class TituloLancamentoController {
   @ApiOperation(
       value = "Desativar título de lançamento",
       tags = {
-        "titulo-lancamento-controller",
+        TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
