@@ -53,10 +53,12 @@ public class UsuarioGateway {
     return null;
   }
 
-  public Usuario buscarPorEmail(final String email) {
+  public Usuario buscarPorEmail(final String email, final boolean active) {
     if (UsuarioSecurityGateway.userAuthenticatedByEmail(email)) {
-      Optional<Usuario> obj = repository.findByEmail(email)
-              .filter(usuario -> usuario.getAtivo());
+      Optional<Usuario> obj = repository.findByEmail(email);
+      if (active) {
+        obj = obj.filter(usuario -> usuario.getAtivo());
+      }
       return obj.orElseThrow(
           () ->
               new ObjectNotFoundException(
@@ -92,14 +94,14 @@ public class UsuarioGateway {
     return null;
   }
 
-  public Usuario ativar(final String id) {
-    Usuario obj = this.buscarPorCodigo(id);
+  public Usuario ativar(final String email) {
+    Usuario obj = this.buscarPorEmail(email, false);
     obj.setDataExclusao(null);
     return repository.save(obj);
   }
 
-  public Usuario desativar(final String id) {
-    Usuario obj = this.buscarPorCodigo(id);
+  public Usuario desativar(final String email) {
+    Usuario obj = this.buscarPorEmail(email, true);
     obj.setDataExclusao(LocalDateTime.now());
     return repository.save(obj);
   }

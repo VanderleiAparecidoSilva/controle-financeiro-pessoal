@@ -11,23 +11,21 @@ import javax.mail.internet.MimeMessage;
 @Slf4j
 public class SmtpEmailService extends AbstractEmailService {
 
-    @Autowired
-    private MailSender mailSender;
+  @Autowired private MailSender mailSender;
 
-    @Autowired
-    private JavaMailSender javaMailSender;
+  @Autowired private JavaMailSender javaMailSender;
 
-    @Override
-    public void enviarEmail(SimpleMailMessage msg) {
-        log.info("Simulando envio de e-mail...");
-        mailSender.send(msg);
-        log.info("Email enviado");
-    }
+  @Override
+  public void enviarEmail(SimpleMailMessage msg) {
+    log.info("Enviando e-mail...");
+    mailSender.send(msg);
+    log.info("Email enviado");
+  }
 
-    @Override
-    public void enviarEmail(final MimeMessage msg) {
-        log.info("Simulando envio de e-mail...");
-        javaMailSender.send(msg);
-        log.info("Email enviado");
-    }
+  @Override
+  public void enviarEmail(final MimeMessage msg) {
+    log.info("Enviando e-mail...");
+    javaMailSender.send(msg);
+    log.info("Email enviado");
+  }
 }

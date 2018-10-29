@@ -12,18 +12,17 @@ import org.springframework.context.annotation.Profile;
 @Profile("dev")
 public class DevConfig {
 
-    @Autowired
-    private DBGateway dbGateway;
+  @Autowired private DBGateway dbGateway;
 
-    @Bean
-    public boolean instantiateDatabase() {
-        dbGateway.instantiateDevDatabase();
+  @Bean
+  public boolean instantiateDatabase() {
+    dbGateway.instantiateDevDatabase();
 
-        return true;
-    }
+    return true;
+  }
 
-    @Bean
-    public EmailService emailService() {
-        return new SmtpEmailService();
-    }
+  @Bean
+  public EmailService emailService() {
+    return new SmtpEmailService();
+  }
 }

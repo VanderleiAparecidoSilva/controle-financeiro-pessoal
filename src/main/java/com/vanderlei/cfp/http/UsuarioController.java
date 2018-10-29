@@ -92,7 +92,7 @@ public class UsuarioController {
   ResponseEntity<Object> buscaPorEmail(
       @ApiParam(value = "Email do usuário", required = true) @RequestParam(value = "value")
           final String email) {
-    Usuario obj = gateway.buscarPorEmail(email);
+    Usuario obj = gateway.buscarPorEmail(email, true);
     final UsuarioDataContract dataContract = dataContractConverter.convert(obj);
     return ResponseEntity.ok().body(dataContract);
   }
@@ -131,12 +131,12 @@ public class UsuarioController {
         @ApiResponse(code = 204, message = "Atualizado com sucesso!"),
         @ApiResponse(code = 400, message = "Request inválido")
       })
-  @RequestMapping(value = "/{id}", method = PUT)
+  @RequestMapping(value = "/{email}", method = PUT)
   ResponseEntity<Void> atualizar(
       @ApiParam(value = "Usuário") @Valid @RequestBody final UsuarioDataContract dataContract,
-      @ApiParam(value = "Identificador do usuário") @PathVariable("id") final String id) {
-    Usuario obj = gateway.buscarPorCodigo(id);
-    Parsers.parse(id, obj, dataContract);
+      @ApiParam(value = "E-mail do usuário") @PathVariable("email") final String email) {
+    Usuario obj = gateway.buscarPorEmail(email, true);
+    Parsers.parse(obj.getId(), obj, dataContract);
     gateway.atualizar(obj);
     return ResponseEntity.noContent().build();
   }
@@ -152,10 +152,10 @@ public class UsuarioController {
         @ApiResponse(code = 204, message = "Ativado com sucesso!"),
         @ApiResponse(code = 400, message = "Request inválido")
       })
-  @RequestMapping(value = "/ativar/{id}", method = PUT)
+  @RequestMapping(value = "/ativar/{email}", method = PUT)
   ResponseEntity<Void> ativar(
-      @ApiParam(value = "Identificador do usuário") @PathVariable("id") final String id) {
-    gateway.ativar(id);
+      @ApiParam(value = "E-mail do usuário") @PathVariable("email") final String email) {
+    gateway.ativar(email);
     return ResponseEntity.noContent().build();
   }
 
@@ -170,11 +170,10 @@ public class UsuarioController {
         @ApiResponse(code = 204, message = "Desativado com sucesso!"),
         @ApiResponse(code = 400, message = "Request inválido")
       })
-  @RequestMapping(value = "/desativar/{id}", method = PUT)
+  @RequestMapping(value = "/desativar/{email}", method = PUT)
   ResponseEntity<Void> desativar(
-      @ApiParam(value = "Identificador do usuário") @PathVariable("id")
-          final String id) {
-    gateway.desativar(id);
+      @ApiParam(value = "E-mail do usuário") @PathVariable("email") final String email) {
+    gateway.desativar(email);
     return ResponseEntity.noContent().build();
   }
 
