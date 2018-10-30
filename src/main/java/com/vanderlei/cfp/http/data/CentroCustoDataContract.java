@@ -22,6 +22,8 @@ public class CentroCustoDataContract implements Serializable {
 
   private Boolean aplicarNaReceita;
 
+  private Boolean ativo;
+
   @Valid
   @NotNull
   @JsonProperty("usuario")
@@ -80,5 +82,13 @@ public class CentroCustoDataContract implements Serializable {
 
   public void setAplicarNaReceita(Boolean aplicarNaReceita) {
     this.aplicarNaReceita = aplicarNaReceita;
+  }
+
+  public Boolean getAtivo() {
+    return ativo;
+  }
+
+  public void setAtivo(Boolean ativo) {
+    this.ativo = ativo;
   }
 }

@@ -1,6 +1,5 @@
 package com.vanderlei.cfp.http.data;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
@@ -12,14 +11,13 @@ public class UsuarioDataContract implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  @JsonIgnore private String id;
+  private String id;
 
   @NotEmpty
   @Length(min = 5, max = 100, message = "O nome deve conter entre 5 e 100 caracteres")
   private String nome;
 
-  @NotEmpty
-  @Email private String email;
+  @NotEmpty @Email private String email;
 
   @NotEmpty private String senha;
 
