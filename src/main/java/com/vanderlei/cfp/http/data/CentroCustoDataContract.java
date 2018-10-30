@@ -1,6 +1,5 @@
 package com.vanderlei.cfp.http.data;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.Length;
 
@@ -13,7 +12,7 @@ public class CentroCustoDataContract implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  @JsonIgnore private String id;
+  private String id;
 
   @NotEmpty
   @Length(min = 5, max = 100, message = "O nome deve conter entre 5 e 100 caracteres")
