@@ -98,6 +98,34 @@ public class CentroCustoGateway {
     return repository.findByNomeAndUsuarioEmail(nome, email);
   }
 
+  public Page<CentroCusto> buscarPorNomeLikeUsuarioEmail(
+      final Integer page,
+      final Integer linesPerPage,
+      final String orderBy,
+      final String direction,
+      final String nome) {
+    UsuarioSecurity objSecurity = UsuarioSecurityGateway.authenticated();
+    if (objSecurity == null) {
+      throw new AuthorizationException("Acesso negado");
+    }
+
+    List<CentroCusto> objList = new ArrayList<>();
+    PageRequest pageRequest =
+        PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
+    Page<CentroCusto> objPage =
+        repository.findByNomeLikeAndUsuarioEmail(nome, objSecurity.getUsername(), pageRequest);
+    objPage.forEach(
+        obj -> {
+          if (obj.getAtivo()) {
+            objList.add(obj);
+          }
+        });
+    return new PageImpl<CentroCusto>(
+        objList,
+        PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy),
+        objList.size());
+  }
+
   public CentroCusto inserir(final CentroCusto obj) {
     if (UsuarioSecurityGateway.userAuthenticatedByEmail(obj.getUsuario().getEmail())) {
       if (!usuarioGateway

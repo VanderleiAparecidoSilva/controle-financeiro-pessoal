@@ -148,6 +148,45 @@ public class CentroCustoController {
   }
 
   @ApiOperation(
+      value = "Busca centro de custo por nome e usuário",
+      response = CentroCustoDataContract.class,
+      tags = {
+        TAG_CONTROLLER,
+      })
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            code = 200,
+            message = "Centro de custo encontrado",
+            response = CentroCustoDataContract.class),
+        @ApiResponse(code = 400, message = "Request inválido"),
+        @ApiResponse(code = 404, message = "Centro de custo não encontrado")
+      })
+  @RequestMapping(
+      value = "/nome",
+      produces = {APPLICATION_JSON_VALUE},
+      method = GET)
+  ResponseEntity<Page<CentroCustoDataContract>> buscaPorNome(
+      @ApiParam(value = "Quantidade de páginas") @RequestParam(value = "page", defaultValue = "0")
+          final Integer page,
+      @ApiParam(value = "Quantidade de linhas por página")
+          @RequestParam(value = "linesPerPage", defaultValue = "24")
+          final Integer linesPerPage,
+      @ApiParam(value = "Ordenação") @RequestParam(value = "orderBy", defaultValue = "nome")
+          final String orderBy,
+      @ApiParam(value = "Direção") @RequestParam(value = "direction", defaultValue = "ASC")
+          final String direction,
+      @ApiParam(value = "Nome do centro de custo", required = true) @RequestParam(value = "nome")
+          final String nome) {
+    Page<CentroCustoDataContract> dataContractList =
+        dataContractConverter.convert(
+            gateway.buscarPorNomeLikeUsuarioEmail(page, linesPerPage, orderBy, direction, nome));
+    return dataContractList.getTotalElements() > 0
+        ? ResponseEntity.ok().body(dataContractList)
+        : ResponseEntity.notFound().build();
+  }
+
+  @ApiOperation(
       value = "Cadastrar novo centro de custo",
       response = CentroCusto.class,
       tags = {
