@@ -66,4 +66,17 @@ public class Parsers {
     obj.setTipo(dataContract.getTipo());
     obj.setUsuario(usuarioConverter.convert(dataContract.getUsuario()));
   }
+
+  public static void parse(
+          final String id, final Permissao obj, final PermissaoDataContract dataContract) {
+    obj.setId(id);
+    obj.setDescricao(dataContract.getDescricao());
+  }
+
+  public static void parse(
+          final String id, final PermissaoUsuario obj, final PermissaoUsuarioDataContract dataContract) {
+    obj.setId(id);
+    obj.setIdPermissao(dataContract.getIdPermissao());
+    obj.setIdUsuario(dataContract.getIdUsuario());
+  }
 }

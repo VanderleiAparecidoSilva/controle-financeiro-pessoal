@@ -2,11 +2,9 @@ package com.vanderlei.cfp.gateways;
 
 import com.vanderlei.cfp.entities.ContaBancaria;
 import com.vanderlei.cfp.entities.enums.Operacao;
-import com.vanderlei.cfp.exceptions.AuthorizationException;
 import com.vanderlei.cfp.exceptions.ObjectDuplicatedException;
 import com.vanderlei.cfp.exceptions.ObjectNotFoundException;
 import com.vanderlei.cfp.gateways.repository.ContaBancariaRepository;
-import com.vanderlei.cfp.security.UsuarioSecurity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -40,14 +38,9 @@ public class ContaBancariaGateway {
       final Integer linesPerPage,
       final String orderBy,
       final String direction) {
-    UsuarioSecurity objSecurity = UsuarioSecurityGateway.authenticated();
-    if (objSecurity == null) {
-      throw new AuthorizationException("Acesso negado");
-    }
-
     PageRequest pageRequest =
         PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
-    return repository.findByUsuarioEmail(objSecurity.getUsername(), pageRequest);
+    return repository.findByUsuarioEmail("", pageRequest);
   }
 
   public Page<ContaBancaria> buscarTodosAtivosPorUsuarioPaginado(
@@ -55,16 +48,10 @@ public class ContaBancariaGateway {
       final Integer linesPerPage,
       final String orderBy,
       final String direction) {
-    UsuarioSecurity objSecurity = UsuarioSecurityGateway.authenticated();
-    if (objSecurity == null) {
-      throw new AuthorizationException("Acesso negado");
-    }
-
     List<ContaBancaria> objList = new ArrayList<>();
     PageRequest pageRequest =
         PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
-    Page<ContaBancaria> objPage =
-        repository.findByUsuarioEmail(objSecurity.getUsername(), pageRequest);
+    Page<ContaBancaria> objPage = repository.findByUsuarioEmail("", pageRequest);
     objPage.forEach(
         obj -> {
           if (obj.getAtivo()) {
@@ -82,58 +69,42 @@ public class ContaBancariaGateway {
   }
 
   public ContaBancaria buscarPorCodigo(final String id) {
-    UsuarioSecurity objSecurity = UsuarioSecurityGateway.authenticated();
-    if (objSecurity == null) {
-      throw new AuthorizationException("Acesso negado");
-    }
     Optional<ContaBancaria> obj = repository.findById(id);
     ContaBancaria contaBancaria =
         obj.orElseThrow(
             () ->
                 new ObjectNotFoundException(
                     msgObjectNotFound + id + msgTipo + ContaBancaria.class.getName()));
-    if (UsuarioSecurityGateway.userAuthenticatedByEmail(contaBancaria.getUsuario().getEmail())) {
-      return contaBancaria;
-    }
-
-    return null;
+    return contaBancaria;
   }
 
   public ContaBancaria inserir(final ContaBancaria obj) {
-    if (UsuarioSecurityGateway.userAuthenticatedByEmail(obj.getUsuario().getEmail())) {
-      if (!usuarioGateway
-          .buscarPorNomeEmail(obj.getUsuario().getNome(), obj.getUsuario().getEmail())
-          .isPresent()) {
-        throw new ObjectNotFoundException(
-            msgUsuarioObjectNotFound + obj.getUsuario() + msgTipo + ContaBancaria.class.getName());
-      }
-      if (repository
-          .findByNomeAndUsuarioEmail(obj.getNome(), obj.getUsuario().getEmail())
-          .isPresent()) {
-        throw new ObjectDuplicatedException(
-            msgObjectDuplicated + obj.getNome() + msgTipo + ContaBancaria.class.getName());
-      }
-      obj.setId(null);
-      obj.setDataInclusao(LocalDateTime.now());
-      return repository.save(obj);
+    if (!usuarioGateway
+        .buscarPorNomeEmail(obj.getUsuario().getNome(), obj.getUsuario().getEmail())
+        .isPresent()) {
+      throw new ObjectNotFoundException(
+          msgUsuarioObjectNotFound + obj.getUsuario() + msgTipo + ContaBancaria.class.getName());
     }
-
-    return null;
+    if (repository
+        .findByNomeAndUsuarioEmail(obj.getNome(), obj.getUsuario().getEmail())
+        .isPresent()) {
+      throw new ObjectDuplicatedException(
+          msgObjectDuplicated + obj.getNome() + msgTipo + ContaBancaria.class.getName());
+    }
+    obj.setId(null);
+    obj.setDataInclusao(LocalDateTime.now());
+    return repository.save(obj);
   }
 
   public ContaBancaria atualizar(final ContaBancaria obj) {
-    if (UsuarioSecurityGateway.userAuthenticatedByEmail(obj.getUsuario().getEmail())) {
-      if (!usuarioGateway
-          .buscarPorNomeEmail(obj.getUsuario().getNome(), obj.getUsuario().getEmail())
-          .isPresent()) {
-        throw new ObjectNotFoundException(
-            msgUsuarioObjectNotFound + obj.getUsuario() + msgTipo + ContaBancaria.class.getName());
-      }
-      obj.setDataAlteracao(LocalDateTime.now());
-      return repository.save(obj);
+    if (!usuarioGateway
+        .buscarPorNomeEmail(obj.getUsuario().getNome(), obj.getUsuario().getEmail())
+        .isPresent()) {
+      throw new ObjectNotFoundException(
+          msgUsuarioObjectNotFound + obj.getUsuario() + msgTipo + ContaBancaria.class.getName());
     }
-
-    return null;
+    obj.setDataAlteracao(LocalDateTime.now());
+    return repository.save(obj);
   }
 
   public ContaBancaria ativar(final String id) {

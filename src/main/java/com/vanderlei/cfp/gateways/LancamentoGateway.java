@@ -5,11 +5,9 @@ import com.vanderlei.cfp.entities.Lancamento;
 import com.vanderlei.cfp.entities.enums.Operacao;
 import com.vanderlei.cfp.entities.enums.Status;
 import com.vanderlei.cfp.entities.enums.Tipo;
-import com.vanderlei.cfp.exceptions.AuthorizationException;
 import com.vanderlei.cfp.exceptions.ObjectNotFoundException;
 import com.vanderlei.cfp.gateways.converters.LancamentoConverter;
 import com.vanderlei.cfp.gateways.repository.LancamentoRepository;
-import com.vanderlei.cfp.security.UsuarioSecurity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -60,13 +58,9 @@ public class LancamentoGateway {
       final Integer linesPerPage,
       final String orderBy,
       final String direction) {
-    UsuarioSecurity objSecurity = UsuarioSecurityGateway.authenticated();
-    if (objSecurity == null) {
-      throw new AuthorizationException("Acesso negado");
-    }
     PageRequest pageRequest =
         PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
-    return repository.findByTipoAndUsuarioEmail(tipo, objSecurity.getUsername(), pageRequest);
+    return repository.findByTipoAndUsuarioEmail(tipo, "", pageRequest);
   }
 
   public Page<Lancamento> buscarTodosPorPeriodoUsuarioPaginado(
@@ -77,37 +71,25 @@ public class LancamentoGateway {
       final Integer linesPerPage,
       final String orderBy,
       final String direction) {
-    UsuarioSecurity objSecurity = UsuarioSecurityGateway.authenticated();
-    if (objSecurity == null) {
-      throw new AuthorizationException("Acesso negado");
-    }
     PageRequest pageRequest =
         PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
 
     return repository.findByTipoAndUsuarioEmailAndVencimentoBetween(
         tipo,
-        objSecurity.getUsername(),
+            "",
         from.minusDays(1).atTime(23, 59, 59),
         to.plusDays(1).atStartOfDay(),
         pageRequest);
   }
 
   public Lancamento buscarPorCodigo(final String id) {
-    UsuarioSecurity objSecurity = UsuarioSecurityGateway.authenticated();
-    if (objSecurity == null) {
-      throw new AuthorizationException("Acesso negado");
-    }
     Optional<Lancamento> obj = repository.findById(id);
     Lancamento lancamento =
         obj.orElseThrow(
             () ->
                 new ObjectNotFoundException(
                     msgObjectNotFound + id + msgTipo + Lancamento.class.getName()));
-    if (UsuarioSecurityGateway.userAuthenticatedByEmail(lancamento.getUsuario().getEmail())) {
-      return lancamento;
-    }
-
-    return null;
+    return lancamento;
   }
 
   public Page<Lancamento> buscarParcelasLancamentoAbertoPaginado(
@@ -116,208 +98,185 @@ public class LancamentoGateway {
       final Integer linesPerPage,
       final String orderBy,
       final String direction) {
-    UsuarioSecurity objSecurity = UsuarioSecurityGateway.authenticated();
-    if (objSecurity == null) {
-      throw new AuthorizationException("Acesso negado");
-    }
     Lancamento obj = this.buscarPorCodigo(id);
-    if (UsuarioSecurityGateway.userAuthenticatedByEmail(obj.getUsuario().getEmail())) {
-      PageRequest pageRequest =
-          PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
-      Page<Lancamento> objList =
-          repository.findByStatusAndUsuarioEmailAndUuidAndParcelaGreaterThanOrderByParcela(
-              Status.ABERTO,
-              obj.getUsuario().getEmail(),
-              obj.getUuid(),
-              obj.getParcela(),
-              pageRequest);
-      return objList;
-    }
-
-    return null;
+    PageRequest pageRequest =
+        PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
+    Page<Lancamento> objList =
+        repository.findByStatusAndUsuarioEmailAndUuidAndParcelaGreaterThanOrderByParcela(
+            Status.ABERTO,
+            obj.getUsuario().getEmail(),
+            obj.getUuid(),
+            obj.getParcela(),
+            pageRequest);
+    return objList;
   }
 
   public Lancamento inserir(final Lancamento obj) {
-    if (UsuarioSecurityGateway.userAuthenticatedByEmail(obj.getUsuario().getEmail())) {
-      Lancamento objRet = null;
+    Lancamento objRet = null;
 
-      if (obj.getUsuario() != null
-          && !usuarioGateway
-              .buscarPorNomeEmail(obj.getUsuario().getNome(), obj.getUsuario().getEmail())
-              .isPresent()) {
-        throw new ObjectNotFoundException(
-            msgUsuarioObjectNotFound + obj.getUsuario() + msgTipo + Lancamento.class.getName());
+    if (obj.getUsuario() != null
+        && !usuarioGateway
+            .buscarPorNomeEmail(obj.getUsuario().getNome(), obj.getUsuario().getEmail())
+            .isPresent()) {
+      throw new ObjectNotFoundException(
+          msgUsuarioObjectNotFound + obj.getUsuario() + msgTipo + Lancamento.class.getName());
+    }
+    if (obj.getNome() != null
+        && !tituloLancamentoGateway
+            .buscarPorNomeUsuarioEmail(obj.getNome().getNome(), obj.getUsuario().getEmail())
+            .isPresent()) {
+      if (obj.getTipo().equals(Tipo.RECEITA)) {
+        obj.getNome().setAplicarNaReceita(true);
+      } else if (obj.getTipo().equals(Tipo.DESPESA)) {
+        obj.getNome().setAplicarNaDespesa(true);
       }
-      if (obj.getNome() != null
-          && !tituloLancamentoGateway
-              .buscarPorNomeUsuarioEmail(obj.getNome().getNome(), obj.getUsuario().getEmail())
-              .isPresent()) {
-        if (obj.getTipo().equals(Tipo.RECEITA)) {
-          obj.getNome().setAplicarNaReceita(true);
-        } else if (obj.getTipo().equals(Tipo.DESPESA)) {
-          obj.getNome().setAplicarNaDespesa(true);
-        }
-        obj.getNome().setDataInclusao(LocalDateTime.now());
-        obj.getNome().setDiaVencimento(obj.getVencimento().getDayOfMonth());
-        tituloLancamentoGateway.salvar(obj.getNome());
+      obj.getNome().setDataInclusao(LocalDateTime.now());
+      obj.getNome().setDiaVencimento(obj.getVencimento().getDayOfMonth());
+      tituloLancamentoGateway.salvar(obj.getNome());
+    }
+    if (obj.getCentroCusto() != null
+        && !centroCustoGateway
+            .buscarPorNomeUsuarioEmail(obj.getCentroCusto().getNome(), obj.getUsuario().getEmail())
+            .isPresent()) {
+      if (obj.getTipo().equals(Tipo.RECEITA)) {
+        obj.getCentroCusto().setAplicarNaReceita(true);
+      } else if (obj.getTipo().equals(Tipo.DESPESA)) {
+        obj.getCentroCusto().setAplicarNaDespesa(true);
       }
-      if (obj.getCentroCusto() != null
-          && !centroCustoGateway
-              .buscarPorNomeUsuarioEmail(
-                  obj.getCentroCusto().getNome(), obj.getUsuario().getEmail())
-              .isPresent()) {
-        if (obj.getTipo().equals(Tipo.RECEITA)) {
-          obj.getCentroCusto().setAplicarNaReceita(true);
-        } else if (obj.getTipo().equals(Tipo.DESPESA)) {
-          obj.getCentroCusto().setAplicarNaDespesa(true);
-        }
-        obj.getCentroCusto().setDataInclusao(LocalDateTime.now());
-        centroCustoGateway.salvar(obj.getCentroCusto());
-      }
-      if (obj.getContaBancaria() != null
-          && !contaBancariaGateway
-              .buscarPorNomeUsuarioEmail(
-                  obj.getContaBancaria().getNome(), obj.getUsuario().getEmail())
-              .isPresent()) {
-        throw new ObjectNotFoundException(
-            msgContaBancariaObjectNotFound
-                + obj.getContaBancaria().getNome()
-                + msgTipo
-                + Lancamento.class.getName());
-      }
-
-      final int qtdParcelas = obj.getQuantidadeTotalParcelas();
-      LocalDate vencimento = obj.getVencimento();
-      final UUID uuid = UUID.randomUUID();
-      for (int i = 0; i < qtdParcelas; i++) {
-        obj.setId(null);
-        obj.setUuid(uuid);
-        obj.setDataInclusao(LocalDateTime.now());
-        if (!obj.isGerarParcelaUnica()) {
-          obj.setParcela(i + 1);
-        } else {
-          obj.setQuantidadeTotalParcelas(1);
-          obj.setParcela(1);
-        }
-        if (i > 0) {
-          obj.setVencimento(vencimento.plusMonths(1));
-          vencimento = vencimento.plusMonths(1);
-        }
-
-        repository.save(obj);
-        if (objRet == null) {
-          objRet = obj;
-        }
-      }
-
-      return objRet;
+      obj.getCentroCusto().setDataInclusao(LocalDateTime.now());
+      centroCustoGateway.salvar(obj.getCentroCusto());
+    }
+    if (obj.getContaBancaria() != null
+        && !contaBancariaGateway
+            .buscarPorNomeUsuarioEmail(
+                obj.getContaBancaria().getNome(), obj.getUsuario().getEmail())
+            .isPresent()) {
+      throw new ObjectNotFoundException(
+          msgContaBancariaObjectNotFound
+              + obj.getContaBancaria().getNome()
+              + msgTipo
+              + Lancamento.class.getName());
     }
 
-    return null;
+    final int qtdParcelas = obj.getQuantidadeTotalParcelas();
+    LocalDate vencimento = obj.getVencimento();
+    final UUID uuid = UUID.randomUUID();
+    for (int i = 0; i < qtdParcelas; i++) {
+      obj.setId(null);
+      obj.setUuid(uuid);
+      obj.setDataInclusao(LocalDateTime.now());
+      if (!obj.isGerarParcelaUnica()) {
+        obj.setParcela(i + 1);
+      } else {
+        obj.setQuantidadeTotalParcelas(1);
+        obj.setParcela(1);
+      }
+      if (i > 0) {
+        obj.setVencimento(vencimento.plusMonths(1));
+        vencimento = vencimento.plusMonths(1);
+      }
+
+      repository.save(obj);
+      if (objRet == null) {
+        objRet = obj;
+      }
+    }
+
+    return objRet;
   }
 
   public void alterarTipo(final String id) {
     Lancamento obj = this.buscarPorCodigo(id);
-    if (UsuarioSecurityGateway.userAuthenticatedByEmail(obj.getUsuario().getEmail())) {
-      obj.setTipo(obj.getTipo().equals(Tipo.RECEITA) ? Tipo.DESPESA : Tipo.RECEITA);
-      repository.save(obj);
-    }
+    obj.setTipo(obj.getTipo().equals(Tipo.RECEITA) ? Tipo.DESPESA : Tipo.RECEITA);
+    repository.save(obj);
   }
 
   public void baixar(final String id, final Baixa baixa) {
     Lancamento obj = this.buscarPorCodigo(id);
-    if (UsuarioSecurityGateway.userAuthenticatedByEmail(obj.getUsuario().getEmail())) {
-      if (obj.getStatus().equals(Status.PAGO)) {
-        throw new ObjectNotFoundException(
-            msgLancamentoFechado
-                + obj.getNome().getNome()
-                + ", status: "
-                + obj.getStatus().getDescricao()
-                + msgTipo
-                + Lancamento.class.getName());
-      }
-      if (!obj.getUsuario().getEmail().equals(baixa.getUsuario().getEmail())
-          || !obj.getUsuario().getNome().equals(baixa.getUsuario().getNome())) {
-        throw new ObjectNotFoundException(
-            msgBaixaUserNotFound
-                + obj.getNome().getNome()
-                + ", usuário: "
-                + baixa.getUsuario()
-                + msgTipo
-                + Lancamento.class.getName());
-      }
-      if (obj.getContaBancaria() != null
-          && !contaBancariaGateway
-              .buscarPorNomeUsuarioEmail(
-                  obj.getContaBancaria().getNome(), obj.getUsuario().getEmail())
-              .isPresent()) {
-        throw new ObjectNotFoundException(
-            msgContaBancariaObjectNotFound
-                + obj.getContaBancaria().getNome()
-                + msgTipo
-                + Lancamento.class.getName());
-      }
-      obj.setBaixa(baixa);
-      obj.setStatus(obj.getTipo().equals(Tipo.RECEITA) ? Status.RECEBIDO : Status.PAGO);
-      repository.save(obj);
+    if (obj.getStatus().equals(Status.PAGO)) {
+      throw new ObjectNotFoundException(
+          msgLancamentoFechado
+              + obj.getNome().getNome()
+              + ", status: "
+              + obj.getStatus().getDescricao()
+              + msgTipo
+              + Lancamento.class.getName());
+    }
+    if (!obj.getUsuario().getEmail().equals(baixa.getUsuario().getEmail())
+        || !obj.getUsuario().getNome().equals(baixa.getUsuario().getNome())) {
+      throw new ObjectNotFoundException(
+          msgBaixaUserNotFound
+              + obj.getNome().getNome()
+              + ", usuário: "
+              + baixa.getUsuario()
+              + msgTipo
+              + Lancamento.class.getName());
+    }
+    if (obj.getContaBancaria() != null
+        && !contaBancariaGateway
+            .buscarPorNomeUsuarioEmail(
+                obj.getContaBancaria().getNome(), obj.getUsuario().getEmail())
+            .isPresent()) {
+      throw new ObjectNotFoundException(
+          msgContaBancariaObjectNotFound
+              + obj.getContaBancaria().getNome()
+              + msgTipo
+              + Lancamento.class.getName());
+    }
+    obj.setBaixa(baixa);
+    obj.setStatus(obj.getTipo().equals(Tipo.RECEITA) ? Status.RECEBIDO : Status.PAGO);
+    repository.save(obj);
 
-      if (UsuarioSecurityGateway.userAuthenticatedByEmail(baixa.getUsuario().getEmail())) {
-        if (baixa.getContaBancaria() != null) {
-          contaBancariaGateway
-              .buscarPorNomeUsuarioEmail(
-                  baixa.getContaBancaria().getNome(), baixa.getUsuario().getEmail())
-              .ifPresent(
-                  contaBancaria -> {
-                    if (contaBancaria.getAtualizarSaldoBancarioNaBaixaTitulo()) {
-                      contaBancariaGateway.atualizarSaldo(
-                          contaBancaria.getId(), obj.getValorParcela(), Operacao.DEBITO);
-                    }
-                  });
-        }
-      }
+    if (baixa.getContaBancaria() != null) {
+      contaBancariaGateway
+          .buscarPorNomeUsuarioEmail(
+              baixa.getContaBancaria().getNome(), baixa.getUsuario().getEmail())
+          .ifPresent(
+              contaBancaria -> {
+                if (contaBancaria.getAtualizarSaldoBancarioNaBaixaTitulo()) {
+                  contaBancariaGateway.atualizarSaldo(
+                      contaBancaria.getId(), obj.getValorParcela(), Operacao.DEBITO);
+                }
+              });
     }
   }
 
   public void estornar(final String id, final Baixa baixa) {
     Lancamento obj = this.buscarPorCodigo(id);
-    if (UsuarioSecurityGateway.userAuthenticatedByEmail(obj.getUsuario().getEmail())) {
-      if (obj.getStatus().equals(Status.ABERTO)) {
-        throw new ObjectNotFoundException(
-            msgLancamentoEmAberto
-                + obj.getNome().getNome()
-                + ", status: "
-                + obj.getStatus().getDescricao()
-                + msgTipo
-                + Lancamento.class.getName());
-      }
-      if (!obj.getUsuario().getEmail().equals(baixa.getUsuario().getEmail())
-          || !obj.getUsuario().getNome().equals(baixa.getUsuario().getNome())) {
-        throw new ObjectNotFoundException(
-            msgBaixaUserNotFound
-                + obj.getNome().getNome()
-                + ", usuário: "
-                + baixa.getUsuario()
-                + msgTipo
-                + Lancamento.class.getName());
-      }
-      obj.setBaixa(null);
-      obj.setStatus(Status.ABERTO);
-      repository.save(obj);
+    if (obj.getStatus().equals(Status.ABERTO)) {
+      throw new ObjectNotFoundException(
+          msgLancamentoEmAberto
+              + obj.getNome().getNome()
+              + ", status: "
+              + obj.getStatus().getDescricao()
+              + msgTipo
+              + Lancamento.class.getName());
+    }
+    if (!obj.getUsuario().getEmail().equals(baixa.getUsuario().getEmail())
+        || !obj.getUsuario().getNome().equals(baixa.getUsuario().getNome())) {
+      throw new ObjectNotFoundException(
+          msgBaixaUserNotFound
+              + obj.getNome().getNome()
+              + ", usuário: "
+              + baixa.getUsuario()
+              + msgTipo
+              + Lancamento.class.getName());
+    }
+    obj.setBaixa(null);
+    obj.setStatus(Status.ABERTO);
+    repository.save(obj);
 
-      if (UsuarioSecurityGateway.userAuthenticatedByEmail(baixa.getUsuario().getEmail())) {
-        if (baixa.getContaBancaria() != null) {
-          contaBancariaGateway
-              .buscarPorNomeUsuarioEmail(
-                  baixa.getContaBancaria().getNome(), baixa.getUsuario().getEmail())
-              .ifPresent(
-                  contaBancaria -> {
-                    if (contaBancaria.getAtualizarSaldoBancarioNaBaixaTitulo()) {
-                      contaBancariaGateway.atualizarSaldo(
-                          contaBancaria.getId(), obj.getValorParcela(), Operacao.CREDITO);
-                    }
-                  });
-        }
-      }
+    if (baixa.getContaBancaria() != null) {
+      contaBancariaGateway
+          .buscarPorNomeUsuarioEmail(
+              baixa.getContaBancaria().getNome(), baixa.getUsuario().getEmail())
+          .ifPresent(
+              contaBancaria -> {
+                if (contaBancaria.getAtualizarSaldoBancarioNaBaixaTitulo()) {
+                  contaBancariaGateway.atualizarSaldo(
+                      contaBancaria.getId(), obj.getValorParcela(), Operacao.CREDITO);
+                }
+              });
     }
   }
 

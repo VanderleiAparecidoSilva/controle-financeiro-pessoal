@@ -1,11 +1,9 @@
 package com.vanderlei.cfp.gateways;
 
 import com.vanderlei.cfp.entities.CentroCusto;
-import com.vanderlei.cfp.exceptions.AuthorizationException;
 import com.vanderlei.cfp.exceptions.ObjectDuplicatedException;
 import com.vanderlei.cfp.exceptions.ObjectNotFoundException;
 import com.vanderlei.cfp.gateways.repository.CentroCustoRepository;
-import com.vanderlei.cfp.security.UsuarioSecurity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -39,14 +37,9 @@ public class CentroCustoGateway {
       final Integer linesPerPage,
       final String orderBy,
       final String direction) {
-    UsuarioSecurity objSecurity = UsuarioSecurityGateway.authenticated();
-    if (objSecurity == null) {
-      throw new AuthorizationException("Acesso negado");
-    }
-
     PageRequest pageRequest =
         PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
-    return repository.findByUsuarioEmail(objSecurity.getUsername(), pageRequest);
+    return repository.findByUsuarioEmail("", pageRequest);
   }
 
   public Page<CentroCusto> buscarTodosAtivosPorUsuarioPaginado(
@@ -54,16 +47,11 @@ public class CentroCustoGateway {
       final Integer linesPerPage,
       final String orderBy,
       final String direction) {
-    UsuarioSecurity objSecurity = UsuarioSecurityGateway.authenticated();
-    if (objSecurity == null) {
-      throw new AuthorizationException("Acesso negado");
-    }
-
     List<CentroCusto> objList = new ArrayList<>();
     PageRequest pageRequest =
         PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
     Page<CentroCusto> objPage =
-        repository.findByUsuarioEmail(objSecurity.getUsername(), pageRequest);
+        repository.findByUsuarioEmail("", pageRequest);
     objPage.forEach(
         obj -> {
           if (obj.getAtivo()) {
@@ -77,21 +65,13 @@ public class CentroCustoGateway {
   }
 
   public CentroCusto buscarPorCodigo(final String id) {
-    UsuarioSecurity objSecurity = UsuarioSecurityGateway.authenticated();
-    if (objSecurity == null) {
-      throw new AuthorizationException("Acesso negado");
-    }
     Optional<CentroCusto> obj = repository.findById(id);
     CentroCusto centroCusto =
         obj.orElseThrow(
             () ->
                 new ObjectNotFoundException(
                     msgObjectNotFound + id + msgTipo + CentroCusto.class.getName()));
-    if (UsuarioSecurityGateway.userAuthenticatedByEmail(centroCusto.getUsuario().getEmail())) {
-      return centroCusto;
-    }
-
-    return null;
+    return centroCusto;
   }
 
   public Optional<CentroCusto> buscarPorNomeUsuarioEmail(final String nome, final String email) {
@@ -104,16 +84,11 @@ public class CentroCustoGateway {
       final String orderBy,
       final String direction,
       final String nome) {
-    UsuarioSecurity objSecurity = UsuarioSecurityGateway.authenticated();
-    if (objSecurity == null) {
-      throw new AuthorizationException("Acesso negado");
-    }
-
     List<CentroCusto> objList = new ArrayList<>();
     PageRequest pageRequest =
         PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
     Page<CentroCusto> objPage =
-        repository.findByNomeLikeAndUsuarioEmail(nome, objSecurity.getUsername(), pageRequest);
+        repository.findByNomeLikeAndUsuarioEmail(nome, "", pageRequest);
     objPage.forEach(
         obj -> {
           if (obj.getAtivo()) {
@@ -127,40 +102,32 @@ public class CentroCustoGateway {
   }
 
   public CentroCusto inserir(final CentroCusto obj) {
-    if (UsuarioSecurityGateway.userAuthenticatedByEmail(obj.getUsuario().getEmail())) {
-      if (!usuarioGateway
-          .buscarPorNomeEmail(obj.getUsuario().getNome(), obj.getUsuario().getEmail())
-          .isPresent()) {
-        throw new ObjectNotFoundException(
-            msgUsuarioObjectNotFound + obj.getUsuario() + msgTipo + CentroCusto.class.getName());
-      }
-      if (repository
-          .findByNomeAndUsuarioEmail(obj.getNome(), obj.getUsuario().getEmail())
-          .isPresent()) {
-        throw new ObjectDuplicatedException(
-            msgObjectDuplicated + obj.getNome() + msgTipo + CentroCusto.class.getName());
-      }
-      obj.setId(null);
-      obj.setDataInclusao(LocalDateTime.now());
-      return repository.save(obj);
+    if (!usuarioGateway
+        .buscarPorNomeEmail(obj.getUsuario().getNome(), obj.getUsuario().getEmail())
+        .isPresent()) {
+      throw new ObjectNotFoundException(
+          msgUsuarioObjectNotFound + obj.getUsuario() + msgTipo + CentroCusto.class.getName());
     }
-
-    return null;
+    if (repository
+        .findByNomeAndUsuarioEmail(obj.getNome(), obj.getUsuario().getEmail())
+        .isPresent()) {
+      throw new ObjectDuplicatedException(
+          msgObjectDuplicated + obj.getNome() + msgTipo + CentroCusto.class.getName());
+    }
+    obj.setId(null);
+    obj.setDataInclusao(LocalDateTime.now());
+    return repository.save(obj);
   }
 
   public CentroCusto atualizar(final CentroCusto obj) {
-    if (UsuarioSecurityGateway.userAuthenticatedByEmail(obj.getUsuario().getEmail())) {
-      if (!usuarioGateway
-          .buscarPorNomeEmail(obj.getUsuario().getNome(), obj.getUsuario().getEmail())
-          .isPresent()) {
-        throw new ObjectNotFoundException(
-            msgUsuarioObjectNotFound + obj.getUsuario() + msgTipo + CentroCusto.class.getName());
-      }
-      obj.setDataAlteracao(LocalDateTime.now());
-      return repository.save(obj);
+    if (!usuarioGateway
+        .buscarPorNomeEmail(obj.getUsuario().getNome(), obj.getUsuario().getEmail())
+        .isPresent()) {
+      throw new ObjectNotFoundException(
+          msgUsuarioObjectNotFound + obj.getUsuario() + msgTipo + CentroCusto.class.getName());
     }
-
-    return null;
+    obj.setDataAlteracao(LocalDateTime.now());
+    return repository.save(obj);
   }
 
   public CentroCusto ativar(final String id) {

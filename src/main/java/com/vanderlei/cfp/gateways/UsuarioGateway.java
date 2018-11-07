@@ -1,18 +1,13 @@
 package com.vanderlei.cfp.gateways;
 
 import com.vanderlei.cfp.entities.Usuario;
-import com.vanderlei.cfp.exceptions.AuthorizationException;
 import com.vanderlei.cfp.exceptions.ObjectDuplicatedException;
 import com.vanderlei.cfp.exceptions.ObjectNotFoundException;
 import com.vanderlei.cfp.gateways.repository.UsuarioRepository;
-import com.vanderlei.cfp.security.UsuarioSecurity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.image.BufferedImage;
-import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -42,30 +37,22 @@ public class UsuarioGateway {
   private Integer size;
 
   public Usuario buscarPorCodigo(final String id) {
-    if (UsuarioSecurityGateway.userAuthenticatedById(id)) {
-      Optional<Usuario> obj = repository.findById(id);
-      return obj.orElseThrow(
-          () ->
-              new ObjectNotFoundException(
-                  msgObjectNotFoundUsuarioCodigo + id + msgTipo + Usuario.class.getName()));
-    }
-
-    return null;
+    Optional<Usuario> obj = repository.findById(id);
+    return obj.orElseThrow(
+        () ->
+            new ObjectNotFoundException(
+                msgObjectNotFoundUsuarioCodigo + id + msgTipo + Usuario.class.getName()));
   }
 
   public Usuario buscarPorEmail(final String email, final boolean active) {
-    if (UsuarioSecurityGateway.userAuthenticatedByEmail(email)) {
-      Optional<Usuario> obj = repository.findByEmail(email);
-      if (active) {
-        obj = obj.filter(usuario -> usuario.getAtivo());
-      }
-      return obj.orElseThrow(
-          () ->
-              new ObjectNotFoundException(
-                  msgObjectNotFoundUsuarioEmail + email + msgTipo + Usuario.class.getName()));
+    Optional<Usuario> obj = repository.findByEmail(email);
+    if (active) {
+      obj = obj.filter(usuario -> usuario.getAtivo());
     }
-
-    return null;
+    return obj.orElseThrow(
+        () ->
+            new ObjectNotFoundException(
+                msgObjectNotFoundUsuarioEmail + email + msgTipo + Usuario.class.getName()));
   }
 
   public Optional<Usuario> buscarPorNomeEmail(final String nome, final String email) {
@@ -86,12 +73,8 @@ public class UsuarioGateway {
   }
 
   public Usuario atualizar(final Usuario obj) {
-    if (UsuarioSecurityGateway.userAuthenticatedById(obj.getId())) {
-      obj.setDataAlteracao(LocalDateTime.now());
-      return repository.save(obj);
-    }
-
-    return null;
+    obj.setDataAlteracao(LocalDateTime.now());
+    return repository.save(obj);
   }
 
   public Usuario ativar(final String email) {
@@ -104,20 +87,5 @@ public class UsuarioGateway {
     Usuario obj = this.buscarPorEmail(email, true);
     obj.setDataExclusao(LocalDateTime.now());
     return repository.save(obj);
-  }
-
-  public URI atualizarFotoPessoal(MultipartFile multipartFile) {
-    UsuarioSecurity usuarioSecurity = UsuarioSecurityGateway.authenticated();
-    if (usuarioSecurity == null) {
-      throw new AuthorizationException("Acesso negado");
-    }
-
-    BufferedImage jpgImage = imageGateway.getJpgImageFromFile(multipartFile);
-    String fileName = prefix + usuarioSecurity.getId() + ".jpg";
-
-    return s3Gateway.uploadFile(
-        imageGateway.getInputStream(imageGateway.cropAndResize(jpgImage, size), "jpg"),
-        fileName,
-        "image");
   }
 }

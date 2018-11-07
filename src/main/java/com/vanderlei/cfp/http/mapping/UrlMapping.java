@@ -8,4 +8,7 @@ public interface UrlMapping {
     String TITULO_LANCAMENTO = "/api/tituloslancamentos";
     String LANCAMENTO = "/api/lancamentos";
     String AUTHORIZATION = "/api/authorization";
+    String TOKENS = "/api/tokens";
+    String PERMISSAO = "/api/permissao";
+    String PERMISSAO_USUARIO = "/api/permissao/usuario";
 }

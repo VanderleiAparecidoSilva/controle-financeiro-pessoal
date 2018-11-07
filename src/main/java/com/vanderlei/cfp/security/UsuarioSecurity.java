@@ -1,74 +1,23 @@
 package com.vanderlei.cfp.security;
 
-import com.vanderlei.cfp.entities.enums.Perfil;
+import com.vanderlei.cfp.entities.Usuario;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.User;
 
 import java.util.Collection;
-import java.util.Set;
-import java.util.stream.Collectors;
 
-public class UsuarioSecurity implements UserDetails {
+public class UsuarioSecurity extends User {
 
-    private String id;
+  private static final long serialVersionUID = 1L;
 
-    private String email;
+  private Usuario usuario;
 
-    private String senha;
+  public UsuarioSecurity(Usuario usuario, Collection<? extends GrantedAuthority> authorities) {
+    super(usuario.getEmail(), usuario.getSenha(), authorities);
+    this.usuario = usuario;
+  }
 
-    private Collection<? extends GrantedAuthority> authorities;
-
-    public UsuarioSecurity(String id, String email, String senha, Set<Perfil> perfis) {
-        this.id = id;
-        this.email = email;
-        this.senha = senha;
-        this.authorities = perfis
-                .stream()
-                .map(perfil -> new SimpleGrantedAuthority(perfil.getDescricao()))
-                .collect(Collectors.toList());
-    }
-
-    public boolean hasRole(final Perfil perfil) {
-        return getAuthorities().contains(new SimpleGrantedAuthority(perfil.getDescricao()));
-    }
-
-    public String getId() {
-        return this.id;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.authorities;
-    }
-
-    @Override
-    public String getPassword() {
-        return this.senha;
-    }
-
-    @Override
-    public String getUsername() {
-        return this.email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
+  public Usuario getUsuario() {
+    return usuario;
+  }
 }

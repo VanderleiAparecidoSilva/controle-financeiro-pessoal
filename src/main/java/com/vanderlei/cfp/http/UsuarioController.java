@@ -20,11 +20,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.net.URI;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -176,23 +174,5 @@ public class UsuarioController {
       @ApiParam(value = "E-mail do usuário") @PathVariable("email") final String email) {
     gateway.desativar(email);
     return ResponseEntity.noContent().build();
-  }
-
-  @ApiOperation(
-      value = "Atualizar foto pessoal do usuário",
-      tags = {
-        TAG_CONTROLLER,
-      })
-  @ApiResponses(
-      value = {
-        @ApiResponse(code = 201, message = "Atualizado com sucesso!"),
-        @ApiResponse(code = 400, message = "Request inválido")
-      })
-  @RequestMapping(value = "/foto", method = POST)
-  ResponseEntity<Void> uploadProfilePicture(
-      @ApiParam(value = "Arquivo de Foto") @RequestParam(name = "arquivo")
-          MultipartFile multipartFile) {
-    URI uri = gateway.atualizarFotoPessoal(multipartFile);
-    return ResponseEntity.created(uri).build();
   }
 }

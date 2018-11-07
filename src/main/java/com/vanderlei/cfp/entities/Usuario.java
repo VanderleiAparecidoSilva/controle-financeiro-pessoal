@@ -1,7 +1,6 @@
 package com.vanderlei.cfp.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.vanderlei.cfp.entities.enums.Perfil;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
@@ -15,10 +14,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Document(collection = "usuario")
 @CompoundIndexes({
@@ -49,24 +46,16 @@ public class Usuario implements Serializable {
 
   private LocalDateTime dataExclusao;
 
-  @ElementCollection(fetch = FetchType.EAGER)
-  @CollectionTable(name = "PERFIS")
-  private Set<Integer> perfis;
-
   public Usuario() {
-    this.perfis = new HashSet<>();
     this.permiteEmailLembrete = true;
-    addPerfil(Perfil.USUARIO);
   }
 
   public Usuario(
       final String id, final String nome, final String email, final Boolean permiteEmailLembrete) {
-    this.perfis = new HashSet<>();
     this.id = id;
     this.nome = nome;
     this.email = email;
     this.permiteEmailLembrete = permiteEmailLembrete;
-    addPerfil(Perfil.USUARIO);
   }
 
   public String getId() {
@@ -131,14 +120,6 @@ public class Usuario implements Serializable {
 
   public void setDataExclusao(LocalDateTime dataExclusao) {
     this.dataExclusao = dataExclusao;
-  }
-
-  public Set<Perfil> getPerfis() {
-    return perfis.stream().map(x -> Perfil.toEnum(x)).collect(Collectors.toSet());
-  }
-
-  public void addPerfil(Perfil perfil) {
-    perfis.add(perfil.getCodigo());
   }
 
   @JsonIgnore
