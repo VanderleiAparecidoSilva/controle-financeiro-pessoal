@@ -46,7 +46,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     "/swagger-resources/configuration/security"
   };
 
-  public static final String[] PUBLIC_MATCHERS_POST = {"/api/usuarios", "/api/permissao", "/api/permissao/usuario"};
+  public static final String[] PUBLIC_MATCHERS_POST = {"/api/usuarios"};
 
   @Override
   public void configure(HttpSecurity http) throws Exception {
