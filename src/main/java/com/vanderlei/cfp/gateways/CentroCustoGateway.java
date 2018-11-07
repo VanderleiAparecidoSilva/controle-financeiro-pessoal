@@ -39,7 +39,7 @@ public class CentroCustoGateway {
       final String direction) {
     PageRequest pageRequest =
         PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
-    return repository.findByUsuarioEmail("", pageRequest);
+    return repository.findByUsuarioEmail("vanderlei@gmail.com", pageRequest);
   }
 
   public Page<CentroCusto> buscarTodosAtivosPorUsuarioPaginado(

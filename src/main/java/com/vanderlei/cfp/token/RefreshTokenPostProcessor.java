@@ -39,6 +39,7 @@ public class RefreshTokenPostProcessor implements ResponseBodyAdvice<OAuth2Acces
       Class<? extends HttpMessageConverter<?>> aClass,
       ServerHttpRequest serverHttpRequest,
       ServerHttpResponse serverHttpResponse) {
+
     HttpServletRequest req = ((ServletServerHttpRequest) serverHttpRequest).getServletRequest();
     HttpServletResponse resp =
         ((ServletServerHttpResponse) serverHttpResponse).getServletResponse();

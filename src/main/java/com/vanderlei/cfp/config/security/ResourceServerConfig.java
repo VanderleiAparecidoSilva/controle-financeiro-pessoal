@@ -51,18 +51,18 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
   @Override
   public void configure(HttpSecurity http) throws Exception {
     http.authorizeRequests()
-        .antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST)
-        .permitAll()
-        .antMatchers(PUBLIC_MATCHERS)
-        .permitAll()
-        .anyRequest()
-        .authenticated()
+            .antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST)
+            .permitAll()
+            .antMatchers(PUBLIC_MATCHERS)
+            .permitAll()
+            .anyRequest()
+            .authenticated()
         .and()
-        .sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
-        .csrf()
-        .disable();
+            .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+            .csrf()
+            .disable();
   }
 
   @Override
