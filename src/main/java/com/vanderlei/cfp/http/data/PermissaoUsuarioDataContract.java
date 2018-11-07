@@ -1,27 +1,28 @@
 package com.vanderlei.cfp.http.data;
 
-import org.hibernate.validator.constraints.Length;
-
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
-public class PermissaoDataContract implements Serializable {
+public class PermissaoUsuarioDataContract implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
   private String id;
 
-  @NotEmpty
-  @Length(min = 5, max = 100, message = "O nome deve conter entre 5 e 100 caracteres")
-  private String descricao;
+  @NotNull @NotEmpty private String idUsuario;
+
+  @NotNull @NotEmpty private String idPermissao;
 
   private Boolean ativo;
 
-  public PermissaoDataContract() {}
+  public PermissaoUsuarioDataContract() {}
 
-  public PermissaoDataContract(final String id, final String descricao) {
+  public PermissaoUsuarioDataContract(
+      final String id, final String idUsuario, final String idPermissao) {
     this.id = id;
-    this.descricao = descricao;
+    this.idUsuario = idUsuario;
+    this.idPermissao = idPermissao;
   }
 
   public String getId() {
@@ -32,12 +33,20 @@ public class PermissaoDataContract implements Serializable {
     this.id = id;
   }
 
-  public String getDescricao() {
-    return descricao;
+  public String getIdUsuario() {
+    return idUsuario;
   }
 
-  public void setDescricao(String descricao) {
-    this.descricao = descricao;
+  public void setIdUsuario(String idUsuario) {
+    this.idUsuario = idUsuario;
+  }
+
+  public String getIdPermissao() {
+    return idPermissao;
+  }
+
+  public void setIdPermissao(String idPermissao) {
+    this.idPermissao = idPermissao;
   }
 
   public Boolean getAtivo() {
