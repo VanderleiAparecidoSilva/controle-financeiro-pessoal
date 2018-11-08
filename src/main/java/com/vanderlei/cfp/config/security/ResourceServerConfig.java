@@ -47,7 +47,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
   };
 
   public static final String[] PUBLIC_MATCHERS_POST = {
-          "/api/usuarios", "/api/centrocustos"
+          "/api/usuarios"
   };
 
   @Override
