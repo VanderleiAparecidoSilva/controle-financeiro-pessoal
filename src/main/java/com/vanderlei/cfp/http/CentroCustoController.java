@@ -179,6 +179,8 @@ public class CentroCustoController {
           final String email,
       @ApiParam(value = "Nome do centro de custo", required = true) @RequestParam(value = "nome")
           final String nome,
+      @ApiParam(value = "Ativo", required = true, defaultValue = "true") @RequestParam(value = "ativo")
+        final Boolean ativo,
       @ApiParam(value = "Quantidade de páginas") @RequestParam(value = "page", defaultValue = "0")
           final Integer page,
       @ApiParam(value = "Quantidade de linhas por página")
@@ -191,7 +193,7 @@ public class CentroCustoController {
     Page<CentroCustoDataContract> dataContractList =
         dataContractConverter.convert(
             gateway.buscarPorNomeLikeUsuarioEmail(
-                email, nome, page, linesPerPage, orderBy, direction));
+                email, nome, ativo, page, linesPerPage, orderBy, direction));
     return dataContractList.getTotalElements() > 0
         ? ResponseEntity.ok().body(dataContractList)
         : ResponseEntity.notFound().build();

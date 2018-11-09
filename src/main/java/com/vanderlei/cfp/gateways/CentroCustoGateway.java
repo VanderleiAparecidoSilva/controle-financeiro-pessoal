@@ -88,6 +88,7 @@ public class CentroCustoGateway {
   public Page<CentroCusto> buscarPorNomeLikeUsuarioEmail(
       final String email,
       final String nome,
+      final Boolean ativo,
       final Integer page,
       final Integer linesPerPage,
       final String orderBy,
@@ -95,17 +96,21 @@ public class CentroCustoGateway {
     List<CentroCusto> objList = new ArrayList<>();
     PageRequest pageRequest =
         PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
-    Page<CentroCusto> objPage = repository.findByNomeLikeAndUsuarioEmail(nome, email, pageRequest);
-    objPage.forEach(
-        obj -> {
-          if (obj.getAtivo()) {
-            objList.add(obj);
-          }
-        });
-    return new PageImpl<CentroCusto>(
-        objList,
-        PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy),
-        objList.size());
+    Page<CentroCusto> objPage = repository.findByNomeLikeIgnoreCaseAndUsuarioEmail(nome, email, pageRequest);
+    if (ativo) {
+      objPage.forEach(
+          obj -> {
+            if (obj.getAtivo()) {
+              objList.add(obj);
+            }
+          });
+      return new PageImpl<CentroCusto>(
+          objList,
+          PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy),
+          objList.size());
+    } else {
+      return objPage;
+    }
   }
 
   public CentroCusto inserir(final CentroCusto obj) {

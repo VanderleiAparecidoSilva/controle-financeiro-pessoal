@@ -16,7 +16,7 @@ public interface CentroCustoRepository extends MongoRepository<CentroCusto, Stri
   Optional<CentroCusto> findByNomeAndUsuarioEmail(final String nome, final String email);
 
   @Transactional(readOnly = true)
-  Page<CentroCusto> findByNomeLikeAndUsuarioEmail(
+  Page<CentroCusto> findByNomeLikeIgnoreCaseAndUsuarioEmail(
       final String nome, final String email, final Pageable pageable);
 
   @Transactional(readOnly = true)
