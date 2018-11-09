@@ -7,7 +7,6 @@ import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -25,7 +24,9 @@ public class Upload implements Serializable {
 
   @NotNull private Usuario usuario;
 
-  @NotEmpty private LocalDateTime dataInclusao;
+  @NotNull private LocalDateTime dataInclusao;
+
+  @NotNull private Boolean processado;
 
   public Upload() {}
 
@@ -65,6 +66,14 @@ public class Upload implements Serializable {
 
   public void setDataInclusao(LocalDateTime dataInclusao) {
     this.dataInclusao = dataInclusao;
+  }
+
+  public Boolean getProcessado() {
+    return processado;
+  }
+
+  public void setProcessado(Boolean processado) {
+    this.processado = processado;
   }
 
   @Override

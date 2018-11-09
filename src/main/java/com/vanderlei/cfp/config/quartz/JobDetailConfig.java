@@ -1,5 +1,6 @@
 package com.vanderlei.cfp.config.quartz;
 
+import com.vanderlei.cfp.job.UploadJob;
 import com.vanderlei.cfp.job.VencimentoJob;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -15,6 +16,12 @@ public class JobDetailConfig {
     @Qualifier("jobVencimento")
     public JobDetailFactoryBean jobVencimento() {
         return createJobDetail(VencimentoJob.class);
+    }
+
+    @Bean
+    @Qualifier("jobUpload")
+    public JobDetailFactoryBean jobUpload() {
+        return createJobDetail(UploadJob.class);
     }
 
     private static JobDetailFactoryBean createJobDetail(Class jobClass) {

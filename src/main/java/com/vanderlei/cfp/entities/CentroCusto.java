@@ -34,7 +34,7 @@ public class CentroCusto implements Serializable {
 
   @NotNull private Usuario usuario;
 
-  @NotEmpty private LocalDateTime dataInclusao;
+  @NotNull private LocalDateTime dataInclusao;
 
   private LocalDateTime dataAlteracao;
 

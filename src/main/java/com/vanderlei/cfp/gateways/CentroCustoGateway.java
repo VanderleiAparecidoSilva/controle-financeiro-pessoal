@@ -168,6 +168,7 @@ public class CentroCustoGateway {
       obj.setId(null);
       obj.setDataInclusao(LocalDateTime.now());
       obj.setUsuario(usuario);
+      obj.setProcessado(false);
       uploadRepository.save(obj);
     }
   }

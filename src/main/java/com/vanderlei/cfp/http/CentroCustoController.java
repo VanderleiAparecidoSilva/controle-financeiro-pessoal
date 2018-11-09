@@ -223,13 +223,13 @@ public class CentroCustoController {
   }
 
   @ApiOperation(
-      value = "TipoUpload de novos centros de custo",
+      value = "Upload de novos centros de custo",
       tags = {
         TAG_CONTROLLER,
       })
   @ApiResponses(
       value = {
-        @ApiResponse(code = 201, message = "TipoUpload efetuado com sucesso!"),
+        @ApiResponse(code = 201, message = "Upload efetuado com sucesso!"),
         @ApiResponse(code = 400, message = "Request inválido")
       })
   @RequestMapping(

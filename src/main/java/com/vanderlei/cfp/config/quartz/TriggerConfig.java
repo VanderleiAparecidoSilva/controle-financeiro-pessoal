@@ -28,4 +28,15 @@ public class TriggerConfig {
         cron.setGroup(GROUP);
         return cron;
     }
+
+    @Bean
+    public CronTriggerFactoryBean cronUpload(@Qualifier("jobUpload") final JobDetail jobUpload) {
+        CronTriggerFactoryBean cron = new CronTriggerFactoryBean();
+        cron.setJobDetail(jobUpload);
+        cron.setCronExpression(quartzApplicationProperties.getJob().getUpload().getCronExpression());
+        cron.setMisfireInstruction(SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
+        cron.setName("uploadJob");
+        cron.setGroup(GROUP);
+        return cron;
+    }
 }

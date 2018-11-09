@@ -29,6 +29,8 @@ public class QuartzApplicationProperties {
 
         private CronExpression vencimento;
 
+        private CronExpression upload;
+
         @Getter
         @Setter
         public static class CronExpression{
