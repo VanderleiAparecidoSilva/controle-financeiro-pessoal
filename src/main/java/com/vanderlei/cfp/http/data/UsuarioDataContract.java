@@ -21,7 +21,7 @@ public class UsuarioDataContract implements Serializable {
 
   @NotEmpty private String senha;
 
-  @NotNull private Boolean permiteEmailLembrete;
+  private Boolean permiteEmailLembrete;
 
   public UsuarioDataContract() {}
 

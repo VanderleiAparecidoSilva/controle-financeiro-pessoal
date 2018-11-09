@@ -1,9 +1,13 @@
 package com.vanderlei.cfp.gateways;
 
 import com.vanderlei.cfp.entities.CentroCusto;
+import com.vanderlei.cfp.entities.Usuario;
+import com.vanderlei.cfp.entities.enums.TipoUpload;
+import com.vanderlei.cfp.entities.upload.CentroCustoUpload;
 import com.vanderlei.cfp.exceptions.ObjectDuplicatedException;
 import com.vanderlei.cfp.exceptions.ObjectNotFoundException;
 import com.vanderlei.cfp.gateways.repository.CentroCustoRepository;
+import com.vanderlei.cfp.gateways.repository.UploadRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -30,19 +34,23 @@ public class CentroCustoGateway {
 
   @Autowired private CentroCustoRepository repository;
 
+  @Autowired private UploadRepository uploadRepository;
+
   @Autowired private UsuarioGateway usuarioGateway;
 
   public Page<CentroCusto> buscarTodosPorUsuarioPaginado(
+      final String email,
       final Integer page,
       final Integer linesPerPage,
       final String orderBy,
       final String direction) {
     PageRequest pageRequest =
         PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
-    return repository.findByUsuarioEmail("vanderlei@gmail.com", pageRequest);
+    return repository.findByUsuarioEmail(email, pageRequest);
   }
 
   public Page<CentroCusto> buscarTodosAtivosPorUsuarioPaginado(
+      final String email,
       final Integer page,
       final Integer linesPerPage,
       final String orderBy,
@@ -50,8 +58,7 @@ public class CentroCustoGateway {
     List<CentroCusto> objList = new ArrayList<>();
     PageRequest pageRequest =
         PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
-    Page<CentroCusto> objPage =
-        repository.findByUsuarioEmail("", pageRequest);
+    Page<CentroCusto> objPage = repository.findByUsuarioEmail(email, pageRequest);
     objPage.forEach(
         obj -> {
           if (obj.getAtivo()) {
@@ -64,8 +71,8 @@ public class CentroCustoGateway {
         objList.size());
   }
 
-  public CentroCusto buscarPorCodigo(final String id) {
-    Optional<CentroCusto> obj = repository.findById(id);
+  public CentroCusto buscarPorCodigoUsuario(final String id, final String email) {
+    Optional<CentroCusto> obj = repository.findByIdAndUsuarioEmail(id, email);
     CentroCusto centroCusto =
         obj.orElseThrow(
             () ->
@@ -79,16 +86,16 @@ public class CentroCustoGateway {
   }
 
   public Page<CentroCusto> buscarPorNomeLikeUsuarioEmail(
+      final String email,
+      final String nome,
       final Integer page,
       final Integer linesPerPage,
       final String orderBy,
-      final String direction,
-      final String nome) {
+      final String direction) {
     List<CentroCusto> objList = new ArrayList<>();
     PageRequest pageRequest =
         PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
-    Page<CentroCusto> objPage =
-        repository.findByNomeLikeAndUsuarioEmail(nome, "", pageRequest);
+    Page<CentroCusto> objPage = repository.findByNomeLikeAndUsuarioEmail(nome, email, pageRequest);
     objPage.forEach(
         obj -> {
           if (obj.getAtivo()) {
@@ -130,19 +137,38 @@ public class CentroCustoGateway {
     return repository.save(obj);
   }
 
-  public CentroCusto ativar(final String id) {
-    CentroCusto obj = this.buscarPorCodigo(id);
+  public CentroCusto ativar(final String id, final String email) {
+    CentroCusto obj = this.buscarPorCodigoUsuario(id, email);
     obj.setDataExclusao(null);
     return repository.save(obj);
   }
 
-  public CentroCusto desativar(final String id) {
-    CentroCusto obj = this.buscarPorCodigo(id);
+  public CentroCusto desativar(final String id, final String email) {
+    CentroCusto obj = this.buscarPorCodigoUsuario(id, email);
     obj.setDataExclusao(LocalDateTime.now());
     return repository.save(obj);
   }
 
   public void salvar(final CentroCusto obj) {
     repository.save(obj);
+  }
+
+  public void upload(final String email, final String str) {
+    Usuario usuario = usuarioGateway.buscarPorEmail(email, true);
+
+    if (usuario != null) {
+      CentroCustoUpload obj = new CentroCustoUpload();
+      String[] strArray = str.split(";");
+
+      obj.setTipo(TipoUpload.toEnum(strArray[0]));
+      obj.setNome(strArray[1]);
+      obj.setAplicarNaReceita(Boolean.valueOf(strArray[2]));
+      obj.setAplicarNaDespesa(Boolean.valueOf(strArray[3]));
+
+      obj.setId(null);
+      obj.setDataInclusao(LocalDateTime.now());
+      obj.setUsuario(usuario);
+      uploadRepository.save(obj);
+    }
   }
 }

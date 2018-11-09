@@ -38,7 +38,7 @@ public class Usuario implements Serializable {
 
   @JsonIgnore private String senha;
 
-  @NotNull private Boolean permiteEmailLembrete;
+  private Boolean permiteEmailLembrete;
 
   @NotNull private LocalDateTime dataInclusao;
 
