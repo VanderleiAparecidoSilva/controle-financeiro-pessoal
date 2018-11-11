@@ -10,7 +10,7 @@ public class Parsers {
   public static void parse(
       final String id, final CentroCusto obj, final CentroCustoDataContract dataContract) {
     obj.setId(id);
-    obj.setNome(dataContract.getNome());
+    obj.setNome(dataContract.getNome().toUpperCase());
     obj.setAplicarNaDespesa(dataContract.getAplicarNaDespesa());
     obj.setAplicarNaReceita(dataContract.getAplicarNaReceita());
   }

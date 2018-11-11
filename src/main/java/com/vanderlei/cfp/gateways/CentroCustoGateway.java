@@ -166,7 +166,7 @@ public class CentroCustoGateway {
       String[] strArray = str.split(";");
 
       obj.setTipo(TipoUpload.toEnum(strArray[0]));
-      obj.setNome(strArray[1]);
+      obj.setNome(strArray[1].toUpperCase());
       obj.setAplicarNaReceita(Boolean.valueOf(strArray[2]));
       obj.setAplicarNaDespesa(Boolean.valueOf(strArray[3]));
 

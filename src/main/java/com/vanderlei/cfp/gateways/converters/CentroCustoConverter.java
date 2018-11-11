@@ -14,6 +14,7 @@ public class CentroCustoConverter implements Converter<CentroCustoDataContract, 
     public CentroCusto convert(final CentroCustoDataContract dataContract) {
         CentroCusto obj = new CentroCusto();
         BeanUtils.copyProperties(dataContract, obj);
+        obj.setNome(obj.getNome().toUpperCase());
         obj.setUsuario(new Usuario(null, dataContract.getUsuario().getNome(), dataContract.getUsuario().getEmail(),
                 dataContract.getUsuario().getPermiteEmailLembrete()));
 

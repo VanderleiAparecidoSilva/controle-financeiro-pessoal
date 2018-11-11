@@ -179,8 +179,9 @@ public class CentroCustoController {
           final String email,
       @ApiParam(value = "Nome do centro de custo", required = true) @RequestParam(value = "nome")
           final String nome,
-      @ApiParam(value = "Ativo", required = true, defaultValue = "true") @RequestParam(value = "ativo")
-        final Boolean ativo,
+      @ApiParam(value = "Ativo", required = true, defaultValue = "true")
+          @RequestParam(value = "ativo")
+          final Boolean ativo,
       @ApiParam(value = "Quantidade de páginas") @RequestParam(value = "page", defaultValue = "0")
           final Integer page,
       @ApiParam(value = "Quantidade de linhas por página")
@@ -260,16 +261,16 @@ public class CentroCustoController {
         @ApiResponse(code = 204, message = "Atualizado com sucesso!"),
         @ApiResponse(code = 400, message = "Request inválido")
       })
-  @RequestMapping(value = "/{id}/{email}", method = PUT)
-  ResponseEntity<Void> atualizar(
+  @RequestMapping(value = "/{email}/{id}", method = PUT)
+  ResponseEntity<CentroCusto> atualizar(
       @ApiParam(value = "Centro de Custo") @Valid @RequestBody
           final CentroCustoDataContract dataContract,
-      @ApiParam(value = "Identificador do centro de custo") @PathVariable("id") final String id,
-      @ApiParam(value = "Identificador do usuário") @PathVariable("email") final String email) {
+      @ApiParam(value = "Identificador do usuário") @PathVariable("email") final String email,
+      @ApiParam(value = "Identificador do centro de custo") @PathVariable("id") final String id) {
     CentroCusto obj = gateway.buscarPorCodigoUsuario(id, email);
     Parsers.parse(id, obj, dataContract);
     gateway.atualizar(obj);
-    return ResponseEntity.noContent().build();
+    return ResponseEntity.status(HttpStatus.OK).body(obj);
   }
 
   @ApiOperation(
