@@ -30,6 +30,8 @@ public class UsuarioGateway {
 
   @Autowired private UsuarioRepository repository;
 
+  @Autowired private PermissaoUsuarioGateway permissaoUsuarioGateway;
+
   @Value("${img.prefix.client.profile}")
   private String prefix;
 
@@ -69,11 +71,19 @@ public class UsuarioGateway {
     }
     obj.setId(null);
     obj.setDataInclusao(LocalDateTime.now());
-    return repository.save(obj);
+    Usuario objRet = repository.save(obj);
+    if (permissaoUsuarioGateway.buscarPorUsuario(objRet.getId()).size() == 0) {
+      permissaoUsuarioGateway.inserirPermissaoPadraoParaUsuario(objRet.getId());
+    }
+
+    return objRet;
   }
 
   public Usuario atualizar(final Usuario obj) {
     obj.setDataAlteracao(LocalDateTime.now());
+    if (permissaoUsuarioGateway.buscarPorUsuario(obj.getId()).size() == 0) {
+      permissaoUsuarioGateway.inserirPermissaoPadraoParaUsuario(obj.getId());
+    }
     return repository.save(obj);
   }
 

@@ -21,7 +21,9 @@ public class Permissao implements Serializable {
 
   @NotNull @NotEmpty private String descricao;
 
-  @NotEmpty private LocalDateTime dataInclusao;
+  @NotNull private Boolean permissaoDefault;
+
+  @NotNull private LocalDateTime dataInclusao;
 
   private LocalDateTime dataAlteracao;
 
@@ -41,6 +43,14 @@ public class Permissao implements Serializable {
 
   public void setDescricao(String descricao) {
     this.descricao = descricao;
+  }
+
+  public Boolean getPermissaoDefault() {
+    return permissaoDefault;
+  }
+
+  public void setPermissaoDefault(Boolean permissaoDefault) {
+    this.permissaoDefault = permissaoDefault;
   }
 
   public LocalDateTime getDataInclusao() {

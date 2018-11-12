@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -73,5 +74,9 @@ public class PermissaoGateway {
 
   public void salvar(final Permissao obj) {
     repository.save(obj);
+  }
+
+  public List<Permissao> buscarDefault(Boolean value) {
+    return repository.findByPermissaoDefault(value);
   }
 }

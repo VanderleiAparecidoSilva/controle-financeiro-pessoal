@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,6 +23,8 @@ public class PermissaoUsuarioGateway {
 
   @Autowired private PermissaoUsuarioRepository repository;
 
+  @Autowired private PermissaoGateway permissaoGateway;
+
   public PermissaoUsuario buscarPorCodigo(final String id) {
     Optional<PermissaoUsuario> obj = repository.findById(id);
     PermissaoUsuario permissaoUsuario =
@@ -30,6 +33,10 @@ public class PermissaoUsuarioGateway {
                 new ObjectNotFoundException(
                     msgObjectNotFound + id + msgTipo + Permissao.class.getName()));
     return permissaoUsuario;
+  }
+
+  public List<PermissaoUsuario> buscarPorUsuario(final String userId) {
+    return repository.findByIdUsuario(userId);
   }
 
   public PermissaoUsuario inserir(final PermissaoUsuario obj) {
@@ -63,5 +70,17 @@ public class PermissaoUsuarioGateway {
 
   public void salvar(final PermissaoUsuario obj) {
     repository.save(obj);
+  }
+
+  public void inserirPermissaoPadraoParaUsuario(final String userId) {
+    List<Permissao> permissaoDefaultList = permissaoGateway.buscarDefault(true);
+    permissaoDefaultList.forEach(
+        o -> {
+          PermissaoUsuario obj = new PermissaoUsuario();
+          obj.setIdUsuario(userId);
+          obj.setIdPermissao(o.getId());
+
+          this.inserir(obj);
+        });
   }
 }
