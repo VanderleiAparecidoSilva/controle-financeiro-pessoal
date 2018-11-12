@@ -75,7 +75,6 @@ public class UsuarioGateway {
     if (permissaoUsuarioGateway.buscarPorUsuario(objRet.getId()).size() == 0) {
       permissaoUsuarioGateway.inserirPermissaoPadraoParaUsuario(objRet.getId());
     }
-
     return objRet;
   }
 
