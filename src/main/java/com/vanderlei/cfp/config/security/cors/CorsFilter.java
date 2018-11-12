@@ -1,5 +1,6 @@
 package com.vanderlei.cfp.config.security.cors;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -12,6 +13,7 @@ import java.io.IOException;
 
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
+@Slf4j
 public class CorsFilter implements Filter {
 
   @Value("${origin-permitida}")
@@ -29,7 +31,8 @@ public class CorsFilter implements Filter {
 
     response.setHeader("Access-Control-Allow-Origin", originPermitida);
     response.setHeader("Access-Control-Allow-Credentials", "true");
-
+    log.info("Origem configurada: " + originPermitida);
+    log.info("Origem request: " + request.getHeader("Origin"));
     if ("OPTIONS".equals(request.getMethod())
         && originPermitida.equals(request.getHeader("Origin"))) {
       response.setHeader("Access-Control-Allow-Methods", "POST, GET, DELETE, PUT, OPTIONS");

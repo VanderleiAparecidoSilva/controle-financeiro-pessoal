@@ -1,6 +1,7 @@
 package com.vanderlei.cfp.config.security;
 
 import com.vanderlei.cfp.config.security.token.CustomTokenEnhancer;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +22,7 @@ import java.util.Arrays;
 
 @Profile("oauth-security")
 @Configuration
+@Slf4j
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
   @Value("${jwt.secret}")
@@ -68,6 +70,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
   @Bean
   public JwtAccessTokenConverter accessTokenConverter() {
     JwtAccessTokenConverter accessTokenConverter = new JwtAccessTokenConverter();
+    log.info("Secret: " + secret);
     accessTokenConverter.setSigningKey(secret);
     return accessTokenConverter;
   }
