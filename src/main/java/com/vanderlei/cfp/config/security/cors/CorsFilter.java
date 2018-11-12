@@ -1,6 +1,7 @@
 package com.vanderlei.cfp.config.security.cors;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.vanderlei.cfp.config.property.CFPApiProperty;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -14,8 +15,7 @@ import java.io.IOException;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CorsFilter implements Filter {
 
-  @Value("${origin.permitida}")
-  private String originPermitida;
+  @Autowired private CFPApiProperty cfpApiProperty;
 
   @Override
   public void init(FilterConfig filterConfig) throws ServletException {}
@@ -27,11 +27,11 @@ public class CorsFilter implements Filter {
     HttpServletRequest request = (HttpServletRequest) servletRequest;
     HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-    response.setHeader("Access-Control-Allow-Origin", originPermitida);
+    response.setHeader("Access-Control-Allow-Origin", cfpApiProperty.getOriginPermitida());
     response.setHeader("Access-Control-Allow-Credentials", "true");
 
     if ("OPTIONS".equals(request.getMethod())
-        && originPermitida.equals(request.getHeader("Origin"))) {
+        && cfpApiProperty.getOriginPermitida().equals(request.getHeader("Origin"))) {
       response.setHeader("Access-Control-Allow-Methods", "POST, GET, DELETE, PUT, OPTIONS");
       response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type, Accept");
       response.setHeader("Access-Control-Max-Age", "3600");

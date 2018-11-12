@@ -1,9 +1,10 @@
 package com.vanderlei.cfp.http;
 
+import com.vanderlei.cfp.config.property.CFPApiProperty;
 import com.vanderlei.cfp.http.mapping.UrlMapping;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,16 +22,15 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping(UrlMapping.TOKENS)
 public class TokenController {
 
-  @Value("${seguranca.enable-https}")
-  private Boolean isEnableHttps;
-
   static final String TAG_CONTROLLER = "tokens-controller";
+
+  @Autowired private CFPApiProperty cfpApiProperty;
 
   @DeleteMapping("/revoke")
   public void revoke(HttpServletRequest req, HttpServletResponse resp) {
     Cookie cookie = new Cookie("refreshToken", null);
     cookie.setHttpOnly(true);
-    cookie.setSecure(isEnableHttps);
+    cookie.setSecure(cfpApiProperty.getSeguranca().isEnableHttps());
     cookie.setPath(req.getContextPath() + "/oauth/token");
     cookie.setMaxAge(0);
 
