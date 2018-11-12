@@ -3,6 +3,7 @@ package com.vanderlei.cfp.http.data;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 public class PermissaoDataContract implements Serializable {
@@ -15,13 +16,16 @@ public class PermissaoDataContract implements Serializable {
   @Length(min = 5, max = 100, message = "O nome deve conter entre 5 e 100 caracteres")
   private String descricao;
 
+  @NotNull private Boolean permissaoDefault;
+
   private Boolean ativo;
 
   public PermissaoDataContract() {}
 
-  public PermissaoDataContract(final String id, final String descricao) {
+  public PermissaoDataContract(final String id, final String descricao, Boolean permissaoDefault) {
     this.id = id;
     this.descricao = descricao;
+    this.permissaoDefault = permissaoDefault;
   }
 
   public String getId() {
@@ -38,6 +42,14 @@ public class PermissaoDataContract implements Serializable {
 
   public void setDescricao(String descricao) {
     this.descricao = descricao;
+  }
+
+  public Boolean getPermissaoDefault() {
+    return permissaoDefault;
+  }
+
+  public void setPermissaoDefault(Boolean permissaoDefault) {
+    this.permissaoDefault = permissaoDefault;
   }
 
   public Boolean getAtivo() {
