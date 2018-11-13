@@ -60,13 +60,15 @@ public class ContaBancariaController {
         @ApiResponse(code = 404, message = "Conta bancária não encontrada")
       })
   @RequestMapping(
-      value = "/{id}",
+      value = "/{email}/{id}",
       produces = {APPLICATION_JSON_VALUE},
       method = GET)
   ResponseEntity<Object> buscaPorId(
+      @ApiParam(value = "Identificador do usuário", required = true) @PathVariable("email")
+          final String email,
       @ApiParam(value = "Identificador da conta bancária", required = true) @PathVariable("id")
           final String id) {
-    ContaBancaria obj = gateway.buscarPorCodigo(id);
+    ContaBancaria obj = gateway.buscarPorCodigoUsuario(id, email); //TODO Continuar adicionando e-mail nos requests de conta bancaria
     final ContaBancariaDataContract dataContract = dataContractConverter.convert(obj);
     return obj != null ? ResponseEntity.ok().body(dataContract) : ResponseEntity.notFound().build();
   }
@@ -191,7 +193,7 @@ public class ContaBancariaController {
       @ApiParam(value = "Conta Bancária") @Valid @RequestBody
           final ContaBancariaDataContract dataContract,
       @ApiParam(value = "Identificador da conta bancária") @PathVariable("id") final String id) {
-    ContaBancaria obj = gateway.buscarPorCodigo(id);
+    ContaBancaria obj = gateway.buscarPorCodigoUsuario(id);
     Parsers.parse(id, obj, dataContract);
     gateway.atualizar(obj);
     return ResponseEntity.noContent().build();

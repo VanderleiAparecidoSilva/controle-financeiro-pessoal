@@ -17,4 +17,7 @@ public interface ContaBancariaRepository extends MongoRepository<ContaBancaria, 
 
   @Transactional(readOnly = true)
   Page<ContaBancaria> findByUsuarioEmail(final String email, final Pageable pageable);
+
+  @Transactional(readOnly = true)
+  Optional<ContaBancaria> findByIdAndUsuarioEmail(final String id, final String email);
 }

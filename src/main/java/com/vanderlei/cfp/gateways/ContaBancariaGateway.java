@@ -68,8 +68,8 @@ public class ContaBancariaGateway {
     return repository.findByNomeAndUsuarioEmail(nome, email);
   }
 
-  public ContaBancaria buscarPorCodigo(final String id) {
-    Optional<ContaBancaria> obj = repository.findById(id);
+  public ContaBancaria buscarPorCodigoUsuario(final String id, final String email) {
+    Optional<ContaBancaria> obj = repository.findByIdAndUsuarioEmail(id, email);
     ContaBancaria contaBancaria =
         obj.orElseThrow(
             () ->
@@ -108,19 +108,19 @@ public class ContaBancariaGateway {
   }
 
   public ContaBancaria ativar(final String id) {
-    ContaBancaria obj = this.buscarPorCodigo(id);
+    ContaBancaria obj = this.buscarPorCodigoUsuario(id);
     obj.setDataExclusao(null);
     return repository.save(obj);
   }
 
   public ContaBancaria desativar(final String id) {
-    ContaBancaria obj = this.buscarPorCodigo(id);
+    ContaBancaria obj = this.buscarPorCodigoUsuario(id);
     obj.setDataExclusao(LocalDateTime.now());
     return repository.save(obj);
   }
 
   public void atualizarSaldo(final String id, final Double valor, final Operacao operacao) {
-    ContaBancaria obj = this.buscarPorCodigo(id);
+    ContaBancaria obj = this.buscarPorCodigoUsuario(id);
     obj.setDataAlteracao(LocalDateTime.now());
     obj.setSaldoContaBancaria(
         operacao.equals(Operacao.CREDITO)
