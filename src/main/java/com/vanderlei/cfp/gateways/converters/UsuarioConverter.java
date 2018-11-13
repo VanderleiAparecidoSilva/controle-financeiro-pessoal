@@ -11,18 +11,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class UsuarioConverter implements Converter<UsuarioDataContract, Usuario> {
 
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+  @Autowired private BCryptPasswordEncoder passwordEncoder;
 
-    public UsuarioConverter() {
-        this.passwordEncoder = new BCryptPasswordEncoder();
-    }
+  public UsuarioConverter() {
+    this.passwordEncoder = new BCryptPasswordEncoder();
+  }
 
-    @Override
-    public Usuario convert(final UsuarioDataContract dataContract) {
-        Usuario obj = new Usuario();
-        BeanUtils.copyProperties(dataContract, obj);
-        obj.setSenha(passwordEncoder.encode(dataContract.getSenha()));
-        return obj;
-    }
+  @Override
+  public Usuario convert(final UsuarioDataContract dataContract) {
+    Usuario obj = new Usuario();
+    BeanUtils.copyProperties(dataContract, obj);
+    obj.setSenha(passwordEncoder.encode(dataContract.getSenha()));
+    return obj;
+  }
 }
