@@ -1,8 +1,8 @@
 package com.vanderlei.cfp.entities.enums;
 
 public enum TipoUpload {
-  CENTRO_CUSTO("cc"),
-  CONTA_BANCARIA("cb");
+  CENTRO_CUSTO("CC"),
+  CONTA_BANCARIA("CB");
 
   private String descricao;
 
