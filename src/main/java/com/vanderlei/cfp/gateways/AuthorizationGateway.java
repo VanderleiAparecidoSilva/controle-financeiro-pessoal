@@ -5,12 +5,15 @@ import com.vanderlei.cfp.entities.Usuario;
 import com.vanderlei.cfp.exceptions.ObjectNotFoundException;
 import com.vanderlei.cfp.gateways.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.Random;
 
+
+@Profile("oauth-security")
 @Service
 public class AuthorizationGateway {
 
