@@ -1,6 +1,5 @@
 package com.vanderlei.cfp.token;
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.util.ParameterMap;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.Ordered;
@@ -17,7 +16,6 @@ import java.util.Map;
 @Profile("oauth-security")
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
-@Slf4j
 public class RefreshTokenCookiePreProcessorFilter implements Filter {
   @Override
   public void init(FilterConfig filterConfig) throws ServletException {}
@@ -27,12 +25,10 @@ public class RefreshTokenCookiePreProcessorFilter implements Filter {
       ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
       throws IOException, ServletException {
     HttpServletRequest req = (HttpServletRequest) servletRequest;
-    log.info("Request: " + req);
     if ("/oauth/token".equalsIgnoreCase(req.getRequestURI())
         && "refresh_token".equals(req.getParameter("grant_type"))
         && req.getCookies() != null) {
       for (Cookie cookie : req.getCookies()) {
-        log.info("Cookies: " + req.getCookies().toString());
         if (cookie.getName().equals("refreshToken")) {
           String refreshToken = cookie.getValue();
           req = new MyServletRequestWrapper(req, refreshToken);
