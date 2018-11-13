@@ -245,7 +245,10 @@ public class CentroCustoController {
           final String email,
       @ApiParam(value = "Centro de Custo") @RequestBody final String dataContract) {
 
-    if (dataContract.split(";")[0].toUpperCase().equals(TipoUpload.CENTRO_CUSTO.getDescricao().toUpperCase())) {
+    if (dataContract
+        .split(";")[0]
+        .toUpperCase()
+        .equals(TipoUpload.CENTRO_CUSTO.getDescricao().toUpperCase())) {
       gateway.upload(email, dataContract);
     }
     return ResponseEntity.noContent().build();
