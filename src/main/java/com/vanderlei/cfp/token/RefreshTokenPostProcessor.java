@@ -1,5 +1,6 @@
 package com.vanderlei.cfp.token;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.MethodParameter;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Profile("oauth-security")
 @ControllerAdvice
+@Slf4j
 public class RefreshTokenPostProcessor implements ResponseBodyAdvice<OAuth2AccessToken> {
 
   @Value("${seguranca.enable-https}")
@@ -47,6 +49,8 @@ public class RefreshTokenPostProcessor implements ResponseBodyAdvice<OAuth2Acces
     DefaultOAuth2AccessToken token = (DefaultOAuth2AccessToken) oAuth2AccessToken;
 
     String refreshToken = oAuth2AccessToken.getRefreshToken().getValue();
+    log.info(refreshToken);
+    log.info(isEnableHttps.toString());
     adicionarRefreshTokenNoCookie(refreshToken, req, resp);
     removerRefreshTokenDoBody(token);
 
