@@ -1,7 +1,6 @@
 package com.vanderlei.cfp.config.security;
 
 import com.vanderlei.cfp.config.security.token.CustomTokenEnhancer;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -22,67 +21,64 @@ import java.util.Arrays;
 
 @Profile("oauth-security")
 @Configuration
-@Slf4j
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
-    @Value("${jwt.secret}")
-    private String secret;
+  @Value("${jwt.secret}")
+  private String secret;
 
-    @Value("${jwt.expiration}")
-    private int expiration;
+  @Value("${jwt.expiration}")
+  private int expiration;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+  @Autowired private AuthenticationManager authenticationManager;
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+  @Autowired private UserDetailsService userDetailsService;
 
-    @Override
-    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients
-                .inMemory()
-                .withClient("angular")
-                .secret("$2a$10$4CvdsdqhNu/A1ERtlyqOYeSbwnRbL7xCbPclZ7k3o6HvWw0oU3v1u") // @ngul@r0
-                .scopes("read", "write")
-                .authorizedGrantTypes("password", "refresh_token")
-                .accessTokenValiditySeconds(expiration)
-                .refreshTokenValiditySeconds(3600 * 24)
-                .and()
-                .withClient("mobile")
-                .secret("$2a$10$KJRZ.d9lgifvJU420wX7Oeb2sA3mgnGjv9iyUWNqcN1RxjXnKfcKK") // m0b1l30
-                .scopes("read")
-                .authorizedGrantTypes("password", "refresh_token")
-                .accessTokenValiditySeconds(expiration)
-                .refreshTokenValiditySeconds(3600 * 24);
-    }
+  @Override
+  public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+    clients
+        .inMemory()
+        .withClient("angular")
+        .secret("$2a$10$4CvdsdqhNu/A1ERtlyqOYeSbwnRbL7xCbPclZ7k3o6HvWw0oU3v1u") // @ngul@r0
+        .scopes("read", "write")
+        .authorizedGrantTypes("password", "refresh_token")
+        .accessTokenValiditySeconds(expiration)
+        .refreshTokenValiditySeconds(3600 * 24)
+        .and()
+        .withClient("mobile")
+        .secret("$2a$10$KJRZ.d9lgifvJU420wX7Oeb2sA3mgnGjv9iyUWNqcN1RxjXnKfcKK") // m0b1l30
+        .scopes("read")
+        .authorizedGrantTypes("password", "refresh_token")
+        .accessTokenValiditySeconds(expiration)
+        .refreshTokenValiditySeconds(3600 * 24);
+  }
 
-    @Override
-    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
-        tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(), accessTokenConverter()));
+  @Override
+  public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+    TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+    tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(), accessTokenConverter()));
 
-        endpoints
-                .tokenStore(tokenStore())
-                .tokenEnhancer(tokenEnhancerChain)
-                .reuseRefreshTokens(false)
-                .userDetailsService(userDetailsService)
-                .authenticationManager(authenticationManager);
-    }
+    endpoints
+        .tokenStore(tokenStore())
+        .tokenEnhancer(tokenEnhancerChain)
+        .reuseRefreshTokens(false)
+        .userDetailsService(userDetailsService)
+        .authenticationManager(authenticationManager);
+  }
 
-    @Bean
-    public JwtAccessTokenConverter accessTokenConverter() {
-        JwtAccessTokenConverter accessTokenConverter = new JwtAccessTokenConverter();
-        accessTokenConverter.setSigningKey(secret);
-        return accessTokenConverter;
-    }
+  @Bean
+  public JwtAccessTokenConverter accessTokenConverter() {
+    JwtAccessTokenConverter accessTokenConverter = new JwtAccessTokenConverter();
+    accessTokenConverter.setSigningKey(secret);
+    return accessTokenConverter;
+  }
 
-    @Bean
-    public TokenStore tokenStore() {
-        return new JwtTokenStore(accessTokenConverter());
-    }
+  @Bean
+  public TokenStore tokenStore() {
+    return new JwtTokenStore(accessTokenConverter());
+  }
 
-    @Bean
-    public TokenEnhancer tokenEnhancer() {
-        return new CustomTokenEnhancer();
-    }
+  @Bean
+  public TokenEnhancer tokenEnhancer() {
+    return new CustomTokenEnhancer();
+  }
 }

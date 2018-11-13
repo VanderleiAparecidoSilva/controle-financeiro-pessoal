@@ -19,6 +19,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 @EnableAuthorizationServer
 @EnableResourceServer
 public class OAuthSecurityConfig extends WebSecurityConfigurerAdapter {
+
   @Bean
   @Override
   protected AuthenticationManager authenticationManager() throws Exception {
