@@ -40,7 +40,7 @@ public class ContaBancariaGateway {
   @Autowired private UsuarioGateway usuarioGateway;
 
   public Page<ContaBancaria> buscarTodosPorUsuarioPaginado(
-          final String email,
+      final String email,
       final Integer page,
       final Integer linesPerPage,
       final String orderBy,
@@ -51,7 +51,7 @@ public class ContaBancariaGateway {
   }
 
   public Page<ContaBancaria> buscarTodosAtivosPorUsuarioPaginado(
-          final String email,
+      final String email,
       final Integer page,
       final Integer linesPerPage,
       final String orderBy,
@@ -77,28 +77,29 @@ public class ContaBancariaGateway {
   }
 
   public Page<ContaBancaria> buscarPorNomeLikeUsuarioEmail(
-          final String email,
-          final String nome,
-          final Boolean ativo,
-          final Integer page,
-          final Integer linesPerPage,
-          final String orderBy,
-          final String direction) {
+      final String email,
+      final String nome,
+      final Boolean ativo,
+      final Integer page,
+      final Integer linesPerPage,
+      final String orderBy,
+      final String direction) {
     List<ContaBancaria> objList = new ArrayList<>();
     PageRequest pageRequest =
-            PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
-    Page<ContaBancaria> objPage = repository.findByNomeLikeIgnoreCaseAndUsuarioEmail(nome, email, pageRequest);
+        PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
+    Page<ContaBancaria> objPage =
+        repository.findByNomeLikeIgnoreCaseAndUsuarioEmail(nome, email, pageRequest);
     if (ativo) {
       objPage.forEach(
-              obj -> {
-                if (obj.getAtivo()) {
-                  objList.add(obj);
-                }
-              });
+          obj -> {
+            if (obj.getAtivo()) {
+              objList.add(obj);
+            }
+          });
       return new PageImpl<ContaBancaria>(
-              objList,
-              PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy),
-              objList.size());
+          objList,
+          PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy),
+          objList.size());
     } else {
       return objPage;
     }
@@ -155,7 +156,8 @@ public class ContaBancariaGateway {
     return repository.save(obj);
   }
 
-  public void atualizarSaldo(final String id, final String email,  final Double valor, final Operacao operacao) {
+  public void atualizarSaldo(
+      final String id, final String email, final Double valor, final Operacao operacao) {
     ContaBancaria obj = this.buscarPorCodigoUsuario(id, email);
     obj.setDataAlteracao(LocalDateTime.now());
     obj.setSaldoContaBancaria(

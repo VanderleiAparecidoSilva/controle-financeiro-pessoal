@@ -53,6 +53,7 @@ public class LancamentoGateway {
   @Autowired private LancamentoConverter lancamentoConverter;
 
   public Page<Lancamento> buscarTodosPorUsuarioPaginado(
+      final String email,
       final Tipo tipo,
       final Integer page,
       final Integer linesPerPage,
@@ -60,10 +61,11 @@ public class LancamentoGateway {
       final String direction) {
     PageRequest pageRequest =
         PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
-    return repository.findByTipoAndUsuarioEmail(tipo, "", pageRequest);
+    return repository.findByTipoAndUsuarioEmail(tipo, email, pageRequest);
   }
 
   public Page<Lancamento> buscarTodosPorPeriodoUsuarioPaginado(
+      final String email,
       final LocalDate from,
       final LocalDate to,
       final Tipo tipo,
@@ -76,7 +78,7 @@ public class LancamentoGateway {
 
     return repository.findByTipoAndUsuarioEmailAndVencimentoBetween(
         tipo,
-            "",
+        email,
         from.minusDays(1).atTime(23, 59, 59),
         to.plusDays(1).atStartOfDay(),
         pageRequest);
@@ -235,7 +237,10 @@ public class LancamentoGateway {
               contaBancaria -> {
                 if (contaBancaria.getAtualizarSaldoBancarioNaBaixaTitulo()) {
                   contaBancariaGateway.atualizarSaldo(
-                      contaBancaria.getId(), "", obj.getValorParcela(), Operacao.DEBITO); //TODO Adicionar email nos parametros
+                      contaBancaria.getId(),
+                      contaBancaria.getUsuario().getEmail(),
+                      obj.getValorParcela(),
+                      Operacao.DEBITO);
                 }
               });
     }
@@ -274,7 +279,10 @@ public class LancamentoGateway {
               contaBancaria -> {
                 if (contaBancaria.getAtualizarSaldoBancarioNaBaixaTitulo()) {
                   contaBancariaGateway.atualizarSaldo(
-                      contaBancaria.getId(), "", obj.getValorParcela(), Operacao.CREDITO); //TODO adicionar email nos parametros
+                      contaBancaria.getId(),
+                      contaBancaria.getUsuario().getEmail(),
+                      obj.getValorParcela(),
+                      Operacao.CREDITO);
                 }
               });
     }

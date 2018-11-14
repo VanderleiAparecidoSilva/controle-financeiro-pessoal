@@ -95,7 +95,7 @@ public class ContaBancariaController {
       produces = {APPLICATION_JSON_VALUE},
       method = GET)
   ResponseEntity<Page<ContaBancariaDataContract>> buscaTodosPorPagina(
-          @ApiParam(value = "Identificador do usuário", required = true) @RequestParam(value = "email")
+      @ApiParam(value = "Identificador do usuário", required = true) @RequestParam(value = "email")
           final String email,
       @ApiParam(value = "Quantidade de páginas") @RequestParam(value = "page", defaultValue = "0")
           final Integer page,
@@ -136,7 +136,7 @@ public class ContaBancariaController {
       produces = {APPLICATION_JSON_VALUE},
       method = GET)
   ResponseEntity<Page<ContaBancariaDataContract>> buscaTodosAtivosPorPagina(
-          @ApiParam(value = "Identificador do usuário", required = true) @RequestParam(value = "email")
+      @ApiParam(value = "Identificador do usuário", required = true) @RequestParam(value = "email")
           final String email,
       @ApiParam(value = "Quantidade de páginas") @RequestParam(value = "page", defaultValue = "0")
           final Integer page,
@@ -149,56 +149,57 @@ public class ContaBancariaController {
           final String direction) {
     Page<ContaBancariaDataContract> dataContractList =
         dataContractConverter.convert(
-            gateway.buscarTodosAtivosPorUsuarioPaginado(email, page, linesPerPage, orderBy, direction));
+            gateway.buscarTodosAtivosPorUsuarioPaginado(
+                email, page, linesPerPage, orderBy, direction));
     return dataContractList.getTotalElements() > 0
         ? ResponseEntity.ok().body(dataContractList)
         : ResponseEntity.notFound().build();
   }
 
-    @ApiOperation(
-            value = "Busca conta bancária por nome e usuário",
-            response = ContaBancariaDataContract.class,
-            tags = {
-                    TAG_CONTROLLER,
-            })
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            code = 200,
-                            message = "Conta bancária encontrada",
-                            response = ContaBancariaDataContract.class),
-                    @ApiResponse(code = 400, message = "Request inválido"),
-                    @ApiResponse(code = 404, message = "Conta bancária não encontrada")
-            })
-    @RequestMapping(
-            value = "/email/nome",
-            produces = {APPLICATION_JSON_VALUE},
-            method = GET)
-    ResponseEntity<Page<ContaBancariaDataContract>> buscaPorNome(
-            @ApiParam(value = "Identificador do usuário", required = true) @RequestParam(value = "email")
-            final String email,
-            @ApiParam(value = "Nome da conta bancária", required = true) @RequestParam(value = "nome")
-            final String nome,
-            @ApiParam(value = "Ativo", required = true, defaultValue = "true")
-            @RequestParam(value = "ativo")
-            final Boolean ativo,
-            @ApiParam(value = "Quantidade de páginas") @RequestParam(value = "page", defaultValue = "0")
-            final Integer page,
-            @ApiParam(value = "Quantidade de linhas por página")
-            @RequestParam(value = "linesPerPage", defaultValue = "24")
-            final Integer linesPerPage,
-            @ApiParam(value = "Ordenação") @RequestParam(value = "orderBy", defaultValue = "nome")
-            final String orderBy,
-            @ApiParam(value = "Direção") @RequestParam(value = "direction", defaultValue = "ASC")
-            final String direction) {
-        Page<ContaBancariaDataContract> dataContractList =
-                dataContractConverter.convert(
-                        gateway.buscarPorNomeLikeUsuarioEmail(
-                                email, nome, ativo, page, linesPerPage, orderBy, direction));
-        return dataContractList.getTotalElements() > 0
-                ? ResponseEntity.ok().body(dataContractList)
-                : ResponseEntity.notFound().build();
-    }
+  @ApiOperation(
+      value = "Busca conta bancária por nome e usuário",
+      response = ContaBancariaDataContract.class,
+      tags = {
+        TAG_CONTROLLER,
+      })
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            code = 200,
+            message = "Conta bancária encontrada",
+            response = ContaBancariaDataContract.class),
+        @ApiResponse(code = 400, message = "Request inválido"),
+        @ApiResponse(code = 404, message = "Conta bancária não encontrada")
+      })
+  @RequestMapping(
+      value = "/email/nome",
+      produces = {APPLICATION_JSON_VALUE},
+      method = GET)
+  ResponseEntity<Page<ContaBancariaDataContract>> buscaPorNome(
+      @ApiParam(value = "Identificador do usuário", required = true) @RequestParam(value = "email")
+          final String email,
+      @ApiParam(value = "Nome da conta bancária", required = true) @RequestParam(value = "nome")
+          final String nome,
+      @ApiParam(value = "Ativo", required = true, defaultValue = "true")
+          @RequestParam(value = "ativo")
+          final Boolean ativo,
+      @ApiParam(value = "Quantidade de páginas") @RequestParam(value = "page", defaultValue = "0")
+          final Integer page,
+      @ApiParam(value = "Quantidade de linhas por página")
+          @RequestParam(value = "linesPerPage", defaultValue = "24")
+          final Integer linesPerPage,
+      @ApiParam(value = "Ordenação") @RequestParam(value = "orderBy", defaultValue = "nome")
+          final String orderBy,
+      @ApiParam(value = "Direção") @RequestParam(value = "direction", defaultValue = "ASC")
+          final String direction) {
+    Page<ContaBancariaDataContract> dataContractList =
+        dataContractConverter.convert(
+            gateway.buscarPorNomeLikeUsuarioEmail(
+                email, nome, ativo, page, linesPerPage, orderBy, direction));
+    return dataContractList.getTotalElements() > 0
+        ? ResponseEntity.ok().body(dataContractList)
+        : ResponseEntity.notFound().build();
+  }
 
   @ApiOperation(
       value = "Cadastrar nova conta bancária",
@@ -228,34 +229,34 @@ public class ContaBancariaController {
     return ResponseEntity.status(HttpStatus.CREATED).body(obj);
   }
 
-    @ApiOperation(
-            value = "Upload de novas contas bancárias",
-            tags = {
-                    TAG_CONTROLLER,
-            })
-    @ApiResponses(
-            value = {
-                    @ApiResponse(code = 201, message = "Upload efetuado com sucesso!"),
-                    @ApiResponse(code = 400, message = "Request inválido")
-            })
-    @RequestMapping(
-            value = "/upload",
-            consumes = {APPLICATION_JSON_VALUE},
-            produces = {APPLICATION_JSON_VALUE},
-            method = POST)
-    ResponseEntity<Void> upload(
-            @ApiParam(value = "Identificador do usuário", required = true) @RequestParam(value = "email")
-            final String email,
-            @ApiParam(value = "Conta Bancária") @RequestBody final String dataContract) {
+  @ApiOperation(
+      value = "Upload de novas contas bancárias",
+      tags = {
+        TAG_CONTROLLER,
+      })
+  @ApiResponses(
+      value = {
+        @ApiResponse(code = 201, message = "Upload efetuado com sucesso!"),
+        @ApiResponse(code = 400, message = "Request inválido")
+      })
+  @RequestMapping(
+      value = "/upload",
+      consumes = {APPLICATION_JSON_VALUE},
+      produces = {APPLICATION_JSON_VALUE},
+      method = POST)
+  ResponseEntity<Void> upload(
+      @ApiParam(value = "Identificador do usuário", required = true) @RequestParam(value = "email")
+          final String email,
+      @ApiParam(value = "Conta Bancária") @RequestBody final String dataContract) {
 
-        if (dataContract
-                .split(";")[0]
-                .toUpperCase()
-                .equals(TipoUpload.CONTA_BANCARIA.getDescricao().toUpperCase())) {
-            gateway.upload(email, dataContract);
-        }
-        return ResponseEntity.noContent().build();
+    if (dataContract
+        .split(";")[0]
+        .toUpperCase()
+        .equals(TipoUpload.CONTA_BANCARIA.getDescricao().toUpperCase())) {
+      gateway.upload(email, dataContract);
     }
+    return ResponseEntity.noContent().build();
+  }
 
   @ApiOperation(
       value = "Atualizar conta bancária",

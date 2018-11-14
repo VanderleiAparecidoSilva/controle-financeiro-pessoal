@@ -74,7 +74,9 @@ public class LancamentoController {
       value = "/credito",
       produces = {APPLICATION_JSON_VALUE},
       method = GET)
-  ResponseEntity<Page<LancamentoDataContract>> buscaTodosCreditoPorPagina(
+  ResponseEntity<Page<LancamentoDataContract>> buscaTodosCreditoPorUsuarioPaginado(
+      @ApiParam(value = "Identificador do usuário", required = true) @RequestParam(value = "email")
+          final String email,
       @ApiParam(value = "Quantidade de páginas") @RequestParam(value = "page", defaultValue = "0")
           final Integer page,
       @ApiParam(value = "Quantidade de linhas por página")
@@ -87,7 +89,7 @@ public class LancamentoController {
     Page<LancamentoDataContract> objList =
         dataContractConverter.convert(
             gateway.buscarTodosPorUsuarioPaginado(
-                Tipo.RECEITA, page, linesPerPage, orderBy, direction));
+                email, Tipo.RECEITA, page, linesPerPage, orderBy, direction));
     return objList.getTotalElements() > 0
         ? ResponseEntity.ok().body(objList)
         : ResponseEntity.notFound().build();
@@ -114,7 +116,9 @@ public class LancamentoController {
       value = "/credito/periodo",
       produces = {APPLICATION_JSON_VALUE},
       method = GET)
-  ResponseEntity<Page<LancamentoDataContract>> buscaTodosCreditoPeriodoPorPagina(
+  ResponseEntity<Page<LancamentoDataContract>> buscaTodosCreditoPeriodoPorUsuarioPaginado(
+      @ApiParam(value = "Identificador do usuário", required = true) @RequestParam(value = "email")
+          final String email,
       @ApiParam(value = "Data inicial")
           @RequestParam(value = "from")
           @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -135,7 +139,7 @@ public class LancamentoController {
     Page<LancamentoDataContract> objList =
         dataContractConverter.convert(
             gateway.buscarTodosPorPeriodoUsuarioPaginado(
-                from, to, Tipo.RECEITA, page, linesPerPage, orderBy, direction));
+                email, from, to, Tipo.RECEITA, page, linesPerPage, orderBy, direction));
     return objList.getTotalElements() > 0
         ? ResponseEntity.ok().body(objList)
         : ResponseEntity.notFound().build();
@@ -162,7 +166,9 @@ public class LancamentoController {
       value = "/debito",
       produces = {APPLICATION_JSON_VALUE},
       method = GET)
-  ResponseEntity<Page<LancamentoDataContract>> buscaTodosDebitoPorPagina(
+  ResponseEntity<Page<LancamentoDataContract>> buscaTodosDebitoPorUsuarioPaginado(
+      @ApiParam(value = "Identificador do usuário", required = true) @RequestParam(value = "email")
+          final String email,
       @ApiParam(value = "Quantidade de páginas") @RequestParam(value = "page", defaultValue = "0")
           final Integer page,
       @ApiParam(value = "Quantidade de linhas por página")
@@ -175,7 +181,7 @@ public class LancamentoController {
     Page<LancamentoDataContract> objList =
         dataContractConverter.convert(
             gateway.buscarTodosPorUsuarioPaginado(
-                Tipo.DESPESA, page, linesPerPage, orderBy, direction));
+                email, Tipo.DESPESA, page, linesPerPage, orderBy, direction));
     return objList.getTotalElements() > 0
         ? ResponseEntity.ok().body(objList)
         : ResponseEntity.notFound().build();
@@ -202,7 +208,9 @@ public class LancamentoController {
       value = "/debito/periodo",
       produces = {APPLICATION_JSON_VALUE},
       method = GET)
-  ResponseEntity<Page<LancamentoDataContract>> buscaTodosDebitoPeriodoPorPagina(
+  ResponseEntity<Page<LancamentoDataContract>> buscaTodosDebitoPeriodoPorUsuarioPaginado(
+      @ApiParam(value = "Identificador do usuário", required = true) @RequestParam(value = "email")
+          final String email,
       @ApiParam(value = "Data inicial")
           @RequestParam(value = "from")
           @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -223,7 +231,7 @@ public class LancamentoController {
     Page<LancamentoDataContract> objList =
         dataContractConverter.convert(
             gateway.buscarTodosPorPeriodoUsuarioPaginado(
-                from, to, Tipo.DESPESA, page, linesPerPage, orderBy, direction));
+                email, from, to, Tipo.DESPESA, page, linesPerPage, orderBy, direction));
     return objList.getTotalElements() > 0
         ? ResponseEntity.ok().body(objList)
         : ResponseEntity.notFound().build();
