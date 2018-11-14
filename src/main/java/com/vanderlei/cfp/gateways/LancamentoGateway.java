@@ -235,7 +235,7 @@ public class LancamentoGateway {
               contaBancaria -> {
                 if (contaBancaria.getAtualizarSaldoBancarioNaBaixaTitulo()) {
                   contaBancariaGateway.atualizarSaldo(
-                      contaBancaria.getId(), obj.getValorParcela(), Operacao.DEBITO);
+                      contaBancaria.getId(), "", obj.getValorParcela(), Operacao.DEBITO); //TODO Adicionar email nos parametros
                 }
               });
     }
@@ -274,7 +274,7 @@ public class LancamentoGateway {
               contaBancaria -> {
                 if (contaBancaria.getAtualizarSaldoBancarioNaBaixaTitulo()) {
                   contaBancariaGateway.atualizarSaldo(
-                      contaBancaria.getId(), obj.getValorParcela(), Operacao.CREDITO);
+                      contaBancaria.getId(), "", obj.getValorParcela(), Operacao.CREDITO); //TODO adicionar email nos parametros
                 }
               });
     }
