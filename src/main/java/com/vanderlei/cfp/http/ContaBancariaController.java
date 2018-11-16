@@ -269,7 +269,7 @@ public class ContaBancariaController {
         @ApiResponse(code = 400, message = "Request inválido")
       })
   @RequestMapping(value = "/{email}/{id}", method = PUT)
-  ResponseEntity<Void> atualizar(
+  ResponseEntity<ContaBancaria> atualizar(
       @ApiParam(value = "Conta Bancária") @Valid @RequestBody
           final ContaBancariaDataContract dataContract,
       @ApiParam(value = "Identificador do usuário") @PathVariable("email") final String email,
@@ -277,7 +277,7 @@ public class ContaBancariaController {
     ContaBancaria obj = gateway.buscarPorCodigoUsuario(id, email);
     Parsers.parse(id, obj, dataContract);
     gateway.atualizar(obj);
-    return ResponseEntity.noContent().build();
+    return ResponseEntity.status(HttpStatus.OK).body(obj);
   }
 
   @ApiOperation(

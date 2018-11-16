@@ -13,7 +13,7 @@ public class ContaBancariaDataContract implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  @JsonIgnore private String id;
+  private String id;
 
   @NotEmpty
   @Length(min = 3, max = 100, message = "O nome deve conter entre 3 e 100 caracteres")
@@ -28,6 +28,8 @@ public class ContaBancariaDataContract implements Serializable {
   private Boolean vincularSaldoBancarioNoTotalReceita;
 
   private Boolean atualizarSaldoBancarioNaBaixaTitulo;
+
+  private Boolean ativo;
 
   @Valid
   @NotNull
@@ -109,6 +111,14 @@ public class ContaBancariaDataContract implements Serializable {
 
   public void setAtualizarSaldoBancarioNaBaixaTitulo(Boolean atualizarSaldoBancarioNaBaixaTitulo) {
     this.atualizarSaldoBancarioNaBaixaTitulo = atualizarSaldoBancarioNaBaixaTitulo;
+  }
+
+  public Boolean getAtivo() {
+    return ativo;
+  }
+
+  public void setAtivo(Boolean ativo) {
+    this.ativo = ativo;
   }
 
   public UsuarioDataContract getUsuario() {
