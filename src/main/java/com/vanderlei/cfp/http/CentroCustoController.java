@@ -272,7 +272,7 @@ public class CentroCustoController {
       @ApiParam(value = "Identificador do centro de custo") @PathVariable("id") final String id) {
     CentroCusto obj = gateway.buscarPorCodigoUsuario(id, email);
     Parsers.parse(id, obj, dataContract);
-    gateway.atualizar(obj);
+    obj = gateway.atualizar(obj);
     return ResponseEntity.status(HttpStatus.OK).body(obj);
   }
 

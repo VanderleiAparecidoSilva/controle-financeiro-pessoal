@@ -25,7 +25,7 @@ public class Parsers {
   public static void parse(
       final String id, final ContaBancaria obj, final ContaBancariaDataContract dataContract) {
     obj.setId(id);
-    obj.setNome(dataContract.getNome());
+    obj.setNome(dataContract.getNome().toUpperCase());
     obj.setNumeroContaBancaria(dataContract.getNumeroContaBancaria());
     obj.setAtualizarSaldoBancarioNaBaixaTitulo(
         dataContract.getAtualizarSaldoBancarioNaBaixaTitulo());

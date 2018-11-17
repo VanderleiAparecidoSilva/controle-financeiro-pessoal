@@ -1,5 +1,6 @@
 package com.vanderlei.cfp.http.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.Length;
 
@@ -7,6 +8,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 public class CentroCustoDataContract implements Serializable {
 
@@ -23,6 +25,15 @@ public class CentroCustoDataContract implements Serializable {
   private Boolean aplicarNaReceita;
 
   private Boolean ativo;
+
+  @JsonIgnore
+  private LocalDateTime dataInclusao;
+
+  @JsonIgnore
+  private LocalDateTime dataAlteracao;
+
+  @JsonIgnore
+  private LocalDateTime dataExclusao;
 
   @Valid
   @NotNull
@@ -90,5 +101,29 @@ public class CentroCustoDataContract implements Serializable {
 
   public void setAtivo(Boolean ativo) {
     this.ativo = ativo;
+  }
+
+  public LocalDateTime getDataInclusao() {
+    return dataInclusao;
+  }
+
+  public void setDataInclusao(LocalDateTime dataInclusao) {
+    this.dataInclusao = dataInclusao;
+  }
+
+  public LocalDateTime getDataAlteracao() {
+    return dataAlteracao;
+  }
+
+  public void setDataAlteracao(LocalDateTime dataAlteracao) {
+    this.dataAlteracao = dataAlteracao;
+  }
+
+  public LocalDateTime getDataExclusao() {
+    return dataExclusao;
+  }
+
+  public void setDataExclusao(LocalDateTime dataExclusao) {
+    this.dataExclusao = dataExclusao;
   }
 }

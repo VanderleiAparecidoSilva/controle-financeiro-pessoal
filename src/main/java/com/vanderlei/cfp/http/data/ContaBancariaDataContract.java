@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 public class ContaBancariaDataContract implements Serializable {
 
@@ -30,6 +31,15 @@ public class ContaBancariaDataContract implements Serializable {
   private Boolean atualizarSaldoBancarioNaBaixaTitulo;
 
   private Boolean ativo;
+
+  @JsonIgnore
+  private LocalDateTime dataInclusao;
+
+  @JsonIgnore
+  private LocalDateTime dataAlteracao;
+
+  @JsonIgnore
+  private LocalDateTime dataExclusao;
 
   @Valid
   @NotNull
@@ -127,5 +137,29 @@ public class ContaBancariaDataContract implements Serializable {
 
   public void setUsuario(UsuarioDataContract usuario) {
     this.usuario = usuario;
+  }
+
+  public LocalDateTime getDataInclusao() {
+    return dataInclusao;
+  }
+
+  public void setDataInclusao(LocalDateTime dataInclusao) {
+    this.dataInclusao = dataInclusao;
+  }
+
+  public LocalDateTime getDataAlteracao() {
+    return dataAlteracao;
+  }
+
+  public void setDataAlteracao(LocalDateTime dataAlteracao) {
+    this.dataAlteracao = dataAlteracao;
+  }
+
+  public LocalDateTime getDataExclusao() {
+    return dataExclusao;
+  }
+
+  public void setDataExclusao(LocalDateTime dataExclusao) {
+    this.dataExclusao = dataExclusao;
   }
 }

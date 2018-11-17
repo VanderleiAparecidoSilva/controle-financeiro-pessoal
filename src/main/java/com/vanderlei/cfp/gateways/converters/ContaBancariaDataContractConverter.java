@@ -16,6 +16,7 @@ public class ContaBancariaDataContractConverter
   public ContaBancariaDataContract convert(ContaBancaria obj) {
     ContaBancariaDataContract objDataContract = new ContaBancariaDataContract();
     BeanUtils.copyProperties(obj, objDataContract);
+    objDataContract.setNome(objDataContract.getNome().toUpperCase());
     objDataContract.setUsuario(
         new UsuarioDataContract(
             null,

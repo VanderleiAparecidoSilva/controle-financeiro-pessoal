@@ -14,6 +14,7 @@ public class ContaBancariaConverter implements Converter<ContaBancariaDataContra
     public ContaBancaria convert(final ContaBancariaDataContract dataContract) {
         ContaBancaria obj = new ContaBancaria();
         BeanUtils.copyProperties(dataContract, obj);
+        obj.setNome(obj.getNome().toUpperCase());
         obj.setUsuario(new Usuario(null, dataContract.getUsuario().getNome(), dataContract.getUsuario().getEmail(),
                 dataContract.getUsuario().getPermiteEmailLembrete()));
         return obj;

@@ -276,7 +276,7 @@ public class ContaBancariaController {
       @ApiParam(value = "Identificador da conta bancária") @PathVariable("id") final String id) {
     ContaBancaria obj = gateway.buscarPorCodigoUsuario(id, email);
     Parsers.parse(id, obj, dataContract);
-    gateway.atualizar(obj);
+    obj = gateway.atualizar(obj);
     return ResponseEntity.status(HttpStatus.OK).body(obj);
   }
 
