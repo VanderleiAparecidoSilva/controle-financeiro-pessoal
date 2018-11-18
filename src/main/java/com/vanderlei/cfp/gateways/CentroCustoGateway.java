@@ -96,7 +96,8 @@ public class CentroCustoGateway {
     List<CentroCusto> objList = new ArrayList<>();
     PageRequest pageRequest =
         PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
-    Page<CentroCusto> objPage = repository.findByNomeLikeIgnoreCaseAndUsuarioEmail(nome, email, pageRequest);
+    Page<CentroCusto> objPage =
+        repository.findByNomeLikeIgnoreCaseAndUsuarioEmail(nome, email, pageRequest);
     if (ativo) {
       objPage.forEach(
           obj -> {
@@ -114,9 +115,7 @@ public class CentroCustoGateway {
   }
 
   public CentroCusto inserir(final CentroCusto obj) {
-    if (!usuarioGateway
-        .buscarPorNomeEmail(obj.getUsuario().getNome(), obj.getUsuario().getEmail())
-        .isPresent()) {
+    if (usuarioGateway.buscarPorEmail(obj.getUsuario().getNome(), true) == null) {
       throw new ObjectNotFoundException(
           msgUsuarioObjectNotFound + obj.getUsuario() + msgTipo + CentroCusto.class.getName());
     }
@@ -132,9 +131,7 @@ public class CentroCustoGateway {
   }
 
   public CentroCusto atualizar(final CentroCusto obj) {
-    if (!usuarioGateway
-        .buscarPorNomeEmail(obj.getUsuario().getNome(), obj.getUsuario().getEmail())
-        .isPresent()) {
+    if (usuarioGateway.buscarPorEmail(obj.getUsuario().getEmail(), true) == null) {
       throw new ObjectNotFoundException(
           msgUsuarioObjectNotFound + obj.getUsuario() + msgTipo + CentroCusto.class.getName());
     }

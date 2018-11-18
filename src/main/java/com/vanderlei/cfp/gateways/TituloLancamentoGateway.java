@@ -52,8 +52,7 @@ public class TituloLancamentoGateway {
     List<TituloLancamento> objList = new ArrayList<>();
     PageRequest pageRequest =
         PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
-    Page<TituloLancamento> objPage =
-        repository.findByUsuarioEmail("", pageRequest);
+    Page<TituloLancamento> objPage = repository.findByUsuarioEmail("", pageRequest);
     objPage.forEach(
         obj -> {
           if (obj.getAtivo()) {
@@ -82,9 +81,7 @@ public class TituloLancamentoGateway {
   }
 
   public TituloLancamento inserir(final TituloLancamento obj) {
-    if (!usuarioGateway
-        .buscarPorNomeEmail(obj.getUsuario().getNome(), obj.getUsuario().getEmail())
-        .isPresent()) {
+    if (usuarioGateway.buscarPorEmail(obj.getUsuario().getEmail(), true) == null) {
       throw new ObjectNotFoundException(
           msgUsuarioObjectNotFound + obj.getUsuario() + msgTipo + TituloLancamento.class.getName());
     }
@@ -100,9 +97,7 @@ public class TituloLancamentoGateway {
   }
 
   public TituloLancamento atualizar(final TituloLancamento obj) {
-    if (!usuarioGateway
-        .buscarPorNomeEmail(obj.getUsuario().getNome(), obj.getUsuario().getEmail())
-        .isPresent()) {
+    if (usuarioGateway.buscarPorEmail(obj.getUsuario().getEmail(), true) == null) {
       throw new ObjectNotFoundException(
           msgUsuarioObjectNotFound + obj.getUsuario() + msgTipo + TituloLancamento.class.getName());
     }

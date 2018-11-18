@@ -116,9 +116,7 @@ public class ContaBancariaGateway {
   }
 
   public ContaBancaria inserir(final ContaBancaria obj) {
-    if (!usuarioGateway
-        .buscarPorNomeEmail(obj.getUsuario().getNome(), obj.getUsuario().getEmail())
-        .isPresent()) {
+    if (usuarioGateway.buscarPorEmail(obj.getUsuario().getEmail(), true) == null) {
       throw new ObjectNotFoundException(
           msgUsuarioObjectNotFound + obj.getUsuario() + msgTipo + ContaBancaria.class.getName());
     }
@@ -134,9 +132,7 @@ public class ContaBancariaGateway {
   }
 
   public ContaBancaria atualizar(final ContaBancaria obj) {
-    if (!usuarioGateway
-        .buscarPorNomeEmail(obj.getUsuario().getNome(), obj.getUsuario().getEmail())
-        .isPresent()) {
+    if (usuarioGateway.buscarPorEmail(obj.getUsuario().getEmail(), true) == null) {
       throw new ObjectNotFoundException(
           msgUsuarioObjectNotFound + obj.getUsuario() + msgTipo + ContaBancaria.class.getName());
     }
