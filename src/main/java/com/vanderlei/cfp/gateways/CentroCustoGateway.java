@@ -115,7 +115,7 @@ public class CentroCustoGateway {
   }
 
   public CentroCusto inserir(final CentroCusto obj) {
-    if (usuarioGateway.buscarPorEmail(obj.getUsuario().getNome(), true) == null) {
+    if (usuarioGateway.buscarPorEmail(obj.getUsuario().getEmail(), true) == null) {
       throw new ObjectNotFoundException(
           msgUsuarioObjectNotFound + obj.getUsuario() + msgTipo + CentroCusto.class.getName());
     }

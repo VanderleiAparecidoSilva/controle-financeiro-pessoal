@@ -16,6 +16,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -173,8 +176,10 @@ public class ContaBancariaGateway {
       obj.setTipo(TipoUpload.toEnum(strArray[0]));
       obj.setNome(strArray[1].toUpperCase());
       obj.setNumeroContaBancaria(strArray[2]);
-      obj.setLimiteContaBancaria(Double.valueOf(strArray[3]));
-      obj.setSaldoContaBancaria(Double.valueOf(strArray[4]));
+      try {
+        obj.setLimiteContaBancaria(getDoubleValue(strArray[3]));
+        obj.setSaldoContaBancaria(getDoubleValue(strArray[4]));
+      } catch (ParseException e) {}
       obj.setVincularSaldoBancarioNoTotalReceita(Boolean.valueOf(strArray[5]));
       obj.setAtualizarSaldoBancarioNaBaixaTitulo(Boolean.valueOf(strArray[6]));
 
@@ -184,5 +189,13 @@ public class ContaBancariaGateway {
       obj.setProcessado(false);
       uploadRepository.save(obj);
     }
+  }
+
+  private Double getDoubleValue(final String value) throws ParseException {
+    DecimalFormat df = new DecimalFormat();
+    DecimalFormatSymbols sfs = new DecimalFormatSymbols();
+    sfs.setDecimalSeparator(',');
+    df.setDecimalFormatSymbols(sfs);
+    return df.parse(value.replace(".", "")).doubleValue();
   }
 }
