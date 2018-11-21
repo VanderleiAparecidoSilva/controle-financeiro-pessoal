@@ -115,7 +115,7 @@ public class CentroCustoController {
   }
 
   @ApiOperation(
-      value = "Busca todos os centro de custos ativos por usuário (paginado)",
+      value = "Busca todos os centro de custos ativos por usuário",
       response = CentroCustoDataContract.class,
       responseContainer = "Page",
       tags = {
@@ -140,6 +140,38 @@ public class CentroCustoController {
           final String email) {
     List<CentroCustoDataContract> dataContractList =
         dataContractConverter.convert(gateway.buscarTodosAtivosPorUsuario(email));
+    return dataContractList.size() > 0
+        ? ResponseEntity.ok().body(dataContractList)
+        : ResponseEntity.notFound().build();
+  }
+
+  @ApiOperation(
+      value = "Busca todos os centro de custos ativos por usuário e tipo",
+      response = CentroCustoDataContract.class,
+      responseContainer = "Page",
+      tags = {
+        TAG_CONTROLLER,
+      })
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            code = 200,
+            message = "Um ou mais centro de custos encontrados",
+            response = CentroCustoDataContract.class,
+            responseContainer = "Page"),
+        @ApiResponse(code = 400, message = "Request inválido"),
+        @ApiResponse(code = 404, message = "Centro de custo não encontrado")
+      })
+  @RequestMapping(
+      value = "/ativos/tipo",
+      produces = {APPLICATION_JSON_VALUE},
+      method = GET)
+  ResponseEntity<List<CentroCustoDataContract>> buscaTodosAtivos(
+      @ApiParam(value = "Identificador do usuário", required = true) @RequestParam(value = "email")
+          final String email,
+      @ApiParam(value = "Tipo", required = true) @RequestParam(value = "tipo") final String tipo) {
+    List<CentroCustoDataContract> dataContractList =
+        dataContractConverter.convert(gateway.buscarTodosAtivosPorUsuarioTipo(email, tipo));
     return dataContractList.size() > 0
         ? ResponseEntity.ok().body(dataContractList)
         : ResponseEntity.notFound().build();

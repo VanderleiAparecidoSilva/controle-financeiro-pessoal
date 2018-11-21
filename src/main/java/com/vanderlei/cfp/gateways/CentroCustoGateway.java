@@ -58,6 +58,26 @@ public class CentroCustoGateway {
         .collect(Collectors.toList());
   }
 
+  public List<CentroCusto> buscarTodosAtivosPorUsuarioTipo(final String email, final String tipo) {
+    if (tipo.equals("1")) {
+      return repository
+          .findByUsuarioEmail(email)
+          .stream()
+          .filter(obj -> obj.getAtivo())
+          .filter(obj -> obj.getAplicarNaDespesa())
+          .collect(Collectors.toList());
+    } else if (tipo.equals("2")) {
+      return repository
+          .findByUsuarioEmail(email)
+          .stream()
+          .filter(obj -> obj.getAtivo())
+          .filter(obj -> obj.getAplicarNaReceita())
+          .collect(Collectors.toList());
+    }
+
+    return new ArrayList<>();
+  }
+
   public CentroCusto buscarPorCodigoUsuario(final String id, final String email) {
     Optional<CentroCusto> obj = repository.findByIdAndUsuarioEmail(id, email);
     CentroCusto centroCusto =
