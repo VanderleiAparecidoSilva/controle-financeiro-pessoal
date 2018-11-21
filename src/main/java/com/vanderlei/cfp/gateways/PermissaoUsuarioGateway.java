@@ -1,5 +1,6 @@
 package com.vanderlei.cfp.gateways;
 
+import com.vanderlei.cfp.entities.CentroCusto;
 import com.vanderlei.cfp.entities.Permissao;
 import com.vanderlei.cfp.entities.PermissaoUsuario;
 import com.vanderlei.cfp.exceptions.ObjectDuplicatedException;
@@ -15,6 +16,9 @@ import java.util.Optional;
 @Service
 public class PermissaoUsuarioGateway {
 
+  private final String msgUsuarioObjectNotFound =
+      "O usuário informado no centro de custo não existe: ";
+
   private final String msgObjectNotFound = "Permissão do usuário não encontrada! Codigo: ";
 
   private final String msgObjectDuplicated = "Permissão já vinculada ao usuário com ID: ";
@@ -24,6 +28,8 @@ public class PermissaoUsuarioGateway {
   @Autowired private PermissaoUsuarioRepository repository;
 
   @Autowired private PermissaoGateway permissaoGateway;
+
+  @Autowired private UsuarioGateway usuarioGateway;
 
   public PermissaoUsuario buscarPorCodigo(final String id) {
     Optional<PermissaoUsuario> obj = repository.findById(id);
@@ -40,6 +46,10 @@ public class PermissaoUsuarioGateway {
   }
 
   public PermissaoUsuario inserir(final PermissaoUsuario obj) {
+    if (usuarioGateway.buscarPorCodigo(obj.getIdUsuario()) == null) {
+      throw new ObjectNotFoundException(
+          msgUsuarioObjectNotFound + obj.getIdUsuario() + msgTipo + CentroCusto.class.getName());
+    }
     if (repository
         .findByIdUsuarioAndIdPermissao(obj.getIdUsuario(), obj.getIdPermissao())
         .isPresent()) {
@@ -52,6 +62,10 @@ public class PermissaoUsuarioGateway {
   }
 
   public PermissaoUsuario atualizar(final PermissaoUsuario obj) {
+    if (usuarioGateway.buscarPorCodigo(obj.getIdUsuario()) == null) {
+      throw new ObjectNotFoundException(
+          msgUsuarioObjectNotFound + obj.getIdUsuario() + msgTipo + CentroCusto.class.getName());
+    }
     obj.setDataAlteracao(LocalDateTime.now());
     return repository.save(obj);
   }

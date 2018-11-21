@@ -8,6 +8,9 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Component
 public class ContaBancariaDataContractConverter
     implements Converter<ContaBancaria, ContaBancariaDataContract> {
@@ -29,5 +32,9 @@ public class ContaBancariaDataContractConverter
 
   public Page<ContaBancariaDataContract> convert(final Page<ContaBancaria> objList) {
     return objList.map(obj -> this.convert(obj));
+  }
+
+  public List<ContaBancariaDataContract> convert(final List<ContaBancaria> objList) {
+    return objList.stream().map(obj -> this.convert(obj)).collect(Collectors.toList());
   }
 }

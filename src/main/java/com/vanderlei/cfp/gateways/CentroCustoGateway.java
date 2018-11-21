@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CentroCustoGateway {
@@ -49,26 +50,12 @@ public class CentroCustoGateway {
     return repository.findByUsuarioEmail(email, pageRequest);
   }
 
-  public Page<CentroCusto> buscarTodosAtivosPorUsuarioPaginado(
-      final String email,
-      final Integer page,
-      final Integer linesPerPage,
-      final String orderBy,
-      final String direction) {
-    List<CentroCusto> objList = new ArrayList<>();
-    PageRequest pageRequest =
-        PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
-    Page<CentroCusto> objPage = repository.findByUsuarioEmail(email, pageRequest);
-    objPage.forEach(
-        obj -> {
-          if (obj.getAtivo()) {
-            objList.add(obj);
-          }
-        });
-    return new PageImpl<CentroCusto>(
-        objList,
-        PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy),
-        objList.size());
+  public List<CentroCusto> buscarTodosAtivosPorUsuario(final String email) {
+    return repository
+        .findByUsuarioEmail(email)
+        .stream()
+        .filter(obj -> obj.getAtivo())
+        .collect(Collectors.toList());
   }
 
   public CentroCusto buscarPorCodigoUsuario(final String id, final String email) {

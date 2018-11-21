@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ContaBancariaGateway {
@@ -53,26 +54,12 @@ public class ContaBancariaGateway {
     return repository.findByUsuarioEmail(email, pageRequest);
   }
 
-  public Page<ContaBancaria> buscarTodosAtivosPorUsuarioPaginado(
-      final String email,
-      final Integer page,
-      final Integer linesPerPage,
-      final String orderBy,
-      final String direction) {
-    List<ContaBancaria> objList = new ArrayList<>();
-    PageRequest pageRequest =
-        PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
-    Page<ContaBancaria> objPage = repository.findByUsuarioEmail(email, pageRequest);
-    objPage.forEach(
-        obj -> {
-          if (obj.getAtivo()) {
-            objList.add(obj);
-          }
-        });
-    return new PageImpl<ContaBancaria>(
-        objList,
-        PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy),
-        objList.size());
+  public List<ContaBancaria> buscarTodosAtivosPorUsuario(final String email) {
+    return repository
+        .findByUsuarioEmail(email)
+        .stream()
+        .filter(obj -> obj.getAtivo())
+        .collect(Collectors.toList());
   }
 
   public Optional<ContaBancaria> buscarPorNomeUsuarioEmail(final String nome, final String email) {
@@ -179,7 +166,8 @@ public class ContaBancariaGateway {
       try {
         obj.setLimiteContaBancaria(getDoubleValue(strArray[3]));
         obj.setSaldoContaBancaria(getDoubleValue(strArray[4]));
-      } catch (ParseException e) {}
+      } catch (ParseException e) {
+      }
       obj.setVincularSaldoBancarioNoTotalReceita(Boolean.valueOf(strArray[5]));
       obj.setAtualizarSaldoBancarioNaBaixaTitulo(Boolean.valueOf(strArray[6]));
 

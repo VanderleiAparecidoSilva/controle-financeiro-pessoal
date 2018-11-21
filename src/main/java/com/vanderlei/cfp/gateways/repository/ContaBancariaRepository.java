@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -17,6 +18,9 @@ public interface ContaBancariaRepository extends MongoRepository<ContaBancaria, 
 
   @Transactional(readOnly = true)
   Page<ContaBancaria> findByUsuarioEmail(final String email, final Pageable pageable);
+
+  @Transactional(readOnly = true)
+  List<ContaBancaria> findByUsuarioEmail(final String email);
 
   @Transactional(readOnly = true)
   Page<ContaBancaria> findByNomeLikeIgnoreCaseAndUsuarioEmail(

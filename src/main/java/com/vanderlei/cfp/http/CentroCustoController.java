@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -134,23 +135,12 @@ public class CentroCustoController {
       value = "/ativos",
       produces = {APPLICATION_JSON_VALUE},
       method = GET)
-  ResponseEntity<Page<CentroCustoDataContract>> buscaTodosAtivosPorPagina(
+  ResponseEntity<List<CentroCustoDataContract>> buscaTodosAtivos(
       @ApiParam(value = "Identificador do usuário", required = true) @RequestParam(value = "email")
-          final String email,
-      @ApiParam(value = "Quantidade de páginas") @RequestParam(value = "page", defaultValue = "0")
-          final Integer page,
-      @ApiParam(value = "Quantidade de linhas por página")
-          @RequestParam(value = "linesPerPage", defaultValue = "24")
-          final Integer linesPerPage,
-      @ApiParam(value = "Ordenação") @RequestParam(value = "orderBy", defaultValue = "nome")
-          final String orderBy,
-      @ApiParam(value = "Direção") @RequestParam(value = "direction", defaultValue = "ASC")
-          final String direction) {
-    Page<CentroCustoDataContract> dataContractList =
-        dataContractConverter.convert(
-            gateway.buscarTodosAtivosPorUsuarioPaginado(
-                email, page, linesPerPage, orderBy, direction));
-    return dataContractList.getTotalElements() > 0
+          final String email) {
+    List<CentroCustoDataContract> dataContractList =
+        dataContractConverter.convert(gateway.buscarTodosAtivosPorUsuario(email));
+    return dataContractList.size() > 0
         ? ResponseEntity.ok().body(dataContractList)
         : ResponseEntity.notFound().build();
   }
