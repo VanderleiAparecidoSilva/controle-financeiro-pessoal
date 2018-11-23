@@ -59,14 +59,14 @@ public class CentroCustoGateway {
   }
 
   public List<CentroCusto> buscarTodosAtivosPorUsuarioTipo(final String email, final String tipo) {
-    if (tipo.equals("1")) {
+    if (tipo.equals("DESPESA")) {
       return repository
           .findByUsuarioEmail(email)
           .stream()
           .filter(obj -> obj.getAtivo())
           .filter(obj -> obj.getAplicarNaDespesa())
           .collect(Collectors.toList());
-    } else if (tipo.equals("2")) {
+    } else if (tipo.equals("RECEITA")) {
       return repository
           .findByUsuarioEmail(email)
           .stream()

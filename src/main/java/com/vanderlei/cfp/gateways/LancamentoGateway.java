@@ -8,6 +8,8 @@ import com.vanderlei.cfp.entities.enums.Tipo;
 import com.vanderlei.cfp.exceptions.ObjectNotFoundException;
 import com.vanderlei.cfp.gateways.converters.LancamentoConverter;
 import com.vanderlei.cfp.gateways.repository.LancamentoRepository;
+import com.vanderlei.cfp.utils.DateUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -162,6 +164,7 @@ public class LancamentoGateway {
 
     final int qtdParcelas = obj.getQuantidadeTotalParcelas();
     LocalDate vencimento = obj.getVencimento();
+    int dayOfMonth = vencimento.getDayOfMonth();
     final UUID uuid = UUID.randomUUID();
     for (int i = 0; i < qtdParcelas; i++) {
       obj.setId(null);
@@ -174,8 +177,19 @@ public class LancamentoGateway {
         obj.setParcela(1);
       }
       if (i > 0) {
-        obj.setVencimento(vencimento.plusMonths(1));
-        vencimento = vencimento.plusMonths(1);
+        if (dataValida(dayOfMonth, vencimento.plusMonths(1))) {
+          LocalDate validDate =
+              DateUtils.getValidDate(
+                  dayOfMonth,
+                  vencimento.plusMonths(1).getMonthValue(),
+                  vencimento.plusMonths(1).getYear());
+
+          obj.setVencimento(validDate);
+          vencimento = validDate;
+        } else {
+          obj.setVencimento(vencimento.plusMonths(1));
+          vencimento = vencimento.plusMonths(1);
+        }
       }
 
       repository.save(obj);
@@ -185,6 +199,16 @@ public class LancamentoGateway {
     }
 
     return objRet;
+  }
+
+  private boolean dataValida(final int dayOfMonth, final LocalDate date) {
+    String data =
+        date.getYear()
+            + "-"
+            + StringUtils.leftPad(String.valueOf(date.getMonthValue()), 2, "0")
+            + "-"
+            + StringUtils.leftPad(String.valueOf(dayOfMonth), 2, "0");
+    return DateUtils.isValid(data);
   }
 
   public void alterarTipo(final String id) {

@@ -4,7 +4,6 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 public class UsuarioDataContract implements Serializable {
@@ -19,7 +18,7 @@ public class UsuarioDataContract implements Serializable {
 
   @NotEmpty @Email private String email;
 
-  @NotEmpty private String senha;
+  private String senha;
 
   private Boolean permiteEmailLembrete;
 

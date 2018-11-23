@@ -19,7 +19,7 @@ public class LancamentoDataContract implements Serializable {
 
   @JsonIgnore private UUID uuid;
 
-  @NotNull private TituloLancamentoDataContract nome;
+  @NotNull private String descricao;
 
   @Valid
   @NotNull
@@ -61,7 +61,7 @@ public class LancamentoDataContract implements Serializable {
   public LancamentoDataContract(
       final String id,
       final UUID uuid,
-      final TituloLancamentoDataContract nome,
+      final String descricao,
       final CentroCustoDataContract centroCusto,
       final LocalDate vencimento,
       final Double valorParcela,
@@ -76,7 +76,7 @@ public class LancamentoDataContract implements Serializable {
       final BaixaDataContract baixa) {
     this.id = id;
     this.uuid = uuid;
-    this.nome = nome;
+    this.descricao = descricao;
     this.centroCusto = centroCusto;
     this.vencimento = vencimento;
     this.valorParcela = valorParcela;
@@ -108,12 +108,12 @@ public class LancamentoDataContract implements Serializable {
     this.uuid = uuid;
   }
 
-  public TituloLancamentoDataContract getNome() {
-    return nome;
+  public String getDescricao() {
+    return descricao;
   }
 
-  public void setNome(TituloLancamentoDataContract nome) {
-    this.nome = nome;
+  public void setDescricao(String descricao) {
+    this.descricao = descricao;
   }
 
   public CentroCustoDataContract getCentroCusto() {
