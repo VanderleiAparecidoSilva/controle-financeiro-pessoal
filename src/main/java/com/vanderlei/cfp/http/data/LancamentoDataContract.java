@@ -1,14 +1,19 @@
 package com.vanderlei.cfp.http.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vanderlei.cfp.entities.enums.Status;
 import com.vanderlei.cfp.entities.enums.Tipo;
 
+import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
+import java.time.temporal.TemporalAccessor;
 import java.util.UUID;
 
 public class LancamentoDataContract implements Serializable {
@@ -54,6 +59,9 @@ public class LancamentoDataContract implements Serializable {
   @JsonProperty("usuario")
   private UsuarioDataContract usuario;
 
+  @Transient
+  private Boolean parcelaAtrasada;
+
   public LancamentoDataContract() {
     this.tipo = Tipo.RECEITA;
   }
@@ -90,6 +98,7 @@ public class LancamentoDataContract implements Serializable {
     this.usuario = usuario;
     this.baixa = baixa;
     this.tipo = Tipo.RECEITA;
+    this.parcelaAtrasada = false;
   }
 
   public String getId() {
@@ -210,5 +219,17 @@ public class LancamentoDataContract implements Serializable {
 
   public void setBaixa(BaixaDataContract baixa) {
     this.baixa = baixa;
+  }
+
+  public String getParcelaComTotalParcelas() {
+    return this.parcela + "/" + this.quantidadeTotalParcelas;
+  }
+
+  public Boolean getParcelaAtrasada() {
+    return this.vencimento.isBefore(LocalDate.now());
+  }
+
+  public void setParcelaAtrasada(Boolean parcelaAtrasada) {
+    this.parcelaAtrasada = parcelaAtrasada;
   }
 }

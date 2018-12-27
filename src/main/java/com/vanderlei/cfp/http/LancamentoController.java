@@ -82,7 +82,7 @@ public class LancamentoController {
       @ApiParam(value = "Quantidade de linhas por página")
           @RequestParam(value = "linesPerPage", defaultValue = "24")
           final Integer linesPerPage,
-      @ApiParam(value = "Ordenação") @RequestParam(value = "orderBy", defaultValue = "nome")
+      @ApiParam(value = "Ordenação") @RequestParam(value = "orderBy", defaultValue = "vencimento")
           final String orderBy,
       @ApiParam(value = "Direção") @RequestParam(value = "direction", defaultValue = "ASC")
           final String direction) {
@@ -132,7 +132,7 @@ public class LancamentoController {
       @ApiParam(value = "Quantidade de linhas por página")
           @RequestParam(value = "linesPerPage", defaultValue = "24")
           final Integer linesPerPage,
-      @ApiParam(value = "Ordenação") @RequestParam(value = "orderBy", defaultValue = "nome")
+      @ApiParam(value = "Ordenação") @RequestParam(value = "orderBy", defaultValue = "vencimento")
           final String orderBy,
       @ApiParam(value = "Direção") @RequestParam(value = "direction", defaultValue = "ASC")
           final String direction) {
@@ -174,7 +174,7 @@ public class LancamentoController {
       @ApiParam(value = "Quantidade de linhas por página")
           @RequestParam(value = "linesPerPage", defaultValue = "24")
           final Integer linesPerPage,
-      @ApiParam(value = "Ordenação") @RequestParam(value = "orderBy", defaultValue = "nome")
+      @ApiParam(value = "Ordenação") @RequestParam(value = "orderBy", defaultValue = "vencimento")
           final String orderBy,
       @ApiParam(value = "Direção") @RequestParam(value = "direction", defaultValue = "ASC")
           final String direction) {
@@ -224,7 +224,7 @@ public class LancamentoController {
       @ApiParam(value = "Quantidade de linhas por página")
           @RequestParam(value = "linesPerPage", defaultValue = "24")
           final Integer linesPerPage,
-      @ApiParam(value = "Ordenação") @RequestParam(value = "orderBy", defaultValue = "nome")
+      @ApiParam(value = "Ordenação") @RequestParam(value = "orderBy", defaultValue = "vencimento")
           final String orderBy,
       @ApiParam(value = "Direção") @RequestParam(value = "direction", defaultValue = "ASC")
           final String direction) {
@@ -265,7 +265,7 @@ public class LancamentoController {
       @ApiParam(value = "Quantidade de linhas por página")
           @RequestParam(value = "linesPerPage", defaultValue = "24")
           final Integer linesPerPage,
-      @ApiParam(value = "Ordenação") @RequestParam(value = "orderBy", defaultValue = "nome")
+      @ApiParam(value = "Ordenação") @RequestParam(value = "orderBy", defaultValue = "vencimento")
           final String orderBy,
       @ApiParam(value = "Direção") @RequestParam(value = "direction", defaultValue = "ASC")
           final String direction) {
