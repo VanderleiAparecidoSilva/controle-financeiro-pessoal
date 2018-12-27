@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -43,12 +44,14 @@ public class UploadJob implements Job {
               {
                 addCentroCusto(upload);
                 setUploadProccess(upload);
+                break;
               }
 
             case CONTA_BANCARIA:
               {
                 addContaBancaria(upload);
                 setUploadProccess(upload);
+                break;
               }
           }
         });
@@ -68,7 +71,10 @@ public class UploadJob implements Job {
     obj.setAplicarNaDespesa(((CentroCustoUpload) upload).getAplicarNaDespesa());
     obj.setUsuario(upload.getUsuario());
 
-    centroCustoGateway.inserir(obj);
+    Optional<CentroCusto> centroCusto = centroCustoGateway.buscarPorNomeUsuarioEmail(obj.getNome(), obj.getUsuario().getEmail());
+    if (!centroCusto.isPresent()) {
+      centroCustoGateway.inserir(obj);
+    }
   }
 
   private void addContaBancaria(final Upload upload) {
@@ -83,6 +89,9 @@ public class UploadJob implements Job {
         ((ContaBancariaUpload) upload).getAtualizarSaldoBancarioNaBaixaTitulo());
     obj.setUsuario(upload.getUsuario());
 
-    contaBancariaGateway.inserir(obj);
+    Optional<ContaBancaria> contaBancaria = contaBancariaGateway.buscarPorNomeUsuarioEmail(obj.getNome(), obj.getUsuario().getEmail());
+    if (!contaBancaria.isPresent()) {
+      contaBancariaGateway.inserir(obj);
+    }
   }
 }
