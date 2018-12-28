@@ -2,6 +2,7 @@ package com.vanderlei.cfp.http;
 
 import com.vanderlei.cfp.entities.Baixa;
 import com.vanderlei.cfp.entities.Lancamento;
+import com.vanderlei.cfp.entities.enums.Status;
 import com.vanderlei.cfp.entities.enums.Tipo;
 import com.vanderlei.cfp.events.ResourceEvent;
 import com.vanderlei.cfp.gateways.LancamentoGateway;
@@ -14,6 +15,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -52,6 +54,35 @@ public class LancamentoController {
   @Autowired private BaixaConverter baixaConverter;
 
   @Autowired private ApplicationEventPublisher publisher;
+
+  @ApiOperation(
+      value = "Busca lançamento por id e email do usuário",
+      response = LancamentoDataContract.class,
+      tags = {
+        TAG_CONTROLLER,
+      })
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            code = 200,
+            message = "Lançamento encontrado",
+            response = LancamentoDataContract.class),
+        @ApiResponse(code = 400, message = "Request inválido"),
+        @ApiResponse(code = 404, message = "Lançamento não encontrado")
+      })
+  @RequestMapping(
+      value = "/email/id",
+      produces = {APPLICATION_JSON_VALUE},
+      method = GET)
+  ResponseEntity<LancamentoDataContract> buscaLancamentoPorIdUsuario(
+      @ApiParam(value = "Identificador do usuário", required = true) @RequestParam(value = "email")
+          final String email,
+      @ApiParam(value = "Identificador do lancamento", required = true) @RequestParam(value = "id")
+          final String id) {
+    LancamentoDataContract obj =
+        dataContractConverter.convert(gateway.buscarPorCodigoUsuarioEmail(id, email));
+    return ResponseEntity.ok().body(obj);
+  }
 
   @ApiOperation(
       value = "Busca todos os lançamentos de crédito por usuário (paginado)",
@@ -127,6 +158,12 @@ public class LancamentoController {
           @RequestParam(value = "to")
           @DateTimeFormat(pattern = "yyyy-MM-dd")
           final LocalDate to,
+      @ApiParam(value = "Descrição")
+          @RequestParam(value = "description", defaultValue = StringUtils.EMPTY)
+          final String description,
+      @ApiParam(value = "Somente títulos em aberto")
+          @RequestParam(value = "onlyOpen", defaultValue = "Sim")
+          final String onlyOpen,
       @ApiParam(value = "Quantidade de páginas") @RequestParam(value = "page", defaultValue = "0")
           final Integer page,
       @ApiParam(value = "Quantidade de linhas por página")
@@ -139,7 +176,16 @@ public class LancamentoController {
     Page<LancamentoDataContract> objList =
         dataContractConverter.convert(
             gateway.buscarTodosPorPeriodoUsuarioPaginado(
-                email, from, to, Tipo.RECEITA, page, linesPerPage, orderBy, direction));
+                email,
+                from,
+                to,
+                description,
+                onlyOpen.equalsIgnoreCase("Sim") ? Status.ABERTO : Status.RECEBIDO,
+                Tipo.RECEITA,
+                page,
+                linesPerPage,
+                orderBy,
+                direction));
     return objList.getTotalElements() > 0
         ? ResponseEntity.ok().body(objList)
         : ResponseEntity.notFound().build();
@@ -219,6 +265,12 @@ public class LancamentoController {
           @RequestParam(value = "to")
           @DateTimeFormat(pattern = "yyyy-MM-dd")
           final LocalDate to,
+      @ApiParam(value = "Descrição")
+          @RequestParam(value = "description", defaultValue = StringUtils.EMPTY)
+          final String description,
+      @ApiParam(value = "Somente títulos em aberto")
+          @RequestParam(value = "onlyOpen", defaultValue = "Sim")
+          final String onlyOpen,
       @ApiParam(value = "Quantidade de páginas") @RequestParam(value = "page", defaultValue = "0")
           final Integer page,
       @ApiParam(value = "Quantidade de linhas por página")
@@ -231,7 +283,16 @@ public class LancamentoController {
     Page<LancamentoDataContract> objList =
         dataContractConverter.convert(
             gateway.buscarTodosPorPeriodoUsuarioPaginado(
-                email, from, to, Tipo.DESPESA, page, linesPerPage, orderBy, direction));
+                email,
+                from,
+                to,
+                description,
+                onlyOpen.equalsIgnoreCase("Sim") ? Status.ABERTO : Status.PAGO,
+                Tipo.DESPESA,
+                page,
+                linesPerPage,
+                orderBy,
+                direction));
     return objList.getTotalElements() > 0
         ? ResponseEntity.ok().body(objList)
         : ResponseEntity.notFound().build();

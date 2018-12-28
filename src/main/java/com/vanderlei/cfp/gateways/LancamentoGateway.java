@@ -70,6 +70,8 @@ public class LancamentoGateway {
       final String email,
       final LocalDate from,
       final LocalDate to,
+      final String description,
+      final Status status,
       final Tipo tipo,
       final Integer page,
       final Integer linesPerPage,
@@ -78,12 +80,35 @@ public class LancamentoGateway {
     PageRequest pageRequest =
         PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
 
-    return repository.findByTipoAndUsuarioEmailAndVencimentoBetween(
-        tipo,
-        email,
-        from.minusDays(1).atTime(23, 59, 59),
-        to.plusDays(1).atStartOfDay(),
-        pageRequest);
+    if (StringUtils.isEmpty(description)) {
+      return repository.findByTipoAndStatusAndUsuarioEmailAndVencimentoBetween(
+          tipo,
+          status,
+          email,
+          from.minusDays(1).atTime(23, 59, 59),
+          to.plusDays(1).atStartOfDay(),
+          pageRequest);
+    } else {
+      return repository
+          .findByNomeNomeLikeIgnoreCaseAndTipoAndStatusAndUsuarioEmailAndVencimentoBetween(
+              description,
+              tipo,
+              status,
+              email,
+              from.minusDays(1).atTime(23, 59, 59),
+              to.plusDays(1).atStartOfDay(),
+              pageRequest);
+    }
+  }
+
+  public Lancamento buscarPorCodigoUsuarioEmail(final String id, final String email) {
+    Optional<Lancamento> obj = repository.findByIdAndUsuarioEmail(id, email);
+    Lancamento lancamento =
+        obj.orElseThrow(
+            () ->
+                new ObjectNotFoundException(
+                    msgObjectNotFound + id + msgTipo + Lancamento.class.getName()));
+    return lancamento;
   }
 
   public Lancamento buscarPorCodigo(final String id) {

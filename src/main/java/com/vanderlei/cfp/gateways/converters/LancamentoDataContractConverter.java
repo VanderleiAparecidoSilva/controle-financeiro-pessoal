@@ -28,24 +28,28 @@ public class LancamentoDataContractConverter
 
     objDataContract.setDescricao(obj.getNome().getNome());
 
-    objDataContract.setCentroCusto(
-        new CentroCustoDataContract(
-            null,
-            obj.getCentroCusto().getNome(),
-            obj.getCentroCusto().getAplicarNaDespesa(),
-            obj.getCentroCusto().getAplicarNaReceita(),
-            objDataContract.getUsuario()));
+    if (obj.getCentroCusto() != null) {
+      objDataContract.setCentroCusto(
+          new CentroCustoDataContract(
+              null,
+              obj.getCentroCusto().getNome(),
+              obj.getCentroCusto().getAplicarNaDespesa(),
+              obj.getCentroCusto().getAplicarNaReceita(),
+              objDataContract.getUsuario()));
+    }
 
-    objDataContract.setContaBancaria(
-        new ContaBancariaDataContract(
-            null,
-            obj.getContaBancaria().getNome(),
-            obj.getContaBancaria().getNumeroContaBancaria(),
-            obj.getContaBancaria().getLimiteContaBancaria(),
-            obj.getContaBancaria().getSaldoContaBancaria(),
-            obj.getContaBancaria().getVincularSaldoBancarioNoTotalReceita(),
-            obj.getContaBancaria().getAtualizarSaldoBancarioNaBaixaTitulo(),
-            objDataContract.getUsuario()));
+    if (obj.getContaBancaria() != null) {
+      objDataContract.setContaBancaria(
+          new ContaBancariaDataContract(
+              null,
+              obj.getContaBancaria().getNome(),
+              obj.getContaBancaria().getNumeroContaBancaria(),
+              obj.getContaBancaria().getLimiteContaBancaria(),
+              obj.getContaBancaria().getSaldoContaBancaria(),
+              obj.getContaBancaria().getVincularSaldoBancarioNoTotalReceita(),
+              obj.getContaBancaria().getAtualizarSaldoBancarioNaBaixaTitulo(),
+              objDataContract.getUsuario()));
+    }
 
     return objDataContract;
   }

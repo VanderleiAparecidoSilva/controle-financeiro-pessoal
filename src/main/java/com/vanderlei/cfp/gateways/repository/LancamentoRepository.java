@@ -12,10 +12,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface LancamentoRepository extends MongoRepository<Lancamento, String> {
+
+  @Transactional(readOnly = true)
+  Optional<Lancamento> findByIdAndUsuarioEmail(final String id, final String email);
 
   @Transactional(readOnly = true)
   Collection<Lancamento> findByStatusAndVencimentoBeforeOrderByUsuarioNome(
@@ -34,8 +38,19 @@ public interface LancamentoRepository extends MongoRepository<Lancamento, String
       final Tipo tipo, final String email, final Pageable pageable);
 
   @Transactional(readOnly = true)
-  Page<Lancamento> findByTipoAndUsuarioEmailAndVencimentoBetween(
+  Page<Lancamento> findByTipoAndStatusAndUsuarioEmailAndVencimentoBetween(
       final Tipo tipo,
+      final Status status,
+      final String email,
+      final LocalDateTime from,
+      final LocalDateTime to,
+      final Pageable pageable);
+
+  @Transactional(readOnly = true)
+  Page<Lancamento> findByNomeNomeLikeIgnoreCaseAndTipoAndStatusAndUsuarioEmailAndVencimentoBetween(
+      final String nome,
+      final Tipo tipo,
+      final Status status,
       final String email,
       final LocalDateTime from,
       final LocalDateTime to,
