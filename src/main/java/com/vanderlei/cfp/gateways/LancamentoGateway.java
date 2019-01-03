@@ -18,9 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class LancamentoGateway {
@@ -76,9 +74,16 @@ public class LancamentoGateway {
       final Integer page,
       final Integer linesPerPage,
       final String orderBy,
-      final String direction) {
+      final String direction,
+      final String orderByTwo,
+      final String directionTwo) {
+
+    List<Sort.Order> orders = new ArrayList<>();
+    orders.add(new Sort.Order(Sort.Direction.valueOf(direction), orderBy));
+    orders.add(new Sort.Order(Sort.Direction.valueOf(directionTwo), orderByTwo));
+
     PageRequest pageRequest =
-        PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
+        PageRequest.of(page, linesPerPage, Sort.by(orders));
 
     if (StringUtils.isEmpty(description)) {
       return repository.findByTipoAndStatusAndUsuarioEmailAndVencimentoBetween(

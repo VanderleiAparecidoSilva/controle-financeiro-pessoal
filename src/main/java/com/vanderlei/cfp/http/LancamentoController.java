@@ -172,7 +172,13 @@ public class LancamentoController {
       @ApiParam(value = "Ordenação") @RequestParam(value = "orderBy", defaultValue = "vencimento")
           final String orderBy,
       @ApiParam(value = "Direção") @RequestParam(value = "direction", defaultValue = "ASC")
-          final String direction) {
+          final String direction,
+      @ApiParam(value = "Ordenação Secundária")
+          @RequestParam(value = "orderByTwo", defaultValue = "nome.nome")
+          final String orderByTwo,
+      @ApiParam(value = "Direção Secundária")
+          @RequestParam(value = "directionTwo", defaultValue = "ASC")
+          final String directionTwo) {
     Page<LancamentoDataContract> objList =
         dataContractConverter.convert(
             gateway.buscarTodosPorPeriodoUsuarioPaginado(
@@ -185,7 +191,9 @@ public class LancamentoController {
                 page,
                 linesPerPage,
                 orderBy,
-                direction));
+                direction,
+                orderByTwo,
+                directionTwo));
     return objList.getTotalElements() > 0
         ? ResponseEntity.ok().body(objList)
         : ResponseEntity.notFound().build();
@@ -279,7 +287,13 @@ public class LancamentoController {
       @ApiParam(value = "Ordenação") @RequestParam(value = "orderBy", defaultValue = "vencimento")
           final String orderBy,
       @ApiParam(value = "Direção") @RequestParam(value = "direction", defaultValue = "ASC")
-          final String direction) {
+          final String direction,
+      @ApiParam(value = "Ordenação Secundária")
+          @RequestParam(value = "orderByTwo", defaultValue = "nome.nome")
+          final String orderByTwo,
+      @ApiParam(value = "Direção Secundária")
+          @RequestParam(value = "directionTwo", defaultValue = "ASC")
+          final String directionTwo) {
     Page<LancamentoDataContract> objList =
         dataContractConverter.convert(
             gateway.buscarTodosPorPeriodoUsuarioPaginado(
@@ -292,7 +306,9 @@ public class LancamentoController {
                 page,
                 linesPerPage,
                 orderBy,
-                direction));
+                direction,
+                orderByTwo,
+                directionTwo));
     return objList.getTotalElements() > 0
         ? ResponseEntity.ok().body(objList)
         : ResponseEntity.notFound().build();
