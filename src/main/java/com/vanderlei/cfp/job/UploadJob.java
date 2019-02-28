@@ -67,11 +67,14 @@ public class UploadJob implements Job {
   private void addCentroCusto(final Upload upload) {
     CentroCusto obj = new CentroCusto();
     obj.setNome(((CentroCustoUpload) upload).getNome());
+    obj.setPrimaria(((CentroCustoUpload) upload).getPrimaria());
+    obj.setSecundaria(((CentroCustoUpload) upload).getSecundaria());
     obj.setAplicarNaReceita(((CentroCustoUpload) upload).getAplicarNaReceita());
     obj.setAplicarNaDespesa(((CentroCustoUpload) upload).getAplicarNaDespesa());
     obj.setUsuario(upload.getUsuario());
 
-    Optional<CentroCusto> centroCusto = centroCustoGateway.buscarPorNomeUsuarioEmail(obj.getNome(), obj.getUsuario().getEmail());
+    Optional<CentroCusto> centroCusto =
+        centroCustoGateway.buscarPorNomeUsuarioEmail(obj.getNome(), obj.getUsuario().getEmail());
     if (!centroCusto.isPresent()) {
       centroCustoGateway.inserir(obj);
     }
@@ -89,7 +92,8 @@ public class UploadJob implements Job {
         ((ContaBancariaUpload) upload).getAtualizarSaldoBancarioNaBaixaTitulo());
     obj.setUsuario(upload.getUsuario());
 
-    Optional<ContaBancaria> contaBancaria = contaBancariaGateway.buscarPorNomeUsuarioEmail(obj.getNome(), obj.getUsuario().getEmail());
+    Optional<ContaBancaria> contaBancaria =
+        contaBancariaGateway.buscarPorNomeUsuarioEmail(obj.getNome(), obj.getUsuario().getEmail());
     if (!contaBancaria.isPresent()) {
       contaBancariaGateway.inserir(obj);
     }

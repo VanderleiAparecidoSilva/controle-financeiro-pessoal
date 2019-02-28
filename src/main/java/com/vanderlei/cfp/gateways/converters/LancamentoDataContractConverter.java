@@ -28,13 +28,27 @@ public class LancamentoDataContractConverter
 
     objDataContract.setDescricao(obj.getNome().getNome());
 
-    if (obj.getCentroCusto() != null) {
-      objDataContract.setCentroCusto(
+    if (obj.getCentroCustoPrimario() != null) {
+      objDataContract.setCentroCustoPrimario(
           new CentroCustoDataContract(
               null,
-              obj.getCentroCusto().getNome(),
-              obj.getCentroCusto().getAplicarNaDespesa(),
-              obj.getCentroCusto().getAplicarNaReceita(),
+              obj.getCentroCustoPrimario().getNome(),
+              obj.getCentroCustoPrimario().getPrimaria(),
+              obj.getCentroCustoPrimario().getSecundaria(),
+              obj.getCentroCustoPrimario().getAplicarNaDespesa(),
+              obj.getCentroCustoPrimario().getAplicarNaReceita(),
+              objDataContract.getUsuario()));
+    }
+
+    if (obj.getCentroCustoSecundario() != null) {
+      objDataContract.setCentroCustoSecundario(
+          new CentroCustoDataContract(
+              null,
+              obj.getCentroCustoSecundario().getNome(),
+              obj.getCentroCustoSecundario().getPrimaria(),
+              obj.getCentroCustoSecundario().getSecundaria(),
+              obj.getCentroCustoSecundario().getAplicarNaDespesa(),
+              obj.getCentroCustoSecundario().getAplicarNaReceita(),
               objDataContract.getUsuario()));
     }
 

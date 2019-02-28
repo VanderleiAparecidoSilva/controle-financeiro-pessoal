@@ -51,27 +51,42 @@ public class CentroCustoGateway {
   }
 
   public List<CentroCusto> buscarTodosAtivosPorUsuario(final String email) {
-    return repository
-        .findByUsuarioEmail(email)
-        .stream()
+    return repository.findByUsuarioEmail(email).stream()
         .filter(obj -> obj.getAtivo())
         .collect(Collectors.toList());
   }
 
   public List<CentroCusto> buscarTodosAtivosPorUsuarioTipo(final String email, final String tipo) {
     if (tipo.equals("DESPESA")) {
-      return repository
-          .findByUsuarioEmail(email)
-          .stream()
+      return repository.findByUsuarioEmail(email).stream()
           .filter(obj -> obj.getAtivo())
           .filter(obj -> obj.getAplicarNaDespesa())
+          .filter(obj -> obj.getPrimaria())
           .collect(Collectors.toList());
     } else if (tipo.equals("RECEITA")) {
-      return repository
-          .findByUsuarioEmail(email)
-          .stream()
+      return repository.findByUsuarioEmail(email).stream()
           .filter(obj -> obj.getAtivo())
           .filter(obj -> obj.getAplicarNaReceita())
+          .filter(obj -> obj.getPrimaria())
+          .collect(Collectors.toList());
+    }
+
+    return new ArrayList<>();
+  }
+
+  public List<CentroCusto> buscarTodosAtivosPorUsuarioTipoSecundaria(
+      final String email, final String tipo) {
+    if (tipo.equals("DESPESA")) {
+      return repository.findByUsuarioEmail(email).stream()
+          .filter(obj -> obj.getAtivo())
+          .filter(obj -> obj.getAplicarNaDespesa())
+          .filter(obj -> obj.getSecundaria())
+          .collect(Collectors.toList());
+    } else if (tipo.equals("RECEITA")) {
+      return repository.findByUsuarioEmail(email).stream()
+          .filter(obj -> obj.getAtivo())
+          .filter(obj -> obj.getAplicarNaReceita())
+          .filter(obj -> obj.getSecundaria())
           .collect(Collectors.toList());
     }
 
@@ -171,8 +186,10 @@ public class CentroCustoGateway {
 
       obj.setTipo(TipoUpload.toEnum(strArray[0]));
       obj.setNome(strArray[1].toUpperCase());
-      obj.setAplicarNaReceita(Boolean.valueOf(strArray[2]));
-      obj.setAplicarNaDespesa(Boolean.valueOf(strArray[3]));
+      obj.setPrimaria(Boolean.valueOf(strArray[2]));
+      obj.setSecundaria(Boolean.valueOf(strArray[3]));
+      obj.setAplicarNaReceita(Boolean.valueOf(strArray[4]));
+      obj.setAplicarNaDespesa(Boolean.valueOf(strArray[5]));
 
       obj.setId(null);
       obj.setDataInclusao(LocalDateTime.now());

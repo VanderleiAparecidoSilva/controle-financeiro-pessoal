@@ -28,6 +28,10 @@ public class CentroCusto implements Serializable {
   @Length(min = 5, max = 100, message = "O nome deve conter entre 5 e 100 caracteres")
   private String nome;
 
+  private Boolean primaria;
+
+  private Boolean secundaria;
+
   private Boolean aplicarNaReceita;
 
   private Boolean aplicarNaDespesa;
@@ -45,11 +49,15 @@ public class CentroCusto implements Serializable {
   public CentroCusto(
       final String id,
       final String nome,
+      final Boolean primaria,
+      final Boolean secundaria,
       final Boolean aplicarNaReceita,
       final Boolean aplicarNaDespesa,
       final Usuario usuario) {
     this.id = id;
     this.nome = nome;
+    this.primaria = primaria;
+    this.secundaria = secundaria;
     this.aplicarNaReceita = aplicarNaReceita;
     this.aplicarNaDespesa = aplicarNaDespesa;
     this.usuario = usuario;
@@ -69,6 +77,22 @@ public class CentroCusto implements Serializable {
 
   public void setNome(String nome) {
     this.nome = nome;
+  }
+
+  public Boolean getPrimaria() {
+    return primaria;
+  }
+
+  public void setPrimaria(Boolean primaria) {
+    this.primaria = primaria;
+  }
+
+  public Boolean getSecundaria() {
+    return secundaria;
+  }
+
+  public void setSecundaria(Boolean secundaria) {
+    this.secundaria = secundaria;
   }
 
   public Boolean getAplicarNaReceita() {

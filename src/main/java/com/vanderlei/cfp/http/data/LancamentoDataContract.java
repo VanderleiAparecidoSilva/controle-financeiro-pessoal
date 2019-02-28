@@ -1,7 +1,6 @@
 package com.vanderlei.cfp.http.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vanderlei.cfp.entities.enums.Status;
 import com.vanderlei.cfp.entities.enums.Tipo;
@@ -11,9 +10,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDate;
-import java.time.temporal.TemporalAccessor;
 import java.util.UUID;
 
 public class LancamentoDataContract implements Serializable {
@@ -28,8 +24,13 @@ public class LancamentoDataContract implements Serializable {
 
   @Valid
   @NotNull
-  @JsonProperty("centrocusto")
-  private CentroCustoDataContract centroCusto;
+  @JsonProperty("centroCustoPrimario")
+  private CentroCustoDataContract centroCustoPrimario;
+
+  @Valid
+  @NotNull
+  @JsonProperty("centroCustoSecundario")
+  private CentroCustoDataContract centroCustoSecundario;
 
   @NotNull private LocalDate vencimento;
 
@@ -59,8 +60,7 @@ public class LancamentoDataContract implements Serializable {
   @JsonProperty("usuario")
   private UsuarioDataContract usuario;
 
-  @Transient
-  private Boolean parcelaAtrasada;
+  @Transient private Boolean parcelaAtrasada;
 
   public LancamentoDataContract() {
     this.tipo = Tipo.RECEITA;
@@ -70,7 +70,8 @@ public class LancamentoDataContract implements Serializable {
       final String id,
       final UUID uuid,
       final String descricao,
-      final CentroCustoDataContract centroCusto,
+      final CentroCustoDataContract centroCustoPrimario,
+      final CentroCustoDataContract centroCustoSecundario,
       final LocalDate vencimento,
       final Double valorParcela,
       final int parcela,
@@ -85,7 +86,8 @@ public class LancamentoDataContract implements Serializable {
     this.id = id;
     this.uuid = uuid;
     this.descricao = descricao;
-    this.centroCusto = centroCusto;
+    this.centroCustoPrimario = centroCustoPrimario;
+    this.centroCustoSecundario = centroCustoSecundario;
     this.vencimento = vencimento;
     this.valorParcela = valorParcela;
     this.parcela = parcela;
@@ -125,12 +127,20 @@ public class LancamentoDataContract implements Serializable {
     this.descricao = descricao;
   }
 
-  public CentroCustoDataContract getCentroCusto() {
-    return centroCusto;
+  public CentroCustoDataContract getCentroCustoPrimario() {
+    return centroCustoPrimario;
   }
 
-  public void setCentroCusto(CentroCustoDataContract centroCusto) {
-    this.centroCusto = centroCusto;
+  public void setCentroCustoPrimario(CentroCustoDataContract centroCustoPrimario) {
+    this.centroCustoPrimario = centroCustoPrimario;
+  }
+
+  public CentroCustoDataContract getCentroCustoSecundario() {
+    return centroCustoSecundario;
+  }
+
+  public void setCentroCustoSecundario(CentroCustoDataContract centroCustoSecundario) {
+    this.centroCustoSecundario = centroCustoSecundario;
   }
 
   public LocalDate getVencimento() {

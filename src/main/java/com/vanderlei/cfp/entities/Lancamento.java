@@ -36,7 +36,9 @@ public class Lancamento implements Serializable {
 
   @NotNull private TituloLancamento nome;
 
-  @NotNull private CentroCusto centroCusto;
+  @NotNull private CentroCusto centroCustoPrimario;
+
+  @NotNull private CentroCusto centroCustoSecundario;
 
   @NotNull private LocalDate vencimento;
 
@@ -74,7 +76,8 @@ public class Lancamento implements Serializable {
       final String id,
       final UUID uuid,
       final TituloLancamento nome,
-      final CentroCusto centroCusto,
+      final CentroCusto centroCustoPrimario,
+      final CentroCusto centroCustoSecundario,
       final LocalDate vencimento,
       final Double valorParcela,
       final int quantidadeTotalParcelas,
@@ -89,7 +92,8 @@ public class Lancamento implements Serializable {
     this.id = id;
     this.uuid = uuid;
     this.nome = nome;
-    this.centroCusto = centroCusto;
+    this.centroCustoPrimario = centroCustoPrimario;
+    this.centroCustoSecundario = centroCustoSecundario;
     this.vencimento = vencimento;
     this.valorParcela = valorParcela;
     this.quantidadeTotalParcelas = quantidadeTotalParcelas;
@@ -127,12 +131,20 @@ public class Lancamento implements Serializable {
     this.nome = nome;
   }
 
-  public CentroCusto getCentroCusto() {
-    return centroCusto;
+  public CentroCusto getCentroCustoPrimario() {
+    return centroCustoPrimario;
   }
 
-  public void setCentroCusto(CentroCusto centroCusto) {
-    this.centroCusto = centroCusto;
+  public void setCentroCustoPrimario(CentroCusto centroCustoPrimario) {
+    this.centroCustoPrimario = centroCustoPrimario;
+  }
+
+  public CentroCusto getCentroCustoSecundario() {
+    return centroCustoSecundario;
+  }
+
+  public void setCentroCustoSecundario(CentroCusto centroCustoSecundario) {
+    this.centroCustoSecundario = centroCustoSecundario;
   }
 
   public LocalDate getVencimento() {

@@ -82,8 +82,7 @@ public class LancamentoGateway {
     orders.add(new Sort.Order(Sort.Direction.valueOf(direction), orderBy));
     orders.add(new Sort.Order(Sort.Direction.valueOf(directionTwo), orderByTwo));
 
-    PageRequest pageRequest =
-        PageRequest.of(page, linesPerPage, Sort.by(orders));
+    PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.by(orders));
 
     if (StringUtils.isEmpty(description)) {
       return repository.findByTipoAndStatusAndUsuarioEmailAndVencimentoBetween(
@@ -168,17 +167,31 @@ public class LancamentoGateway {
       obj.getNome().setDiaVencimento(obj.getVencimento().getDayOfMonth());
       tituloLancamentoGateway.salvar(obj.getNome());
     }
-    if (obj.getCentroCusto() != null
+    if (obj.getCentroCustoPrimario() != null
         && !centroCustoGateway
-            .buscarPorNomeUsuarioEmail(obj.getCentroCusto().getNome(), obj.getUsuario().getEmail())
+            .buscarPorNomeUsuarioEmail(
+                obj.getCentroCustoPrimario().getNome(), obj.getUsuario().getEmail())
             .isPresent()) {
       if (obj.getTipo().equals(Tipo.RECEITA)) {
-        obj.getCentroCusto().setAplicarNaReceita(true);
+        obj.getCentroCustoPrimario().setAplicarNaReceita(true);
       } else if (obj.getTipo().equals(Tipo.DESPESA)) {
-        obj.getCentroCusto().setAplicarNaDespesa(true);
+        obj.getCentroCustoPrimario().setAplicarNaDespesa(true);
       }
-      obj.getCentroCusto().setDataInclusao(LocalDateTime.now());
-      centroCustoGateway.salvar(obj.getCentroCusto());
+      obj.getCentroCustoPrimario().setDataInclusao(LocalDateTime.now());
+      centroCustoGateway.salvar(obj.getCentroCustoPrimario());
+    }
+    if (obj.getCentroCustoSecundario() != null
+        && !centroCustoGateway
+            .buscarPorNomeUsuarioEmail(
+                obj.getCentroCustoSecundario().getNome(), obj.getUsuario().getEmail())
+            .isPresent()) {
+      if (obj.getTipo().equals(Tipo.RECEITA)) {
+        obj.getCentroCustoSecundario().setAplicarNaReceita(true);
+      } else if (obj.getTipo().equals(Tipo.DESPESA)) {
+        obj.getCentroCustoSecundario().setAplicarNaDespesa(true);
+      }
+      obj.getCentroCustoSecundario().setDataInclusao(LocalDateTime.now());
+      centroCustoGateway.salvar(obj.getCentroCustoSecundario());
     }
     if (obj.getContaBancaria() != null
         && !contaBancariaGateway

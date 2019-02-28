@@ -20,20 +20,21 @@ public class CentroCustoDataContract implements Serializable {
   @Length(min = 5, max = 100, message = "O nome deve conter entre 5 e 100 caracteres")
   private String nome;
 
+  private Boolean primaria;
+
+  private Boolean secundaria;
+
   private Boolean aplicarNaDespesa;
 
   private Boolean aplicarNaReceita;
 
   private Boolean ativo;
 
-  @JsonIgnore
-  private LocalDateTime dataInclusao;
+  @JsonIgnore private LocalDateTime dataInclusao;
 
-  @JsonIgnore
-  private LocalDateTime dataAlteracao;
+  @JsonIgnore private LocalDateTime dataAlteracao;
 
-  @JsonIgnore
-  private LocalDateTime dataExclusao;
+  @JsonIgnore private LocalDateTime dataExclusao;
 
   @Valid
   @NotNull
@@ -45,11 +46,15 @@ public class CentroCustoDataContract implements Serializable {
   public CentroCustoDataContract(
       final String id,
       final String nome,
+      final Boolean primaria,
+      final Boolean secundaria,
       final Boolean aplicarNaDespesa,
       final Boolean aplicarNaReceita,
       final UsuarioDataContract usuario) {
     this.id = id;
     this.nome = nome;
+    this.primaria = primaria;
+    this.secundaria = secundaria;
     this.aplicarNaDespesa = aplicarNaDespesa;
     this.aplicarNaReceita = aplicarNaReceita;
     this.usuario = usuario;
@@ -77,6 +82,22 @@ public class CentroCustoDataContract implements Serializable {
 
   public void setNome(String nome) {
     this.nome = nome;
+  }
+
+  public Boolean getPrimaria() {
+    return primaria;
+  }
+
+  public void setPrimaria(Boolean primaria) {
+    this.primaria = primaria;
+  }
+
+  public Boolean getSecundaria() {
+    return secundaria;
+  }
+
+  public void setSecundaria(Boolean secundaria) {
+    this.secundaria = secundaria;
   }
 
   public Boolean getAplicarNaDespesa() {

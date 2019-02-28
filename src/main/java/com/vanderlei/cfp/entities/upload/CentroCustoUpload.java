@@ -15,6 +15,10 @@ public class CentroCustoUpload extends Upload {
   @Length(min = 5, max = 100, message = "O nome deve conter entre 5 e 100 caracteres")
   private String nome;
 
+  private Boolean primaria;
+
+  private Boolean secundaria;
+
   private Boolean aplicarNaReceita;
 
   private Boolean aplicarNaDespesa;
@@ -22,8 +26,14 @@ public class CentroCustoUpload extends Upload {
   public CentroCustoUpload() {}
 
   public CentroCustoUpload(
-      final String nome, final Boolean aplicarNaReceita, final Boolean aplicarNaDespesa) {
+      final String nome,
+      final Boolean primaria,
+      final Boolean secundaria,
+      final Boolean aplicarNaReceita,
+      final Boolean aplicarNaDespesa) {
     this.nome = nome;
+    this.primaria = primaria;
+    this.secundaria = secundaria;
     this.aplicarNaReceita = aplicarNaReceita;
     this.aplicarNaDespesa = aplicarNaDespesa;
   }
@@ -34,6 +44,22 @@ public class CentroCustoUpload extends Upload {
 
   public void setNome(String nome) {
     this.nome = nome;
+  }
+
+  public Boolean getPrimaria() {
+    return primaria;
+  }
+
+  public void setPrimaria(Boolean primaria) {
+    this.primaria = primaria;
+  }
+
+  public Boolean getSecundaria() {
+    return secundaria;
+  }
+
+  public void setSecundaria(Boolean secundaria) {
+    this.secundaria = secundaria;
   }
 
   public Boolean getAplicarNaReceita() {

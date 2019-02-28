@@ -30,17 +30,34 @@ public class LancamentoConverter implements Converter<LancamentoDataContract, La
                   dataContract.getUsuario().getEmail(),
                   dataContract.getUsuario().getPermiteEmailLembrete())));
     }
-    if (dataContract.getCentroCusto() != null) {
-      obj.setCentroCusto(
+    if (dataContract.getCentroCustoPrimario() != null) {
+      obj.setCentroCustoPrimario(
           new CentroCusto(
               null,
-              dataContract.getCentroCusto().getNome().toUpperCase(),
+              dataContract.getCentroCustoPrimario().getNome().toUpperCase(),
+              true,
+              false,
               false,
               false,
               new Usuario(
                   null,
                   dataContract.getUsuario().getNome(),
-                  dataContract.getCentroCusto().getUsuario().getEmail(),
+                  dataContract.getCentroCustoPrimario().getUsuario().getEmail(),
+                  dataContract.getUsuario().getPermiteEmailLembrete())));
+    }
+    if (dataContract.getCentroCustoSecundario() != null) {
+      obj.setCentroCustoSecundario(
+          new CentroCusto(
+              null,
+              dataContract.getCentroCustoSecundario().getNome().toUpperCase(),
+              true,
+              false,
+              false,
+              false,
+              new Usuario(
+                  null,
+                  dataContract.getUsuario().getNome(),
+                  dataContract.getCentroCustoSecundario().getUsuario().getEmail(),
                   dataContract.getUsuario().getPermiteEmailLembrete())));
     }
     if (dataContract.getContaBancaria() != null) {
