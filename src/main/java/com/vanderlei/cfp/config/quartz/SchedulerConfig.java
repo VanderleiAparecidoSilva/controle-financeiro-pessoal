@@ -47,7 +47,8 @@ public class SchedulerConfig {
     private DataSource dataSourceBean() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(quartzApplicationProperties.getDataSourceDriverClassName());
-        dataSource.setUrl(quartzApplicationProperties.getDataSourceUrl() + "?useSSL=false&useTimezone=true&serverTimezone=UTC");
+        dataSource.setUrl(quartzApplicationProperties.getDataSourceUrl() +
+                "?useSSL=false&allowPublicKeyRetrieval=true&useTimezone=true&serverTimezone=UTC");
         dataSource.setUsername(quartzApplicationProperties.getDataSourceUsername());
         dataSource.setPassword(quartzApplicationProperties.getDataSourcePassword());
         return dataSource;

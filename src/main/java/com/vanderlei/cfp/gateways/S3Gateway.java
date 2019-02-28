@@ -18,35 +18,35 @@ import java.net.URISyntaxException;
 @Service
 public class S3Gateway {
 
-    @Autowired
-    private AmazonS3 s3client;
+  @Autowired private AmazonS3 s3client;
 
-    @Value("${s3.bucket}")
-    private String bucketName;
+  @Value("${s3.bucket}")
+  private String bucketName;
 
-    public URI uploadFile(final MultipartFile multipartFile) {
-        try {
-            String fileName = multipartFile.getOriginalFilename();
-            InputStream inputStream = multipartFile.getInputStream();
-            String contentType = multipartFile.getContentType();
+  public URI uploadFile(final MultipartFile multipartFile) {
+    try {
+      String fileName = multipartFile.getOriginalFilename();
+      InputStream inputStream = multipartFile.getInputStream();
+      String contentType = multipartFile.getContentType();
 
-            return uploadFile(inputStream, fileName, contentType);
-        } catch (IOException e) {
-            throw new FileException("Erro de IO: " + e.getMessage());
-        }
+      return uploadFile(inputStream, fileName, contentType);
+    } catch (IOException e) {
+      throw new FileException("Erro de IO: " + e.getMessage());
     }
+  }
 
-    public URI uploadFile(final InputStream inputStream, final String fileName, final String contentType) {
-        try {
-            ObjectMetadata objectMetadata = new ObjectMetadata();
-            objectMetadata.setContentType(contentType);
-            log.info("Iniciando upload");
-            s3client.putObject(bucketName, fileName, inputStream, objectMetadata);
-            log.info("Finalizando upload");
+  public URI uploadFile(
+      final InputStream inputStream, final String fileName, final String contentType) {
+    try {
+      ObjectMetadata objectMetadata = new ObjectMetadata();
+      objectMetadata.setContentType(contentType);
+      log.info("Iniciando upload");
+      s3client.putObject(bucketName, fileName, inputStream, objectMetadata);
+      log.info("Finalizando upload");
 
-            return s3client.getUrl(bucketName, fileName).toURI();
-        } catch (URISyntaxException e) {
-            throw new FileException("Erro ao converter URL para URI");
-        }
+      return s3client.getUrl(bucketName, fileName).toURI();
+    } catch (URISyntaxException e) {
+      throw new FileException("Erro ao converter URL para URI");
     }
+  }
 }
