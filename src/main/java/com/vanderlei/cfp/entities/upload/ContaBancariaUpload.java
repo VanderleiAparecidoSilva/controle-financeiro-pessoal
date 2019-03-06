@@ -27,9 +27,12 @@ public class ContaBancariaUpload extends Upload {
 
   public ContaBancariaUpload() {}
 
-  public ContaBancariaUpload(String nome, String numeroContaBancaria, Double limiteContaBancaria,
-                             Double saldoContaBancaria, Boolean vincularSaldoBancarioNoTotalReceita,
-                             Boolean atualizarSaldoBancarioNaBaixaTitulo) {
+  public ContaBancariaUpload(final String nome,
+                             final String numeroContaBancaria,
+                             final Double limiteContaBancaria,
+                             final Double saldoContaBancaria,
+                             final Boolean vincularSaldoBancarioNoTotalReceita,
+                             final Boolean atualizarSaldoBancarioNaBaixaTitulo) {
     this.nome = nome;
     this.numeroContaBancaria = numeroContaBancaria;
     this.limiteContaBancaria = limiteContaBancaria;

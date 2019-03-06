@@ -12,7 +12,7 @@ import javax.validation.constraints.NotEmpty;
 public class CentroCustoUpload extends Upload {
 
   @NotEmpty
-  @Length(min = 5, max = 100, message = "O nome deve conter entre 5 e 100 caracteres")
+  @Length(min = 3, max = 100, message = "O nome deve conter entre 3 e 100 caracteres")
   private String nome;
 
   private Boolean primaria;

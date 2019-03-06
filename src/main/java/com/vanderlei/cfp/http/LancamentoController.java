@@ -4,6 +4,7 @@ import com.vanderlei.cfp.entities.Baixa;
 import com.vanderlei.cfp.entities.Lancamento;
 import com.vanderlei.cfp.entities.enums.Status;
 import com.vanderlei.cfp.entities.enums.Tipo;
+import com.vanderlei.cfp.entities.enums.TipoUpload;
 import com.vanderlei.cfp.events.ResourceEvent;
 import com.vanderlei.cfp.gateways.LancamentoGateway;
 import com.vanderlei.cfp.gateways.converters.*;
@@ -467,6 +468,35 @@ public class LancamentoController {
   ResponseEntity<Void> desativar(
       @ApiParam(value = "Identificador do lançamento") @PathVariable final String id) {
     gateway.desativar(id);
+    return ResponseEntity.noContent().build();
+  }
+
+  @ApiOperation(
+      value = "Upload de novos lançamentos",
+      tags = {
+        TAG_CONTROLLER,
+      })
+  @ApiResponses(
+      value = {
+        @ApiResponse(code = 201, message = "Upload efetuado com sucesso!"),
+        @ApiResponse(code = 400, message = "Request inválido")
+      })
+  @RequestMapping(
+      value = "/upload",
+      consumes = {APPLICATION_JSON_VALUE},
+      produces = {APPLICATION_JSON_VALUE},
+      method = POST)
+  ResponseEntity<Void> upload(
+      @ApiParam(value = "Identificador do usuário", required = true) @RequestParam(value = "email")
+          final String email,
+      @ApiParam(value = "Lançamento") @RequestBody final String dataContract) {
+
+    if (dataContract
+        .split(";")[0]
+        .toUpperCase()
+        .equals(TipoUpload.LANCAMENTO.getDescricao().toUpperCase())) {
+      gateway.upload(email, dataContract);
+    }
     return ResponseEntity.noContent().build();
   }
 }
