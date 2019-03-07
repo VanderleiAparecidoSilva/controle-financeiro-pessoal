@@ -128,7 +128,7 @@ public class LancamentoGateway {
 
   public Optional<Lancamento> buscarPorTituloTipoUsuarioEmail(
       final String titulo, final Tipo tipo, final String email) {
-    return repository.findByNomeNomeLikeIgnoreCaseAndTipoAndUsuarioEmail(titulo, tipo, email);
+    return repository.findFirstByNomeNomeLikeIgnoreCaseAndTipoAndUsuarioEmail(titulo, tipo, email);
   }
 
   public Lancamento buscarPorCodigo(final String id) {
