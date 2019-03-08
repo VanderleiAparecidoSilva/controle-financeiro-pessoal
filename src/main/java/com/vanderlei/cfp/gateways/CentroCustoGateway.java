@@ -8,6 +8,7 @@ import com.vanderlei.cfp.exceptions.ObjectDuplicatedException;
 import com.vanderlei.cfp.exceptions.ObjectNotFoundException;
 import com.vanderlei.cfp.gateways.repository.CentroCustoRepository;
 import com.vanderlei.cfp.gateways.repository.UploadRepository;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -47,27 +48,27 @@ public class CentroCustoGateway {
       final String direction) {
     PageRequest pageRequest =
         PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
-    return repository.findByUsuarioEmail(email, pageRequest);
+    return repository.findByUsuarioEmailOrderByNome(email, pageRequest);
   }
 
   public List<CentroCusto> buscarTodosAtivosPorUsuario(final String email) {
-    return repository.findByUsuarioEmail(email).stream()
-        .filter(obj -> obj.getAtivo())
+    return repository.findByUsuarioEmailOrderByNome(email).stream()
+        .filter(obj -> ObjectUtils.defaultIfNull(obj.getAtivo(), false))
         .collect(Collectors.toList());
   }
 
   public List<CentroCusto> buscarTodosAtivosPorUsuarioTipo(final String email, final String tipo) {
     if (tipo.equals("DESPESA")) {
-      return repository.findByUsuarioEmail(email).stream()
-          .filter(obj -> obj.getAtivo())
-          .filter(obj -> obj.getAplicarNaDespesa())
-          .filter(obj -> obj.getPrimaria())
+      return repository.findByUsuarioEmailOrderByNome(email).stream()
+          .filter(obj -> ObjectUtils.defaultIfNull(obj.getAtivo(), false))
+          .filter(obj -> ObjectUtils.defaultIfNull(obj.getAplicarNaDespesa(), false))
+          .filter(obj -> ObjectUtils.defaultIfNull(obj.getPrimaria(), false))
           .collect(Collectors.toList());
     } else if (tipo.equals("RECEITA")) {
-      return repository.findByUsuarioEmail(email).stream()
-          .filter(obj -> obj.getAtivo())
-          .filter(obj -> obj.getAplicarNaReceita())
-          .filter(obj -> obj.getPrimaria())
+      return repository.findByUsuarioEmailOrderByNome(email).stream()
+          .filter(obj -> ObjectUtils.defaultIfNull(obj.getAtivo(), false))
+          .filter(obj -> ObjectUtils.defaultIfNull(obj.getAplicarNaReceita(), false))
+          .filter(obj -> ObjectUtils.defaultIfNull(obj.getPrimaria(), false))
           .collect(Collectors.toList());
     }
 
@@ -77,16 +78,16 @@ public class CentroCustoGateway {
   public List<CentroCusto> buscarTodosAtivosPorUsuarioTipoSecundaria(
       final String email, final String tipo) {
     if (tipo.equals("DESPESA")) {
-      return repository.findByUsuarioEmail(email).stream()
-          .filter(obj -> obj.getAtivo())
-          .filter(obj -> obj.getAplicarNaDespesa())
-          .filter(obj -> obj.getSecundaria())
+      return repository.findByUsuarioEmailOrderByNome(email).stream()
+          .filter(obj -> ObjectUtils.defaultIfNull(obj.getAtivo(), false))
+          .filter(obj -> ObjectUtils.defaultIfNull(obj.getAplicarNaDespesa(), false))
+          .filter(obj -> ObjectUtils.defaultIfNull(obj.getSecundaria(), false))
           .collect(Collectors.toList());
     } else if (tipo.equals("RECEITA")) {
-      return repository.findByUsuarioEmail(email).stream()
-          .filter(obj -> obj.getAtivo())
-          .filter(obj -> obj.getAplicarNaReceita())
-          .filter(obj -> obj.getSecundaria())
+      return repository.findByUsuarioEmailOrderByNome(email).stream()
+          .filter(obj -> ObjectUtils.defaultIfNull(obj.getAtivo(), false))
+          .filter(obj -> ObjectUtils.defaultIfNull(obj.getAplicarNaReceita(), false))
+          .filter(obj -> ObjectUtils.defaultIfNull(obj.getSecundaria(), false))
           .collect(Collectors.toList());
     }
 
