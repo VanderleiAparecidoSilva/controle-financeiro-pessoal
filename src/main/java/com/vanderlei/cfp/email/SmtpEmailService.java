@@ -7,6 +7,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
 import javax.mail.internet.MimeMessage;
+import java.time.LocalDateTime;
 
 @Slf4j
 public class SmtpEmailService extends AbstractEmailService {
@@ -17,15 +18,15 @@ public class SmtpEmailService extends AbstractEmailService {
 
   @Override
   public void enviarEmail(SimpleMailMessage msg) {
-    log.info("Enviando e-mail...");
+    log.info(LocalDateTime.now() + " - Enviando e-mail...");
     mailSender.send(msg);
-    log.info("Email enviado");
+    log.info(LocalDateTime.now() + " - Email enviado");
   }
 
   @Override
   public void enviarEmail(final MimeMessage msg) {
-    log.info("Enviando e-mail...");
+    log.info(LocalDateTime.now() + " - Enviando e-mail...");
     javaMailSender.send(msg);
-    log.info("Email enviado");
+    log.info(LocalDateTime.now() + " - Email enviado");
   }
 }

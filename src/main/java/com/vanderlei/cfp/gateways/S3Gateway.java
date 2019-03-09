@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
 
 @Slf4j
 @Service
@@ -40,13 +41,13 @@ public class S3Gateway {
     try {
       ObjectMetadata objectMetadata = new ObjectMetadata();
       objectMetadata.setContentType(contentType);
-      log.info("Iniciando upload");
+      log.info(LocalDateTime.now() + " - Iniciando upload");
       s3client.putObject(bucketName, fileName, inputStream, objectMetadata);
-      log.info("Finalizando upload");
+      log.info(LocalDateTime.now() + " - Finalizando upload");
 
       return s3client.getUrl(bucketName, fileName).toURI();
     } catch (URISyntaxException e) {
-      throw new FileException("Erro ao converter URL para URI");
+      throw new FileException(LocalDateTime.now() + " - Erro ao converter URL para URI");
     }
   }
 }

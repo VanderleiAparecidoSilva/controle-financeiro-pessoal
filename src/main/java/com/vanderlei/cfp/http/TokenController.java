@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
 
 @Profile("oauth-security")
 @Slf4j
@@ -28,7 +29,7 @@ public class TokenController {
 
   @DeleteMapping("/revoke")
   public void revoke(HttpServletRequest req, HttpServletResponse resp) {
-    log.info(isEnableHttps.toString());
+    log.info(LocalDateTime.now() + " - " + isEnableHttps.toString());
     Cookie cookie = new Cookie("refreshToken", null);
     cookie.setHttpOnly(true);
     cookie.setSecure(isEnableHttps);
