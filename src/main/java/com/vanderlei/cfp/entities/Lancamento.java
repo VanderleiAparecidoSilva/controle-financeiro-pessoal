@@ -3,6 +3,7 @@ package com.vanderlei.cfp.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vanderlei.cfp.entities.enums.Status;
 import com.vanderlei.cfp.entities.enums.Tipo;
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
@@ -26,6 +27,7 @@ import java.util.UUID;
   @CompoundIndex(name = "nome-usuarionome", def = "{'nome' : 1, 'usuario.nome' : 1}"),
   @CompoundIndex(name = "nome-usuarioemail", def = "{'nome' : 1, 'usuario.email' : 1}")
 })
+@ToString
 public class Lancamento implements Serializable {
 
   public static final long serialVersionUID = 1L;

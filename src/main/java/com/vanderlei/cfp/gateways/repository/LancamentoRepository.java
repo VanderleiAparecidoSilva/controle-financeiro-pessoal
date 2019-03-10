@@ -57,6 +57,6 @@ public interface LancamentoRepository extends MongoRepository<Lancamento, String
       final Pageable pageable);
 
   @Transactional(readOnly = true)
-  Optional<Lancamento> findFirstByNomeNomeLikeIgnoreCaseAndTipoAndObservacaoAndUsuarioEmail(
-      final String nome, final Tipo tipo, final String observacao, final String email);
+  Optional<Lancamento> findFirstByNomeNomeLikeIgnoreCaseAndTipoAndVencimentoAndObservacaoAndUsuarioEmail(
+      final String nome, final Tipo tipo, final LocalDate vencimento, final String observacao, final String email);
 }

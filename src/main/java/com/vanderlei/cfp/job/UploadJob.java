@@ -145,14 +145,6 @@ public class UploadJob implements Job {
     obj.setTipo(Tipo.valueOf(((LancamentoUpload) upload).getTipoLancamento()));
     obj.setUsuario(upload.getUsuario());
 
-    Optional<Lancamento> lancamento =
-        lancamentoGateway.buscarPorTituloTipoObservacaoUsuarioEmail(
-            obj.getNome().getNome(),
-            obj.getTipo(),
-            obj.getObservacao(),
-            obj.getUsuario().getEmail());
-    if (!lancamento.isPresent()) {
-      lancamentoGateway.inserir(obj);
-    }
+    lancamentoGateway.inserir(obj);
   }
 }

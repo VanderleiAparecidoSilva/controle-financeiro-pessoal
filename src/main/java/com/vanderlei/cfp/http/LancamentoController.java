@@ -112,7 +112,7 @@ public class LancamentoController {
       @ApiParam(value = "Quantidade de páginas") @RequestParam(value = "page", defaultValue = "0")
           final Integer page,
       @ApiParam(value = "Quantidade de linhas por página")
-          @RequestParam(value = "linesPerPage", defaultValue = "24")
+          @RequestParam(value = "linesPerPage", defaultValue = "500")
           final Integer linesPerPage,
       @ApiParam(value = "Ordenação") @RequestParam(value = "orderBy", defaultValue = "vencimento")
           final String orderBy,
@@ -168,7 +168,7 @@ public class LancamentoController {
       @ApiParam(value = "Quantidade de páginas") @RequestParam(value = "page", defaultValue = "0")
           final Integer page,
       @ApiParam(value = "Quantidade de linhas por página")
-          @RequestParam(value = "linesPerPage", defaultValue = "24")
+          @RequestParam(value = "linesPerPage", defaultValue = "500")
           final Integer linesPerPage,
       @ApiParam(value = "Ordenação") @RequestParam(value = "orderBy", defaultValue = "vencimento")
           final String orderBy,
@@ -227,7 +227,7 @@ public class LancamentoController {
       @ApiParam(value = "Quantidade de páginas") @RequestParam(value = "page", defaultValue = "0")
           final Integer page,
       @ApiParam(value = "Quantidade de linhas por página")
-          @RequestParam(value = "linesPerPage", defaultValue = "24")
+          @RequestParam(value = "linesPerPage", defaultValue = "500")
           final Integer linesPerPage,
       @ApiParam(value = "Ordenação") @RequestParam(value = "orderBy", defaultValue = "vencimento")
           final String orderBy,
@@ -283,7 +283,7 @@ public class LancamentoController {
       @ApiParam(value = "Quantidade de páginas") @RequestParam(value = "page", defaultValue = "0")
           final Integer page,
       @ApiParam(value = "Quantidade de linhas por página")
-          @RequestParam(value = "linesPerPage", defaultValue = "24")
+          @RequestParam(value = "linesPerPage", defaultValue = "500")
           final Integer linesPerPage,
       @ApiParam(value = "Ordenação") @RequestParam(value = "orderBy", defaultValue = "vencimento")
           final String orderBy,
@@ -341,7 +341,7 @@ public class LancamentoController {
       @ApiParam(value = "Quantidade de páginas") @RequestParam(value = "page", defaultValue = "0")
           final Integer page,
       @ApiParam(value = "Quantidade de linhas por página")
-          @RequestParam(value = "linesPerPage", defaultValue = "24")
+          @RequestParam(value = "linesPerPage", defaultValue = "500")
           final Integer linesPerPage,
       @ApiParam(value = "Ordenação") @RequestParam(value = "orderBy", defaultValue = "vencimento")
           final String orderBy,
