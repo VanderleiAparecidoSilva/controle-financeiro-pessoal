@@ -38,7 +38,7 @@ public interface LancamentoRepository extends MongoRepository<Lancamento, String
       final Tipo tipo, final String email, final Pageable pageable);
 
   @Transactional(readOnly = true)
-  Page<Lancamento> findByTipoAndStatusAndUsuarioEmailAndVencimentoBetween(
+  Page<Lancamento> findByTipoAndStatusAndUsuarioEmailAndDataExclusaoIsNullAndVencimentoBetween(
       final Tipo tipo,
       final Status status,
       final String email,
@@ -47,7 +47,7 @@ public interface LancamentoRepository extends MongoRepository<Lancamento, String
       final Pageable pageable);
 
   @Transactional(readOnly = true)
-  Page<Lancamento> findByNomeNomeLikeIgnoreCaseAndTipoAndStatusAndUsuarioEmailAndVencimentoBetween(
+  Page<Lancamento> findByNomeNomeLikeIgnoreCaseAndTipoAndStatusAndUsuarioEmailAndDataExclusaoIsNullAndVencimentoBetween(
       final String nome,
       final Tipo tipo,
       final Status status,

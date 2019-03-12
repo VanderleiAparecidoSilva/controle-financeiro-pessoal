@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vanderlei.cfp.entities.enums.Status;
 import com.vanderlei.cfp.entities.enums.Tipo;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.Transient;
 import javax.validation.Valid;
@@ -232,7 +233,8 @@ public class LancamentoDataContract implements Serializable {
   }
 
   public String getParcelaComTotalParcelas() {
-    return this.parcela + "/" + this.quantidadeTotalParcelas;
+    return StringUtils.leftPad(String.valueOf(this.parcela), 2, '0') + "/" +
+            StringUtils.leftPad(String.valueOf(this.quantidadeTotalParcelas), 2, '0');
   }
 
   public Boolean getParcelaAtrasada() {

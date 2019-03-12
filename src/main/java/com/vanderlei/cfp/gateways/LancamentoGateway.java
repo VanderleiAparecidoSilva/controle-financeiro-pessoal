@@ -96,7 +96,7 @@ public class LancamentoGateway {
     PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.by(orders));
 
     if (StringUtils.isEmpty(description)) {
-      return repository.findByTipoAndStatusAndUsuarioEmailAndVencimentoBetween(
+      return repository.findByTipoAndStatusAndUsuarioEmailAndDataExclusaoIsNullAndVencimentoBetween(
           tipo,
           status,
           email,
@@ -105,7 +105,7 @@ public class LancamentoGateway {
           pageRequest);
     } else {
       return repository
-          .findByNomeNomeLikeIgnoreCaseAndTipoAndStatusAndUsuarioEmailAndVencimentoBetween(
+          .findByNomeNomeLikeIgnoreCaseAndTipoAndStatusAndUsuarioEmailAndDataExclusaoIsNullAndVencimentoBetween(
               description,
               tipo,
               status,
@@ -261,6 +261,7 @@ public class LancamentoGateway {
           vencimento = vencimento.plusMonths(1);
         }
       }
+      obj.setObservacao(obj.getObservacao().toUpperCase());
 
       repository.save(obj);
       if (objRet == null) {
