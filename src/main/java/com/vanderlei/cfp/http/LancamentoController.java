@@ -28,6 +28,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -187,7 +189,7 @@ public class LancamentoController {
                 from,
                 to,
                 description,
-                onlyOpen.equalsIgnoreCase("Sim") ? Status.ABERTO : Status.RECEBIDO,
+                getStatus(onlyOpen.equalsIgnoreCase("Sim")),
                 Tipo.RECEITA,
                 page,
                 linesPerPage,
@@ -200,7 +202,7 @@ public class LancamentoController {
         : ResponseEntity.notFound().build();
   }
 
-  @ApiOperation(
+    @ApiOperation(
       value = "Busca todos os lançamentos de débito por usuário (paginado)",
       response = LancamentoDataContract.class,
       responseContainer = "List",
@@ -302,7 +304,7 @@ public class LancamentoController {
                 from,
                 to,
                 description,
-                onlyOpen.equalsIgnoreCase("Sim") ? Status.ABERTO : Status.PAGO,
+                getStatus(onlyOpen.equalsIgnoreCase("Sim")),
                 Tipo.DESPESA,
                 page,
                 linesPerPage,
@@ -498,5 +500,9 @@ public class LancamentoController {
       gateway.upload(email, dataContract);
     }
     return ResponseEntity.noContent().build();
+  }
+
+  private List<Status> getStatus(final boolean onlyOpen) {
+    return onlyOpen ? Arrays.asList(Status.ABERTO) : Arrays.asList(Status.ABERTO, Status.RECEBIDO, Status.PAGO);
   }
 }

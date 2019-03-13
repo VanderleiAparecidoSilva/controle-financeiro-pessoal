@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -38,25 +39,31 @@ public interface LancamentoRepository extends MongoRepository<Lancamento, String
       final Tipo tipo, final String email, final Pageable pageable);
 
   @Transactional(readOnly = true)
-  Page<Lancamento> findByTipoAndStatusAndUsuarioEmailAndDataExclusaoIsNullAndVencimentoBetween(
+  Page<Lancamento> findByTipoAndStatusInAndUsuarioEmailAndDataExclusaoIsNullAndVencimentoBetween(
       final Tipo tipo,
-      final Status status,
+      final List<Status> status,
       final String email,
       final LocalDateTime from,
       final LocalDateTime to,
       final Pageable pageable);
 
   @Transactional(readOnly = true)
-  Page<Lancamento> findByNomeNomeLikeIgnoreCaseAndTipoAndStatusAndUsuarioEmailAndDataExclusaoIsNullAndVencimentoBetween(
-      final String nome,
-      final Tipo tipo,
-      final Status status,
-      final String email,
-      final LocalDateTime from,
-      final LocalDateTime to,
-      final Pageable pageable);
+  Page<Lancamento>
+      findByNomeNomeLikeIgnoreCaseAndTipoAndStatusInAndUsuarioEmailAndDataExclusaoIsNullAndVencimentoBetween(
+          final String nome,
+          final Tipo tipo,
+          final List<Status> status,
+          final String email,
+          final LocalDateTime from,
+          final LocalDateTime to,
+          final Pageable pageable);
 
   @Transactional(readOnly = true)
-  Optional<Lancamento> findFirstByNomeNomeLikeIgnoreCaseAndTipoAndVencimentoAndObservacaoAndUsuarioEmail(
-      final String nome, final Tipo tipo, final LocalDate vencimento, final String observacao, final String email);
+  Optional<Lancamento>
+      findFirstByNomeNomeLikeIgnoreCaseAndTipoAndVencimentoAndObservacaoAndUsuarioEmail(
+          final String nome,
+          final Tipo tipo,
+          final LocalDate vencimento,
+          final String observacao,
+          final String email);
 }

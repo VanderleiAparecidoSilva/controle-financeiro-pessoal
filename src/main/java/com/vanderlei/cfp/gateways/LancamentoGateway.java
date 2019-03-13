@@ -80,7 +80,7 @@ public class LancamentoGateway {
       final LocalDate from,
       final LocalDate to,
       final String description,
-      final Status status,
+      final List<Status> status,
       final Tipo tipo,
       final Integer page,
       final Integer linesPerPage,
@@ -96,7 +96,7 @@ public class LancamentoGateway {
     PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.by(orders));
 
     if (StringUtils.isEmpty(description)) {
-      return repository.findByTipoAndStatusAndUsuarioEmailAndDataExclusaoIsNullAndVencimentoBetween(
+      return repository.findByTipoAndStatusInAndUsuarioEmailAndDataExclusaoIsNullAndVencimentoBetween(
           tipo,
           status,
           email,
@@ -105,7 +105,7 @@ public class LancamentoGateway {
           pageRequest);
     } else {
       return repository
-          .findByNomeNomeLikeIgnoreCaseAndTipoAndStatusAndUsuarioEmailAndDataExclusaoIsNullAndVencimentoBetween(
+          .findByNomeNomeLikeIgnoreCaseAndTipoAndStatusInAndUsuarioEmailAndDataExclusaoIsNullAndVencimentoBetween(
               description,
               tipo,
               status,
