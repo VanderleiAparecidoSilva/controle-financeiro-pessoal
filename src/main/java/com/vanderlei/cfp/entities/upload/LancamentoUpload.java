@@ -24,8 +24,6 @@ public class LancamentoUpload extends Upload {
 
   private Double valorParcela;
 
-  private Integer quantidadeTotalParcelas;
-
   private Integer parcela;
 
   private Boolean gerarParcelaUnica;
@@ -46,7 +44,6 @@ public class LancamentoUpload extends Upload {
       final String centroCustoSecundario,
       final LocalDate vencimento,
       final Double valorParcela,
-      final Integer quantidadeTotalParcelas,
       final Integer parcela,
       final Boolean gerarParcelaUnica,
       final String contaBancaria,
@@ -58,7 +55,6 @@ public class LancamentoUpload extends Upload {
     this.centroCustoSecundario = centroCustoSecundario;
     this.vencimento = vencimento;
     this.valorParcela = valorParcela;
-    this.quantidadeTotalParcelas = quantidadeTotalParcelas;
     this.parcela = parcela;
     this.gerarParcelaUnica = gerarParcelaUnica;
     this.contaBancaria = contaBancaria;
@@ -105,14 +101,6 @@ public class LancamentoUpload extends Upload {
 
   public void setValorParcela(Double valorParcela) {
     this.valorParcela = valorParcela;
-  }
-
-  public Integer getQuantidadeTotalParcelas() {
-    return quantidadeTotalParcelas;
-  }
-
-  public void setQuantidadeTotalParcelas(Integer quantidadeTotalParcelas) {
-    this.quantidadeTotalParcelas = quantidadeTotalParcelas;
   }
 
   public Integer getParcela() {

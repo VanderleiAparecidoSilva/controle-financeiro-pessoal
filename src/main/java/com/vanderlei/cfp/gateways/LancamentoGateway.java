@@ -232,7 +232,8 @@ public class LancamentoGateway {
               + Lancamento.class.getName());
     }
 
-    final int qtdParcelas = obj.getQuantidadeTotalParcelas();
+    final int qtdParcelas = obj.getParcela();
+    obj.setQuantidadeTotalParcelas(qtdParcelas);
     LocalDate vencimento = obj.getVencimento();
     int dayOfMonth = vencimento.getDayOfMonth();
     final UUID uuid = UUID.randomUUID();
@@ -414,12 +415,11 @@ public class LancamentoGateway {
       obj.setVencimento(getVencimento(strArray[4]));
       obj.setValorParcela(Double.valueOf(strArray[5].replace(",", ".")));
       obj.setParcela(Integer.valueOf(strArray[6]));
-      obj.setQuantidadeTotalParcelas(Integer.valueOf(strArray[7]));
-      obj.setGerarParcelaUnica(Boolean.valueOf(strArray[8]));
-      obj.setContaBancaria(strArray[9].toUpperCase());
-      obj.setObservacao(strArray[10].toUpperCase());
-      obj.setStatus(strArray[11].toUpperCase());
-      obj.setTipoLancamento(strArray[12].toUpperCase());
+      obj.setGerarParcelaUnica(Boolean.valueOf(strArray[7]));
+      obj.setContaBancaria(strArray[8].toUpperCase());
+      obj.setObservacao(strArray[9].toUpperCase());
+      obj.setStatus(strArray[10].toUpperCase());
+      obj.setTipoLancamento(strArray[11].toUpperCase());
       obj.setId(null);
       obj.setDataInclusao(LocalDateTime.now());
       obj.setUsuario(usuario);

@@ -46,9 +46,9 @@ public class Lancamento implements Serializable {
 
   @NotNull private Double valorParcela;
 
-  @NotNull private int quantidadeTotalParcelas;
+  @JsonIgnore private int quantidadeTotalParcelas;
 
-  @JsonIgnore private int parcela;
+  @NotNull private int parcela;
 
   private boolean gerarParcelaUnica;
 

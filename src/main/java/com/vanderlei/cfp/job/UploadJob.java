@@ -137,7 +137,6 @@ public class UploadJob implements Job {
     obj.setVencimento(((LancamentoUpload) upload).getVencimento());
     obj.setValorParcela(((LancamentoUpload) upload).getValorParcela());
     obj.setParcela(((LancamentoUpload) upload).getParcela());
-    obj.setQuantidadeTotalParcelas(((LancamentoUpload) upload).getQuantidadeTotalParcelas());
     obj.setGerarParcelaUnica(((LancamentoUpload) upload).getGerarParcelaUnica());
     obj.setContaBancaria(contaBancaria);
     obj.setObservacao(((LancamentoUpload) upload).getObservacao());
