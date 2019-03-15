@@ -35,6 +35,10 @@ public interface LancamentoRepository extends MongoRepository<Lancamento, String
       final Pageable pageable);
 
   @Transactional(readOnly = true)
+  List<Lancamento> findByTipoAndUsuarioEmailAndDataExclusaoIsNullAndVencimentoBetween(
+      final Tipo tipo, final String email, final LocalDateTime from, final LocalDateTime to);
+
+  @Transactional(readOnly = true)
   Page<Lancamento> findByTipoAndUsuarioEmail(
       final Tipo tipo, final String email, final Pageable pageable);
 

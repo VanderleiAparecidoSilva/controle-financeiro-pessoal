@@ -108,6 +108,10 @@ public class CentroCustoGateway {
     return repository.findByNomeAndUsuarioEmail(nome, email);
   }
 
+  public CentroCusto buscarPorNome(final String nome) {
+    return repository.findByNome(nome);
+  }
+
   public Page<CentroCusto> buscarPorNomeLikeUsuarioEmail(
       final String email,
       final String nome,

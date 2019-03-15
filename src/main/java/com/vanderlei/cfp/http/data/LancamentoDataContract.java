@@ -10,6 +10,7 @@ import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -35,7 +36,7 @@ public class LancamentoDataContract implements Serializable {
 
   @NotNull private LocalDate vencimento;
 
-  @NotNull private Double valorParcela;
+  @NotNull private BigDecimal valorParcela;
 
   @NotNull private int parcela;
 
@@ -74,7 +75,7 @@ public class LancamentoDataContract implements Serializable {
       final CentroCustoDataContract centroCustoPrimario,
       final CentroCustoDataContract centroCustoSecundario,
       final LocalDate vencimento,
-      final Double valorParcela,
+      final BigDecimal valorParcela,
       final int parcela,
       final int quantidadeParcelas,
       final boolean gerarParcelaUnica,
@@ -152,11 +153,11 @@ public class LancamentoDataContract implements Serializable {
     this.vencimento = vencimento;
   }
 
-  public Double getValorParcela() {
+  public BigDecimal getValorParcela() {
     return valorParcela;
   }
 
-  public void setValorParcela(Double valorParcela) {
+  public void setValorParcela(BigDecimal valorParcela) {
     this.valorParcela = valorParcela;
   }
 

@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
@@ -55,9 +56,7 @@ public class ContaBancariaGateway {
   }
 
   public List<ContaBancaria> buscarTodosAtivosPorUsuario(final String email) {
-    return repository
-        .findByUsuarioEmail(email)
-        .stream()
+    return repository.findByUsuarioEmail(email).stream()
         .filter(obj -> obj.getAtivo())
         .collect(Collectors.toList());
   }
@@ -143,13 +142,13 @@ public class ContaBancariaGateway {
   }
 
   public void atualizarSaldo(
-      final String id, final String email, final Double valor, final Operacao operacao) {
+      final String id, final String email, final BigDecimal valor, final Operacao operacao) {
     ContaBancaria obj = this.buscarPorCodigoUsuario(id, email);
     obj.setDataAlteracao(LocalDateTime.now());
     obj.setSaldoContaBancaria(
         operacao.equals(Operacao.CREDITO)
-            ? (obj.getSaldoContaBancaria() + valor)
-            : (obj.getSaldoContaBancaria() - valor));
+            ? (obj.getSaldoContaBancaria().add(valor))
+            : (obj.getSaldoContaBancaria().subtract(valor)));
     repository.save(obj);
   }
 
@@ -179,11 +178,11 @@ public class ContaBancariaGateway {
     }
   }
 
-  private Double getDoubleValue(final String value) throws ParseException {
+  private BigDecimal getDoubleValue(final String value) throws ParseException {
     DecimalFormat df = new DecimalFormat();
     DecimalFormatSymbols sfs = new DecimalFormatSymbols();
     sfs.setDecimalSeparator(',');
     df.setDecimalFormatSymbols(sfs);
-    return df.parse(value.replace(".", "")).doubleValue();
+    return BigDecimal.valueOf(df.parse(value.replace(".", "")).doubleValue());
   }
 }

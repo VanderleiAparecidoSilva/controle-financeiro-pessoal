@@ -10,6 +10,7 @@ import com.vanderlei.cfp.gateways.LancamentoGateway;
 import com.vanderlei.cfp.gateways.converters.*;
 import com.vanderlei.cfp.http.data.BaixaDataContract;
 import com.vanderlei.cfp.http.data.LancamentoDataContract;
+import com.vanderlei.cfp.http.data.LancamentoEstatisticaCentroCustoDataContract;
 import com.vanderlei.cfp.http.mapping.UrlMapping;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -27,9 +28,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -45,6 +48,8 @@ public class LancamentoController {
   @Autowired private LancamentoDataContractConverter dataContractConverter;
 
   @Autowired private LancamentoConverter converter;
+
+  @Autowired private LancamentoEstatisticaDataContractConverter estatisticaConverter;
 
   @Autowired private TituloLancamentoDataContractConverter tituloLancamentoDataContractConverter;
 
@@ -202,7 +207,7 @@ public class LancamentoController {
         : ResponseEntity.notFound().build();
   }
 
-    @ApiOperation(
+  @ApiOperation(
       value = "Busca todos os lançamentos de débito por usuário (paginado)",
       response = LancamentoDataContract.class,
       responseContainer = "List",
@@ -359,6 +364,118 @@ public class LancamentoController {
   }
 
   @ApiOperation(
+      value = "Busca lançamentos de crédito por período para gráfico",
+      response = LancamentoEstatisticaCentroCustoDataContract.class,
+      responseContainer = "List",
+      tags = {
+        TAG_CONTROLLER,
+      })
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            code = 200,
+            message = "Lançamentos encontrados",
+            response = LancamentoDataContract.class),
+        @ApiResponse(code = 400, message = "Request inválido"),
+        @ApiResponse(code = 404, message = "Lançamentos não encontrados")
+      })
+  @RequestMapping(
+      value = "/estatisticas/credito/por-centrocusto",
+      produces = {APPLICATION_JSON_VALUE},
+      method = GET)
+  ResponseEntity<List<LancamentoEstatisticaCentroCustoDataContract>>
+      buscaLancamentoCreditoEstatisticaCentroCusto(
+          @ApiParam(value = "Identificador do usuário", required = true)
+              @RequestParam(value = "email")
+              final String email,
+          @ApiParam(value = "Data inicial")
+              @RequestParam(value = "from")
+              @DateTimeFormat(pattern = "yyyy-MM-dd")
+              final LocalDate from,
+          @ApiParam(value = "Data final")
+              @RequestParam(value = "to")
+              @DateTimeFormat(pattern = "yyyy-MM-dd")
+              final LocalDate to) {
+    List<LancamentoDataContract> objLancamentoList =
+        dataContractConverter.convert(
+            gateway.buscarEstatisticaCentroCusto(Tipo.RECEITA, email, from, to));
+
+    return ResponseEntity.ok()
+        .body(
+            objLancamentoList.stream()
+                .collect(
+                    Collectors.groupingBy(
+                        a -> a.getCentroCustoSecundario().getNome(),
+                        Collectors.mapping(
+                            LancamentoDataContract::getValorParcela,
+                            Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))))
+                .entrySet()
+                .stream()
+                .collect(Collectors.toList())
+                .stream()
+                .map(lancamento -> estatisticaConverter.convert(lancamento))
+                .filter(
+                    lancamento -> lancamento.getCentroCusto().getUsuario().getEmail().equals(email))
+                .collect(Collectors.toList()));
+  }
+
+  @ApiOperation(
+      value = "Busca lançamentos de débito por período para gráfico",
+      response = LancamentoEstatisticaCentroCustoDataContract.class,
+      responseContainer = "List",
+      tags = {
+        TAG_CONTROLLER,
+      })
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            code = 200,
+            message = "Lançamentos encontrados",
+            response = LancamentoDataContract.class),
+        @ApiResponse(code = 400, message = "Request inválido"),
+        @ApiResponse(code = 404, message = "Lançamentos não encontrados")
+      })
+  @RequestMapping(
+      value = "/estatisticas/debito/por-centrocusto",
+      produces = {APPLICATION_JSON_VALUE},
+      method = GET)
+  ResponseEntity<List<LancamentoEstatisticaCentroCustoDataContract>>
+      buscaLancamentoDebitoEstatisticaCentroCusto(
+          @ApiParam(value = "Identificador do usuário", required = true)
+              @RequestParam(value = "email")
+              final String email,
+          @ApiParam(value = "Data inicial")
+              @RequestParam(value = "from")
+              @DateTimeFormat(pattern = "yyyy-MM-dd")
+              final LocalDate from,
+          @ApiParam(value = "Data final")
+              @RequestParam(value = "to")
+              @DateTimeFormat(pattern = "yyyy-MM-dd")
+              final LocalDate to) {
+    List<LancamentoDataContract> objLancamentoList =
+        dataContractConverter.convert(
+            gateway.buscarEstatisticaCentroCusto(Tipo.DESPESA, email, from, to));
+
+    return ResponseEntity.ok()
+        .body(
+            objLancamentoList.stream()
+                .collect(
+                    Collectors.groupingBy(
+                        a -> a.getCentroCustoSecundario().getNome(),
+                        Collectors.mapping(
+                            LancamentoDataContract::getValorParcela,
+                            Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))))
+                .entrySet()
+                .stream()
+                .collect(Collectors.toList())
+                .stream()
+                .map(lancamento -> estatisticaConverter.convert(lancamento))
+                .filter(
+                    lancamento -> lancamento.getCentroCusto().getUsuario().getEmail().equals(email))
+                .collect(Collectors.toList()));
+  }
+
+  @ApiOperation(
       value = "Cadastrar novo lançamento",
       response = Lancamento.class,
       tags = {
@@ -503,6 +620,8 @@ public class LancamentoController {
   }
 
   private List<Status> getStatus(final boolean onlyOpen) {
-    return onlyOpen ? Arrays.asList(Status.ABERTO) : Arrays.asList(Status.ABERTO, Status.RECEBIDO, Status.PAGO);
+    return onlyOpen
+        ? Arrays.asList(Status.ABERTO)
+        : Arrays.asList(Status.ABERTO, Status.RECEBIDO, Status.PAGO);
   }
 }

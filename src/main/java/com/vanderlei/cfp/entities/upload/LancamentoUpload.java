@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotEmpty;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Document(collection = "upload")
@@ -22,7 +23,7 @@ public class LancamentoUpload extends Upload {
 
   private LocalDate vencimento;
 
-  private Double valorParcela;
+  private BigDecimal valorParcela;
 
   private Integer parcela;
 
@@ -43,7 +44,7 @@ public class LancamentoUpload extends Upload {
       final String centroCustoPrimario,
       final String centroCustoSecundario,
       final LocalDate vencimento,
-      final Double valorParcela,
+      final BigDecimal valorParcela,
       final Integer parcela,
       final Boolean gerarParcelaUnica,
       final String contaBancaria,
@@ -95,11 +96,11 @@ public class LancamentoUpload extends Upload {
     this.vencimento = vencimento;
   }
 
-  public Double getValorParcela() {
+  public BigDecimal getValorParcela() {
     return valorParcela;
   }
 
-  public void setValorParcela(Double valorParcela) {
+  public void setValorParcela(BigDecimal valorParcela) {
     this.valorParcela = valorParcela;
   }
 

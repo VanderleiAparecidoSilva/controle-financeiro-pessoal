@@ -1,14 +1,14 @@
 package com.vanderlei.cfp.gateways.converters;
 
 import com.vanderlei.cfp.entities.Lancamento;
-import com.vanderlei.cfp.http.data.CentroCustoDataContract;
-import com.vanderlei.cfp.http.data.ContaBancariaDataContract;
-import com.vanderlei.cfp.http.data.LancamentoDataContract;
-import com.vanderlei.cfp.http.data.UsuarioDataContract;
+import com.vanderlei.cfp.http.data.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class LancamentoDataContractConverter
@@ -70,5 +70,9 @@ public class LancamentoDataContractConverter
 
   public Page<LancamentoDataContract> convert(final Page<Lancamento> objList) {
     return objList.map(obj -> this.convert(obj));
+  }
+
+  public List<LancamentoDataContract> convert(final List<Lancamento> objList) {
+    return objList.stream().map(obj -> this.convert(obj)).collect(Collectors.toList());
   }
 }

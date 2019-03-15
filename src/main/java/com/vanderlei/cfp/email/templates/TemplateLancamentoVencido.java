@@ -3,6 +3,7 @@ package com.vanderlei.cfp.email.templates;
 import com.vanderlei.cfp.entities.Lancamento;
 import com.vanderlei.cfp.entities.Usuario;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class TemplateLancamentoVencido {
@@ -35,10 +36,10 @@ public class TemplateLancamentoVencido {
         this.lancamentos = lancamentos;
     }
 
-    public double getValorTotal() {
-        double soma = 0.0;
+    public BigDecimal getValorTotal() {
+        BigDecimal soma = BigDecimal.valueOf(0.0);
         for (Lancamento item : this.lancamentos) {
-            soma = soma + item.getValorParcela();
+            soma = soma.add(item.getValorParcela());
         }
         return soma;
     }

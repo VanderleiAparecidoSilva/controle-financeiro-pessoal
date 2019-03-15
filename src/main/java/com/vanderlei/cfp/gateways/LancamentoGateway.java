@@ -20,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -96,13 +97,14 @@ public class LancamentoGateway {
     PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.by(orders));
 
     if (StringUtils.isEmpty(description)) {
-      return repository.findByTipoAndStatusInAndUsuarioEmailAndDataExclusaoIsNullAndVencimentoBetween(
-          tipo,
-          status,
-          email,
-          from.minusDays(1).atTime(23, 59, 59),
-          to.plusDays(1).atStartOfDay(),
-          pageRequest);
+      return repository
+          .findByTipoAndStatusInAndUsuarioEmailAndDataExclusaoIsNullAndVencimentoBetween(
+              tipo,
+              status,
+              email,
+              from.minusDays(1).atTime(23, 59, 59),
+              to.plusDays(1).atStartOfDay(),
+              pageRequest);
     } else {
       return repository
           .findByNomeNomeLikeIgnoreCaseAndTipoAndStatusInAndUsuarioEmailAndDataExclusaoIsNullAndVencimentoBetween(
@@ -127,9 +129,14 @@ public class LancamentoGateway {
   }
 
   public Optional<Lancamento> buscarPorTituloTipoObservacaoUsuarioEmail(
-      final String titulo, final Tipo tipo, final LocalDate vencimento, final String observacao, final String email) {
-    return repository.findFirstByNomeNomeLikeIgnoreCaseAndTipoAndVencimentoAndObservacaoAndUsuarioEmail(
-        titulo, tipo, vencimento, observacao, email);
+      final String titulo,
+      final Tipo tipo,
+      final LocalDate vencimento,
+      final String observacao,
+      final String email) {
+    return repository
+        .findFirstByNomeNomeLikeIgnoreCaseAndTipoAndVencimentoAndObservacaoAndUsuarioEmail(
+            titulo, tipo, vencimento, observacao, email);
   }
 
   public Lancamento buscarPorCodigo(final String id) {
@@ -159,6 +166,12 @@ public class LancamentoGateway {
             obj.getParcela(),
             pageRequest);
     return objList;
+  }
+
+  public List<Lancamento> buscarEstatisticaCentroCusto(
+      final Tipo tipo, final String email, final LocalDate from, final LocalDate to) {
+    return repository.findByTipoAndUsuarioEmailAndDataExclusaoIsNullAndVencimentoBetween(
+        tipo, email, from.minusDays(1).atTime(23, 59, 59), to.plusDays(1).atStartOfDay());
   }
 
   public Lancamento inserir(final Lancamento obj) {
@@ -413,7 +426,7 @@ public class LancamentoGateway {
       obj.setCentroCustoPrimario(strArray[2].toUpperCase());
       obj.setCentroCustoSecundario(strArray[3].toUpperCase());
       obj.setVencimento(getVencimento(strArray[4]));
-      obj.setValorParcela(Double.valueOf(strArray[5].replace(",", ".")));
+      obj.setValorParcela(BigDecimal.valueOf(Double.valueOf(strArray[5].replace(",", "."))));
       obj.setParcela(Integer.valueOf(strArray[6]));
       obj.setGerarParcelaUnica(Boolean.valueOf(strArray[7]));
       obj.setContaBancaria(strArray[8].toUpperCase());

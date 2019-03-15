@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class ContaBancariaDataContract implements Serializable {
@@ -22,9 +23,9 @@ public class ContaBancariaDataContract implements Serializable {
 
   private String numeroContaBancaria;
 
-  private Double limiteContaBancaria;
+  private BigDecimal limiteContaBancaria;
 
-  private Double saldoContaBancaria;
+  private BigDecimal saldoContaBancaria;
 
   private Boolean vincularSaldoBancarioNoTotalReceita;
 
@@ -32,14 +33,11 @@ public class ContaBancariaDataContract implements Serializable {
 
   private Boolean ativo;
 
-  @JsonIgnore
-  private LocalDateTime dataInclusao;
+  @JsonIgnore private LocalDateTime dataInclusao;
 
-  @JsonIgnore
-  private LocalDateTime dataAlteracao;
+  @JsonIgnore private LocalDateTime dataAlteracao;
 
-  @JsonIgnore
-  private LocalDateTime dataExclusao;
+  @JsonIgnore private LocalDateTime dataExclusao;
 
   @Valid
   @NotNull
@@ -52,8 +50,8 @@ public class ContaBancariaDataContract implements Serializable {
       final String id,
       final String nome,
       final String numeroContaBancaria,
-      final Double limiteContaBancaria,
-      final Double saldoContaBancaria,
+      final BigDecimal limiteContaBancaria,
+      final BigDecimal saldoContaBancaria,
       final Boolean vincularSaldoBancarioNoTotalReceita,
       final Boolean atualizarSaldoBancarioNaBaixaTitulo,
       final UsuarioDataContract usuario) {
@@ -91,19 +89,19 @@ public class ContaBancariaDataContract implements Serializable {
     this.numeroContaBancaria = numeroContaBancaria;
   }
 
-  public Double getLimiteContaBancaria() {
+  public BigDecimal getLimiteContaBancaria() {
     return limiteContaBancaria;
   }
 
-  public void setLimiteContaBancaria(Double limiteContaBancaria) {
+  public void setLimiteContaBancaria(BigDecimal limiteContaBancaria) {
     this.limiteContaBancaria = limiteContaBancaria;
   }
 
-  public Double getSaldoContaBancaria() {
+  public BigDecimal getSaldoContaBancaria() {
     return saldoContaBancaria;
   }
 
-  public void setSaldoContaBancaria(Double saldoContaBancaria) {
+  public void setSaldoContaBancaria(BigDecimal saldoContaBancaria) {
     this.saldoContaBancaria = saldoContaBancaria;
   }
 

@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotEmpty;
+import java.math.BigDecimal;
 
 @Document(collection = "upload")
 @CompoundIndexes({@CompoundIndex(name = "tipo", def = "{'tipo' : 1}")})
@@ -17,9 +18,9 @@ public class ContaBancariaUpload extends Upload {
 
   private String numeroContaBancaria;
 
-  private Double limiteContaBancaria;
+  private BigDecimal limiteContaBancaria;
 
-  private Double saldoContaBancaria;
+  private BigDecimal saldoContaBancaria;
 
   private Boolean vincularSaldoBancarioNoTotalReceita;
 
@@ -27,12 +28,13 @@ public class ContaBancariaUpload extends Upload {
 
   public ContaBancariaUpload() {}
 
-  public ContaBancariaUpload(final String nome,
-                             final String numeroContaBancaria,
-                             final Double limiteContaBancaria,
-                             final Double saldoContaBancaria,
-                             final Boolean vincularSaldoBancarioNoTotalReceita,
-                             final Boolean atualizarSaldoBancarioNaBaixaTitulo) {
+  public ContaBancariaUpload(
+      final String nome,
+      final String numeroContaBancaria,
+      final BigDecimal limiteContaBancaria,
+      final BigDecimal saldoContaBancaria,
+      final Boolean vincularSaldoBancarioNoTotalReceita,
+      final Boolean atualizarSaldoBancarioNaBaixaTitulo) {
     this.nome = nome;
     this.numeroContaBancaria = numeroContaBancaria;
     this.limiteContaBancaria = limiteContaBancaria;
@@ -57,19 +59,19 @@ public class ContaBancariaUpload extends Upload {
     this.numeroContaBancaria = numeroContaBancaria;
   }
 
-  public Double getLimiteContaBancaria() {
+  public BigDecimal getLimiteContaBancaria() {
     return limiteContaBancaria;
   }
 
-  public void setLimiteContaBancaria(Double limiteContaBancaria) {
+  public void setLimiteContaBancaria(BigDecimal limiteContaBancaria) {
     this.limiteContaBancaria = limiteContaBancaria;
   }
 
-  public Double getSaldoContaBancaria() {
+  public BigDecimal getSaldoContaBancaria() {
     return saldoContaBancaria;
   }
 
-  public void setSaldoContaBancaria(Double saldoContaBancaria) {
+  public void setSaldoContaBancaria(BigDecimal saldoContaBancaria) {
     this.saldoContaBancaria = saldoContaBancaria;
   }
 

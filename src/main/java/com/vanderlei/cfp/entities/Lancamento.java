@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -44,7 +45,7 @@ public class Lancamento implements Serializable {
 
   @NotNull private LocalDate vencimento;
 
-  @NotNull private Double valorParcela;
+  @NotNull private BigDecimal valorParcela;
 
   @JsonIgnore private int quantidadeTotalParcelas;
 
@@ -81,7 +82,7 @@ public class Lancamento implements Serializable {
       final CentroCusto centroCustoPrimario,
       final CentroCusto centroCustoSecundario,
       final LocalDate vencimento,
-      final Double valorParcela,
+      final BigDecimal valorParcela,
       final int quantidadeTotalParcelas,
       final int parcela,
       final boolean gerarParcelaUnica,
@@ -157,11 +158,11 @@ public class Lancamento implements Serializable {
     this.vencimento = vencimento;
   }
 
-  public Double getValorParcela() {
+  public BigDecimal getValorParcela() {
     return valorParcela;
   }
 
-  public void setValorParcela(Double valorParcela) {
+  public void setValorParcela(BigDecimal valorParcela) {
     this.valorParcela = valorParcela;
   }
 
