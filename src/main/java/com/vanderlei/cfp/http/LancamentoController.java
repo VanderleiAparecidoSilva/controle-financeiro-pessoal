@@ -364,7 +364,7 @@ public class LancamentoController {
   }
 
   @ApiOperation(
-      value = "Busca lançamentos de crédito por período para gráfico",
+      value = "Busca lançamentos de crédito por período para gráfico sintetico",
       response = LancamentoEstatisticaCentroCustoDataContract.class,
       responseContainer = "List",
       tags = {
@@ -380,11 +380,123 @@ public class LancamentoController {
         @ApiResponse(code = 404, message = "Lançamentos não encontrados")
       })
   @RequestMapping(
-      value = "/estatisticas/credito/por-centrocusto",
+      value = "/estatisticas/credito/por-centrocusto-sintetico",
       produces = {APPLICATION_JSON_VALUE},
       method = GET)
   ResponseEntity<List<LancamentoEstatisticaCentroCustoDataContract>>
-      buscaLancamentoCreditoEstatisticaCentroCusto(
+      buscaLancamentoCreditoEstatisticaCentroCustoSintetico(
+          @ApiParam(value = "Identificador do usuário", required = true)
+              @RequestParam(value = "email")
+              final String email,
+          @ApiParam(value = "Data inicial")
+              @RequestParam(value = "from")
+              @DateTimeFormat(pattern = "yyyy-MM-dd")
+              final LocalDate from,
+          @ApiParam(value = "Data final")
+              @RequestParam(value = "to")
+              @DateTimeFormat(pattern = "yyyy-MM-dd")
+              final LocalDate to) {
+    List<LancamentoDataContract> objLancamentoList =
+        dataContractConverter.convert(
+            gateway.buscarEstatisticaCentroCusto(Tipo.RECEITA, email, from, to));
+
+    return ResponseEntity.ok()
+        .body(
+            objLancamentoList.stream()
+                .collect(
+                    Collectors.groupingBy(
+                        a -> a.getCentroCustoPrimario().getNome(),
+                        Collectors.mapping(
+                            LancamentoDataContract::getValorParcela,
+                            Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))))
+                .entrySet()
+                .stream()
+                .collect(Collectors.toList())
+                .stream()
+                .map(lancamento -> estatisticaConverter.convert(lancamento))
+                .filter(
+                    lancamento -> lancamento.getCentroCusto().getUsuario().getEmail().equals(email))
+                .collect(Collectors.toList()));
+  }
+
+  @ApiOperation(
+      value = "Busca lançamentos de débito por período para gráfico sintetico",
+      response = LancamentoEstatisticaCentroCustoDataContract.class,
+      responseContainer = "List",
+      tags = {
+        TAG_CONTROLLER,
+      })
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            code = 200,
+            message = "Lançamentos encontrados",
+            response = LancamentoDataContract.class),
+        @ApiResponse(code = 400, message = "Request inválido"),
+        @ApiResponse(code = 404, message = "Lançamentos não encontrados")
+      })
+  @RequestMapping(
+      value = "/estatisticas/debito/por-centrocusto-sintetico",
+      produces = {APPLICATION_JSON_VALUE},
+      method = GET)
+  ResponseEntity<List<LancamentoEstatisticaCentroCustoDataContract>>
+      buscaLancamentoDebitoEstatisticaCentroCustoSintetico(
+          @ApiParam(value = "Identificador do usuário", required = true)
+              @RequestParam(value = "email")
+              final String email,
+          @ApiParam(value = "Data inicial")
+              @RequestParam(value = "from")
+              @DateTimeFormat(pattern = "yyyy-MM-dd")
+              final LocalDate from,
+          @ApiParam(value = "Data final")
+              @RequestParam(value = "to")
+              @DateTimeFormat(pattern = "yyyy-MM-dd")
+              final LocalDate to) {
+    List<LancamentoDataContract> objLancamentoList =
+        dataContractConverter.convert(
+            gateway.buscarEstatisticaCentroCusto(Tipo.DESPESA, email, from, to));
+
+    return ResponseEntity.ok()
+        .body(
+            objLancamentoList.stream()
+                .collect(
+                    Collectors.groupingBy(
+                        a -> a.getCentroCustoPrimario().getNome(),
+                        Collectors.mapping(
+                            LancamentoDataContract::getValorParcela,
+                            Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))))
+                .entrySet()
+                .stream()
+                .collect(Collectors.toList())
+                .stream()
+                .map(lancamento -> estatisticaConverter.convert(lancamento))
+                .filter(
+                    lancamento -> lancamento.getCentroCusto().getUsuario().getEmail().equals(email))
+                .collect(Collectors.toList()));
+  }
+
+  @ApiOperation(
+      value = "Busca lançamentos de crédito por período para gráfico analitico",
+      response = LancamentoEstatisticaCentroCustoDataContract.class,
+      responseContainer = "List",
+      tags = {
+        TAG_CONTROLLER,
+      })
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            code = 200,
+            message = "Lançamentos encontrados",
+            response = LancamentoDataContract.class),
+        @ApiResponse(code = 400, message = "Request inválido"),
+        @ApiResponse(code = 404, message = "Lançamentos não encontrados")
+      })
+  @RequestMapping(
+      value = "/estatisticas/credito/por-centrocusto-analitico",
+      produces = {APPLICATION_JSON_VALUE},
+      method = GET)
+  ResponseEntity<List<LancamentoEstatisticaCentroCustoDataContract>>
+      buscaLancamentoCreditoEstatisticaCentroCustoAnalitico(
           @ApiParam(value = "Identificador do usuário", required = true)
               @RequestParam(value = "email")
               final String email,
@@ -420,7 +532,7 @@ public class LancamentoController {
   }
 
   @ApiOperation(
-      value = "Busca lançamentos de débito por período para gráfico",
+      value = "Busca lançamentos de débito por período para gráfico analitico",
       response = LancamentoEstatisticaCentroCustoDataContract.class,
       responseContainer = "List",
       tags = {
@@ -436,11 +548,11 @@ public class LancamentoController {
         @ApiResponse(code = 404, message = "Lançamentos não encontrados")
       })
   @RequestMapping(
-      value = "/estatisticas/debito/por-centrocusto",
+      value = "/estatisticas/debito/por-centrocusto-analitico",
       produces = {APPLICATION_JSON_VALUE},
       method = GET)
   ResponseEntity<List<LancamentoEstatisticaCentroCustoDataContract>>
-      buscaLancamentoDebitoEstatisticaCentroCusto(
+      buscaLancamentoDebitoEstatisticaCentroCustoAnalitico(
           @ApiParam(value = "Identificador do usuário", required = true)
               @RequestParam(value = "email")
               final String email,
