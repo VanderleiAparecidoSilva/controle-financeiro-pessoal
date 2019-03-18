@@ -32,13 +32,20 @@ public class VencimentoJob implements Job {
     execute();
   }
 
+  @Scheduled(cron = "0 5 11 * * *", zone = TIME_ZONE)
+  public void buscarLancamentosVencidosAlternativo() {
+    execute();
+  }
+
   @Scheduled(cron = "0 0 18 * * *", zone = TIME_ZONE)
   public void buscarLancamentosVencidosNoite() {
     execute();
   }
 
   private void execute() {
-    log.info(LocalDateTime.now() + " - Início da execução do job: {}", VencimentoJob.class.getSimpleName());
+    log.info(
+        LocalDateTime.now() + " - Início da execução do job: {}",
+        VencimentoJob.class.getSimpleName());
 
     Collection<Lancamento> lancamentos =
         lancamentoGateway.buscarLancamentosVencidos(Status.ABERTO, LocalDate.now().plusDays(1));
@@ -69,6 +76,8 @@ public class VencimentoJob implements Job {
           emailService.enviarEmailLancamentoVencidoHtml(templateLancamentoVencido);
         });
 
-    log.info(LocalDateTime.now() + " - Término da execução do job: {}", VencimentoJob.class.getSimpleName());
+    log.info(
+        LocalDateTime.now() + " - Término da execução do job: {}",
+        VencimentoJob.class.getSimpleName());
   }
 }
