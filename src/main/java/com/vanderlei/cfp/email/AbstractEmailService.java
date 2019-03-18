@@ -53,8 +53,8 @@ public abstract class AbstractEmailService implements EmailService {
   protected SimpleMailMessage prepararSimpleMailMessageFromLancamento(
       final TemplateLancamentoVencido obj) {
     SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-    simpleMailMessage.setTo(obj.getUsuario().getEmail());
     simpleMailMessage.setFrom(sender);
+    simpleMailMessage.setTo(obj.getUsuario().getEmail());
     simpleMailMessage.setSubject(subject);
     simpleMailMessage.setSentDate(new Date(System.currentTimeMillis()));
     simpleMailMessage.setText(obj.toString());
