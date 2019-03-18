@@ -27,13 +27,6 @@ public class MailConfig {
 
   @Bean
   public JavaMailSender mailSender() {
-    JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-    mailSender.setDefaultEncoding("utf-8");
-    mailSender.setHost(env.getProperty("mail.smtp.host"));
-    mailSender.setPort(env.getProperty("mail.smtp.port", Integer.class));
-    mailSender.setUsername(env.getProperty("mail.smtp.username"));
-    mailSender.setPassword(env.getProperty("mail.smtp.password"));
-
     Properties props = new Properties();
     props.setProperty("mail.mime.charset", "utf-8");
     props.put("mail.transport.protocol", "smtp");
@@ -41,7 +34,14 @@ public class MailConfig {
     props.put("mail.smtp.starttls.enable", true);
     props.put("mail.smtp.connectiontimeout", 10000);
 
+
+    JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
     mailSender.setJavaMailProperties(props);
+    mailSender.setDefaultEncoding("utf-8");
+    mailSender.setHost(env.getProperty("mail.smtp.host"));
+    mailSender.setPort(env.getProperty("mail.smtp.port", Integer.class));
+    mailSender.setUsername(env.getProperty("mail.smtp.username"));
+    mailSender.setPassword(env.getProperty("mail.smtp.password"));
 
     return mailSender;
   }
