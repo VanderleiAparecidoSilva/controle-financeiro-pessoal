@@ -38,11 +38,7 @@ public class MailConfig {
     props.setProperty("mail.mime.charset", "utf-8");
     props.put("mail.transport.protocol", "smtp");
     props.put("mail.smtp.auth", true);
-    props.put("mail.smtp.socketFactory.port", env.getProperty("mail.smtp.port", Integer.class));
-    props.put("mail.smtp.socketFactory.fallback", true);
     props.put("mail.smtp.starttls.enable", true);
-    props.put("mail.smtp.starttls.required", true);
-    props.put("mail.smtp.ssl.enable", false);
     props.put("mail.smtp.connectiontimeout", 10000);
 
     mailSender.setJavaMailProperties(props);
