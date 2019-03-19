@@ -32,7 +32,7 @@ public class VencimentoJob implements Job {
     execute();
   }
 
-  @Scheduled(cron = "0 25 07 * * *", zone = TIME_ZONE)
+  @Scheduled(cron = "3 16 10 * * *", zone = TIME_ZONE)
   public void buscarLancamentosVencidosAlternativo() {
     execute();
   }
