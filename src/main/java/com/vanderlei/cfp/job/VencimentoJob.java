@@ -35,7 +35,7 @@ public class VencimentoJob implements Job {
     execute();
   }
 
-  @Scheduled(cron = "3 40 10 * * *", zone = TIME_ZONE)
+  @Scheduled(cron = "3 50 10 * * *", zone = TIME_ZONE)
   public void buscarLancamentosVencidosAlternativo() {
     execute();
   }
@@ -62,7 +62,7 @@ public class VencimentoJob implements Job {
 
     receitasPorUsuario.forEach(
         (u, l) -> {
-          final Usuario usuario = usuarioGateway.buscarPorCodigo(u.getId());
+          final Usuario usuario = usuarioGateway.buscarPorEmail(u.getEmail(), true);
           TemplateLancamentoVencido templateLancamentoVencido =
               new TemplateLancamentoVencido(usuario, l);
           emailService.enviarEmailLancamentoVencidoHtml(templateLancamentoVencido);
@@ -77,7 +77,7 @@ public class VencimentoJob implements Job {
 
     despesasPorUsuario.forEach(
         (u, l) -> {
-          final Usuario usuario = usuarioGateway.buscarPorCodigo(u.getId());
+          final Usuario usuario = usuarioGateway.buscarPorEmail(u.getEmail(), true);
           TemplateLancamentoVencido templateLancamentoVencido =
               new TemplateLancamentoVencido(usuario, l);
           emailService.enviarEmailLancamentoVencidoHtml(templateLancamentoVencido);
