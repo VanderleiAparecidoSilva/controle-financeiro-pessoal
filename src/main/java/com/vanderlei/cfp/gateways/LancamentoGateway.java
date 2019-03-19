@@ -2,6 +2,7 @@ package com.vanderlei.cfp.gateways;
 
 import com.vanderlei.cfp.entities.Baixa;
 import com.vanderlei.cfp.entities.Lancamento;
+import com.vanderlei.cfp.entities.TituloLancamento;
 import com.vanderlei.cfp.entities.Usuario;
 import com.vanderlei.cfp.entities.enums.Operacao;
 import com.vanderlei.cfp.entities.enums.Status;
@@ -185,20 +186,32 @@ public class LancamentoGateway {
           msgUsuarioObjectNotFound + obj.getUsuario() + msgTipo + Lancamento.class.getName());
     }
 
-    if (obj.getNome() != null
-        && !tituloLancamentoGateway
-            .buscarPorNomeUsuarioEmail(obj.getNome().getNome(), obj.getUsuario().getEmail())
-            .isPresent()) {
-      if (obj.getTipo().equals(Tipo.RECEITA)) {
-        obj.getNome().setAplicarNaReceita(true);
-        obj.getNome().setAplicarNaDespesa(false);
-      } else if (obj.getTipo().equals(Tipo.DESPESA)) {
-        obj.getNome().setAplicarNaReceita(false);
-        obj.getNome().setAplicarNaDespesa(true);
+    if (obj.getNome() != null) {
+      final Optional<TituloLancamento> tituloLancamento =
+          tituloLancamentoGateway.buscarPorNomeUsuarioEmail(
+              obj.getNome().getNome(), obj.getUsuario().getEmail());
+      if (!tituloLancamento.isPresent()) {
+        if (obj.getTipo().equals(Tipo.RECEITA)) {
+          obj.getNome().setAplicarNaReceita(true);
+          obj.getNome().setAplicarNaDespesa(false);
+        } else if (obj.getTipo().equals(Tipo.DESPESA)) {
+          obj.getNome().setAplicarNaReceita(false);
+          obj.getNome().setAplicarNaDespesa(true);
+        }
+        obj.getNome().setDataInclusao(LocalDateTime.now());
+        obj.getNome().setDiaVencimento(obj.getVencimento().getDayOfMonth());
+        tituloLancamentoGateway.salvar(obj.getNome());
+      } else {
+        if (obj.getTipo().equals(Tipo.RECEITA)) {
+          tituloLancamento.get().setAplicarNaReceita(true);
+          tituloLancamento.get().setAplicarNaDespesa(false);
+        } else if (obj.getTipo().equals(Tipo.DESPESA)) {
+          tituloLancamento.get().setAplicarNaReceita(false);
+          tituloLancamento.get().setAplicarNaDespesa(true);
+        }
+        tituloLancamento.get().setDiaVencimento(obj.getVencimento().getDayOfMonth());
+        tituloLancamentoGateway.atualizar(tituloLancamento.get());
       }
-      obj.getNome().setDataInclusao(LocalDateTime.now());
-      obj.getNome().setDiaVencimento(obj.getVencimento().getDayOfMonth());
-      tituloLancamentoGateway.salvar(obj.getNome());
     }
 
     if (obj.getCentroCustoPrimario() != null

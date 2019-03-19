@@ -28,6 +28,10 @@ public class Upload implements Serializable {
 
   @NotNull private Boolean processado;
 
+  private Boolean erro;
+
+  private String mensagemErro;
+
   public Upload() {}
 
   public Upload(final String id, final TipoUpload tipo, final Usuario usuario) {
@@ -74,6 +78,22 @@ public class Upload implements Serializable {
 
   public void setProcessado(Boolean processado) {
     this.processado = processado;
+  }
+
+  public Boolean getErro() {
+    return erro;
+  }
+
+  public void setErro(Boolean erro) {
+    this.erro = erro;
+  }
+
+  public String getMensagemErro() {
+    return mensagemErro;
+  }
+
+  public void setMensagemErro(String mensagemErro) {
+    this.mensagemErro = mensagemErro;
   }
 
   @Override

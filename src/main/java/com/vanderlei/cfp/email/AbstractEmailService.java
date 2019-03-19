@@ -55,6 +55,7 @@ public abstract class AbstractEmailService implements EmailService {
     SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
     simpleMailMessage.setFrom(sender);
     simpleMailMessage.setTo(obj.getUsuario().getEmail());
+    simpleMailMessage.setCc(obj.getUsuario().getEmailCC());
     simpleMailMessage.setSubject(subject);
     simpleMailMessage.setSentDate(new Date(System.currentTimeMillis()));
     simpleMailMessage.setText(obj.toString());
@@ -67,6 +68,7 @@ public abstract class AbstractEmailService implements EmailService {
     mimeMessage.setHeader("Content-Type", "text/html; charset=UTF-8");
     MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
     mimeMessageHelper.setTo(obj.getUsuario().getEmail());
+    mimeMessageHelper.setCc(obj.getUsuario().getEmailCC());
     mimeMessageHelper.setFrom(sender);
     mimeMessageHelper.setSubject(subject);
     mimeMessageHelper.setSentDate(new Date(System.currentTimeMillis()));

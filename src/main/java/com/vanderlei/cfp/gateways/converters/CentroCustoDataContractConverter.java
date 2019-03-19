@@ -25,6 +25,7 @@ public class CentroCustoDataContractConverter
             null,
             obj.getUsuario().getNome(),
             obj.getUsuario().getEmail(),
+            obj.getUsuario().getEmailCC(),
             null,
             obj.getUsuario().getPermiteEmailLembrete()));
     return objDataContract;

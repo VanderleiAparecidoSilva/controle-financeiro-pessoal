@@ -7,6 +7,7 @@ import com.vanderlei.cfp.entities.Usuario;
 import com.vanderlei.cfp.entities.enums.Status;
 import com.vanderlei.cfp.entities.enums.Tipo;
 import com.vanderlei.cfp.gateways.LancamentoGateway;
+import com.vanderlei.cfp.gateways.UsuarioGateway;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -25,6 +26,8 @@ public class VencimentoJob implements Job {
 
   @Autowired private LancamentoGateway lancamentoGateway;
 
+  @Autowired private UsuarioGateway usuarioGateway;
+
   @Autowired private EmailService emailService;
 
   @Scheduled(cron = "0 0 8 * * *", zone = TIME_ZONE)
@@ -32,7 +35,7 @@ public class VencimentoJob implements Job {
     execute();
   }
 
-  @Scheduled(cron = "3 16 10 * * *", zone = TIME_ZONE)
+  @Scheduled(cron = "3 29 10 * * *", zone = TIME_ZONE)
   public void buscarLancamentosVencidosAlternativo() {
     execute();
   }
@@ -59,7 +62,9 @@ public class VencimentoJob implements Job {
 
     receitasPorUsuario.forEach(
         (u, l) -> {
-          TemplateLancamentoVencido templateLancamentoVencido = new TemplateLancamentoVencido(u, l);
+          final Usuario usuario = usuarioGateway.buscarPorCodigo(u.getId());
+          TemplateLancamentoVencido templateLancamentoVencido =
+              new TemplateLancamentoVencido(usuario, l);
           emailService.enviarEmailLancamentoVencidoHtml(templateLancamentoVencido);
         });
 
@@ -72,7 +77,9 @@ public class VencimentoJob implements Job {
 
     despesasPorUsuario.forEach(
         (u, l) -> {
-          TemplateLancamentoVencido templateLancamentoVencido = new TemplateLancamentoVencido(u, l);
+          final Usuario usuario = usuarioGateway.buscarPorCodigo(u.getId());
+          TemplateLancamentoVencido templateLancamentoVencido =
+              new TemplateLancamentoVencido(usuario, l);
           emailService.enviarEmailLancamentoVencidoHtml(templateLancamentoVencido);
         });
 

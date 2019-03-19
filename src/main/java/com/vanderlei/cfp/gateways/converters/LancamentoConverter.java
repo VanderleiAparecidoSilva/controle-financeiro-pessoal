@@ -28,6 +28,7 @@ public class LancamentoConverter implements Converter<LancamentoDataContract, La
                   null,
                   dataContract.getUsuario().getNome(),
                   dataContract.getUsuario().getEmail(),
+                  dataContract.getUsuario().getEmailCC(),
                   dataContract.getUsuario().getPermiteEmailLembrete())));
     }
     if (dataContract.getCentroCustoPrimario() != null) {
@@ -43,6 +44,7 @@ public class LancamentoConverter implements Converter<LancamentoDataContract, La
                   null,
                   dataContract.getUsuario().getNome(),
                   dataContract.getCentroCustoPrimario().getUsuario().getEmail(),
+                  dataContract.getCentroCustoPrimario().getUsuario().getEmailCC(),
                   dataContract.getUsuario().getPermiteEmailLembrete())));
     }
     if (dataContract.getCentroCustoSecundario() != null) {
@@ -58,6 +60,7 @@ public class LancamentoConverter implements Converter<LancamentoDataContract, La
                   null,
                   dataContract.getUsuario().getNome(),
                   dataContract.getCentroCustoSecundario().getUsuario().getEmail(),
+                  dataContract.getCentroCustoSecundario().getUsuario().getEmailCC(),
                   dataContract.getUsuario().getPermiteEmailLembrete())));
     }
     if (dataContract.getContaBancaria() != null) {
@@ -74,6 +77,7 @@ public class LancamentoConverter implements Converter<LancamentoDataContract, La
                   null,
                   dataContract.getContaBancaria().getUsuario().getNome(),
                   dataContract.getContaBancaria().getUsuario().getEmail(),
+                  dataContract.getContaBancaria().getUsuario().getEmailCC(),
                   dataContract.getUsuario().getPermiteEmailLembrete())));
     }
     if (dataContract.getBaixa() != null) {
@@ -93,11 +97,13 @@ public class LancamentoConverter implements Converter<LancamentoDataContract, La
                       null,
                       dataContract.getUsuario().getNome(),
                       dataContract.getUsuario().getEmail(),
+                      dataContract.getUsuario().getEmailCC(),
                       dataContract.getUsuario().getPermiteEmailLembrete())),
               new Usuario(
                   null,
                   dataContract.getUsuario().getNome(),
                   dataContract.getUsuario().getEmail(),
+                  dataContract.getUsuario().getEmailCC(),
                   dataContract.getUsuario().getPermiteEmailLembrete())));
     }
     obj.setUsuario(
@@ -105,6 +111,7 @@ public class LancamentoConverter implements Converter<LancamentoDataContract, La
             null,
             dataContract.getUsuario().getNome(),
             dataContract.getUsuario().getEmail(),
+            dataContract.getUsuario().getEmailCC(),
             dataContract.getUsuario().getPermiteEmailLembrete()));
 
     return obj;

@@ -11,19 +11,35 @@ import org.springframework.stereotype.Component;
 @Component
 public class BaixaConverter implements Converter<BaixaDataContract, Baixa> {
 
-    @Override
-    public Baixa convert(final BaixaDataContract dataContract) {
-        Baixa obj = new Baixa();
-        BeanUtils.copyProperties(dataContract, obj);
-        if (dataContract.getContaBancaria() != null) {
-            obj.setContaBancaria(new ContaBancaria(null, dataContract.getContaBancaria().getNome(), null, null, null,
-                    null, null,
-                    new Usuario(null, dataContract.getUsuario().getNome(), dataContract.getUsuario().getEmail(),
-                            dataContract.getUsuario().getPermiteEmailLembrete())));
-        }
-        obj.setUsuario(new Usuario(null, dataContract.getUsuario().getNome(), dataContract.getUsuario().getEmail(),
-                dataContract.getUsuario().getPermiteEmailLembrete()));
-
-        return obj;
+  @Override
+  public Baixa convert(final BaixaDataContract dataContract) {
+    Baixa obj = new Baixa();
+    BeanUtils.copyProperties(dataContract, obj);
+    if (dataContract.getContaBancaria() != null) {
+      obj.setContaBancaria(
+          new ContaBancaria(
+              null,
+              dataContract.getContaBancaria().getNome(),
+              null,
+              null,
+              null,
+              null,
+              null,
+              new Usuario(
+                  null,
+                  dataContract.getUsuario().getNome(),
+                  dataContract.getUsuario().getEmail(),
+                  dataContract.getUsuario().getEmailCC(),
+                  dataContract.getUsuario().getPermiteEmailLembrete())));
     }
+    obj.setUsuario(
+        new Usuario(
+            null,
+            dataContract.getUsuario().getNome(),
+            dataContract.getUsuario().getEmail(),
+            dataContract.getUsuario().getEmailCC(),
+            dataContract.getUsuario().getPermiteEmailLembrete()));
+
+    return obj;
+  }
 }

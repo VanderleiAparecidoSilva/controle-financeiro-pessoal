@@ -21,6 +21,7 @@ public class TituloLancamentoDataContractConverter
             null,
             obj.getUsuario().getNome(),
             obj.getUsuario().getEmail(),
+            obj.getUsuario().getEmailCC(),
             null,
             obj.getUsuario().getPermiteEmailLembrete()));
     return objDataContract;

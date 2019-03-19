@@ -8,15 +8,21 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TituloLancamentoConverter implements Converter<TituloLancamentoDataContract, TituloLancamento> {
+public class TituloLancamentoConverter
+    implements Converter<TituloLancamentoDataContract, TituloLancamento> {
 
-    @Override
-    public TituloLancamento convert(final TituloLancamentoDataContract dataContract) {
-        TituloLancamento obj = new TituloLancamento();
-        BeanUtils.copyProperties(dataContract, obj);
-        obj.setUsuario(new Usuario(null, dataContract.getUsuario().getNome(), dataContract.getUsuario().getEmail(),
-                dataContract.getUsuario().getPermiteEmailLembrete()));
+  @Override
+  public TituloLancamento convert(final TituloLancamentoDataContract dataContract) {
+    TituloLancamento obj = new TituloLancamento();
+    BeanUtils.copyProperties(dataContract, obj);
+    obj.setUsuario(
+        new Usuario(
+            null,
+            dataContract.getUsuario().getNome(),
+            dataContract.getUsuario().getEmail(),
+            dataContract.getUsuario().getEmailCC(),
+            dataContract.getUsuario().getPermiteEmailLembrete()));
 
-        return obj;
-    }
+    return obj;
+  }
 }

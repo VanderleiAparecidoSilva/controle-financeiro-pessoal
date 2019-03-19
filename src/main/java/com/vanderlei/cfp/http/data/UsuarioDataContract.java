@@ -18,6 +18,8 @@ public class UsuarioDataContract implements Serializable {
 
   @NotEmpty @Email private String email;
 
+  private String emailCC;
+
   private String senha;
 
   private Boolean permiteEmailLembrete;
@@ -28,11 +30,13 @@ public class UsuarioDataContract implements Serializable {
       final String id,
       final String nome,
       final String email,
+      final String emailCC,
       final String senha,
       final Boolean permiteEmailLembrete) {
     this.id = id;
     this.nome = nome;
     this.email = email;
+    this.emailCC = emailCC;
     this.senha = senha;
     this.permiteEmailLembrete = permiteEmailLembrete;
   }
@@ -59,6 +63,14 @@ public class UsuarioDataContract implements Serializable {
 
   public void setEmail(String email) {
     this.email = email;
+  }
+
+  public String getEmailCC() {
+    return emailCC;
+  }
+
+  public void setEmailCC(String emailCC) {
+    this.emailCC = emailCC;
   }
 
   public String getSenha() {

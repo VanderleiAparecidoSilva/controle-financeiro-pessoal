@@ -79,71 +79,94 @@ public class UploadJob implements Job {
   }
 
   private void addCentroCusto(final Upload upload) {
-    CentroCusto obj = new CentroCusto();
-    obj.setNome(((CentroCustoUpload) upload).getNome());
-    obj.setPrimaria(((CentroCustoUpload) upload).getPrimaria());
-    obj.setSecundaria(((CentroCustoUpload) upload).getSecundaria());
-    obj.setAplicarNaReceita(((CentroCustoUpload) upload).getAplicarNaReceita());
-    obj.setAplicarNaDespesa(((CentroCustoUpload) upload).getAplicarNaDespesa());
-    obj.setUsuario(upload.getUsuario());
+    try {
+      CentroCusto obj = new CentroCusto();
+      obj.setNome(((CentroCustoUpload) upload).getNome());
+      obj.setPrimaria(((CentroCustoUpload) upload).getPrimaria());
+      obj.setSecundaria(((CentroCustoUpload) upload).getSecundaria());
+      obj.setAplicarNaReceita(((CentroCustoUpload) upload).getAplicarNaReceita());
+      obj.setAplicarNaDespesa(((CentroCustoUpload) upload).getAplicarNaDespesa());
+      obj.setUsuario(upload.getUsuario());
 
-    Optional<CentroCusto> centroCusto =
-        centroCustoGateway.buscarPorNomeUsuarioEmail(obj.getNome(), obj.getUsuario().getEmail());
-    if (!centroCusto.isPresent()) {
-      centroCustoGateway.inserir(obj);
+      Optional<CentroCusto> centroCusto =
+          centroCustoGateway.buscarPorNomeUsuarioEmail(obj.getNome(), obj.getUsuario().getEmail());
+      if (!centroCusto.isPresent()) {
+        centroCustoGateway.inserir(obj);
+      }
+    } catch (RuntimeException e) {
+      log.error("Erro no cadastro de centro de custo via Upload: ", e.getMessage());
+      upload.setErro(true);
+      upload.setMensagemErro(e.getMessage());
+      uploadGateway.save(upload);
     }
   }
 
   private void addContaBancaria(final Upload upload) {
-    ContaBancaria obj = new ContaBancaria();
-    obj.setNome(((ContaBancariaUpload) upload).getNome());
-    obj.setNumeroContaBancaria(((ContaBancariaUpload) upload).getNumeroContaBancaria());
-    obj.setLimiteContaBancaria(((ContaBancariaUpload) upload).getLimiteContaBancaria());
-    obj.setSaldoContaBancaria(((ContaBancariaUpload) upload).getSaldoContaBancaria());
-    obj.setVincularSaldoBancarioNoTotalReceita(
-        ((ContaBancariaUpload) upload).getVincularSaldoBancarioNoTotalReceita());
-    obj.setAtualizarSaldoBancarioNaBaixaTitulo(
-        ((ContaBancariaUpload) upload).getAtualizarSaldoBancarioNaBaixaTitulo());
-    obj.setUsuario(upload.getUsuario());
+    try {
+      ContaBancaria obj = new ContaBancaria();
+      obj.setNome(((ContaBancariaUpload) upload).getNome());
+      obj.setNumeroContaBancaria(((ContaBancariaUpload) upload).getNumeroContaBancaria());
+      obj.setLimiteContaBancaria(((ContaBancariaUpload) upload).getLimiteContaBancaria());
+      obj.setSaldoContaBancaria(((ContaBancariaUpload) upload).getSaldoContaBancaria());
+      obj.setVincularSaldoBancarioNoTotalReceita(
+          ((ContaBancariaUpload) upload).getVincularSaldoBancarioNoTotalReceita());
+      obj.setAtualizarSaldoBancarioNaBaixaTitulo(
+          ((ContaBancariaUpload) upload).getAtualizarSaldoBancarioNaBaixaTitulo());
+      obj.setUsuario(upload.getUsuario());
 
-    Optional<ContaBancaria> contaBancaria =
-        contaBancariaGateway.buscarPorNomeUsuarioEmail(obj.getNome(), obj.getUsuario().getEmail());
-    if (!contaBancaria.isPresent()) {
-      contaBancariaGateway.inserir(obj);
+      Optional<ContaBancaria> contaBancaria =
+          contaBancariaGateway.buscarPorNomeUsuarioEmail(
+              obj.getNome(), obj.getUsuario().getEmail());
+      if (!contaBancaria.isPresent()) {
+        contaBancariaGateway.inserir(obj);
+      }
+    } catch (RuntimeException e) {
+      log.error("Erro no cadastro de conta bancaria via Upload: ", e.getMessage());
+      upload.setErro(true);
+      upload.setMensagemErro(e.getMessage());
+      uploadGateway.save(upload);
     }
   }
 
   private void addLancamento(final Upload upload) {
-    final TituloLancamento tituloLancamento = new TituloLancamento();
-    tituloLancamento.setNome(((LancamentoUpload) upload).getDescricao());
-    tituloLancamento.setUsuario(upload.getUsuario());
+    try {
+      final TituloLancamento tituloLancamento = new TituloLancamento();
+      tituloLancamento.setNome(((LancamentoUpload) upload).getDescricao());
+      tituloLancamento.setDiaVencimento(((LancamentoUpload) upload).getVencimento().getDayOfMonth());
+      tituloLancamento.setUsuario(upload.getUsuario());
 
-    final CentroCusto ccPrimario = new CentroCusto();
-    ccPrimario.setNome(((LancamentoUpload) upload).getCentroCustoPrimario());
-    ccPrimario.setUsuario(upload.getUsuario());
+      final CentroCusto ccPrimario = new CentroCusto();
+      ccPrimario.setNome(((LancamentoUpload) upload).getCentroCustoPrimario());
+      ccPrimario.setUsuario(upload.getUsuario());
 
-    final CentroCusto ccSecundario = new CentroCusto();
-    ccSecundario.setNome(((LancamentoUpload) upload).getCentroCustoSecundario());
-    ccSecundario.setUsuario(upload.getUsuario());
+      final CentroCusto ccSecundario = new CentroCusto();
+      ccSecundario.setNome(((LancamentoUpload) upload).getCentroCustoSecundario());
+      ccSecundario.setUsuario(upload.getUsuario());
 
-    final ContaBancaria contaBancaria = new ContaBancaria();
-    contaBancaria.setNome(((LancamentoUpload) upload).getContaBancaria());
-    contaBancaria.setUsuario(upload.getUsuario());
+      final ContaBancaria contaBancaria = new ContaBancaria();
+      contaBancaria.setNome(((LancamentoUpload) upload).getContaBancaria());
+      contaBancaria.setUsuario(upload.getUsuario());
 
-    Lancamento obj = new Lancamento();
-    obj.setNome(tituloLancamento);
-    obj.setCentroCustoPrimario(ccPrimario);
-    obj.setCentroCustoSecundario(ccSecundario);
-    obj.setVencimento(((LancamentoUpload) upload).getVencimento());
-    obj.setValorParcela(((LancamentoUpload) upload).getValorParcela());
-    obj.setParcela(((LancamentoUpload) upload).getParcela());
-    obj.setGerarParcelaUnica(((LancamentoUpload) upload).getGerarParcelaUnica());
-    obj.setContaBancaria(contaBancaria);
-    obj.setObservacao(((LancamentoUpload) upload).getObservacao());
-    obj.setStatus(Status.valueOf(((LancamentoUpload) upload).getStatus()));
-    obj.setTipo(Tipo.valueOf(((LancamentoUpload) upload).getTipoLancamento()));
-    obj.setUsuario(upload.getUsuario());
+      Lancamento obj = new Lancamento();
+      obj.setNome(tituloLancamento);
+      obj.setCentroCustoPrimario(ccPrimario);
+      obj.setCentroCustoSecundario(ccSecundario);
+      obj.setVencimento(((LancamentoUpload) upload).getVencimento());
+      obj.setValorParcela(((LancamentoUpload) upload).getValorParcela());
+      obj.setParcela(((LancamentoUpload) upload).getParcela());
+      obj.setGerarParcelaUnica(((LancamentoUpload) upload).getGerarParcelaUnica());
+      obj.setContaBancaria(contaBancaria);
+      obj.setObservacao(((LancamentoUpload) upload).getObservacao());
+      obj.setStatus(Status.valueOf(((LancamentoUpload) upload).getStatus()));
+      obj.setTipo(Tipo.valueOf(((LancamentoUpload) upload).getTipoLancamento()));
+      obj.setUsuario(upload.getUsuario());
 
-    lancamentoGateway.inserir(obj);
+      lancamentoGateway.inserir(obj);
+    } catch (RuntimeException e) {
+      log.error("Erro no cadastro de lançamento via Upload: ", e.getMessage());
+      upload.setErro(true);
+      upload.setMensagemErro(e.getMessage());
+      uploadGateway.save(upload);
+    }
   }
 }

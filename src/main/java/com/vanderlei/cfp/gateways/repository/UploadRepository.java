@@ -11,5 +11,5 @@ import java.util.Collection;
 public interface UploadRepository extends MongoRepository<Upload, String> {
 
   @Transactional(readOnly = true)
-  Collection<Upload> findByProcessado(final Boolean processado);
+  Collection<Upload> findByProcessadoAndErroIsNull(final Boolean processado);
 }

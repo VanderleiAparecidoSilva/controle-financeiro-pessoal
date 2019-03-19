@@ -22,6 +22,7 @@ public class Parsers {
     obj.setId(id);
     obj.setNome(dataContract.getNome());
     obj.setEmail(dataContract.getEmail());
+    obj.setEmailCC(dataContract.getEmailCC());
   }
 
   public static void parse(
@@ -49,41 +50,8 @@ public class Parsers {
   }
 
   public static void parse(
-      final String id, final Lancamento obj, final LancamentoDataContract dataContract) {
-    TituloLancamentoConverter tituloLancamentoConverter = new TituloLancamentoConverter();
-    CentroCustoConverter centroCustoConverter = new CentroCustoConverter();
-    ContaBancariaConverter contaBancariaConverter = new ContaBancariaConverter();
-    UsuarioConverter usuarioConverter = new UsuarioConverter();
-
-    obj.setId(id);
-    // obj.setNome(tituloLancamentoConverter.convert(dataContract.getDescricao())); //TODO Verificar
-    // onde é usado o parse de lançamento e ajustar a captura do nome
-    obj.setCentroCustoPrimario(centroCustoConverter.convert(dataContract.getCentroCustoPrimario()));
-    obj.setCentroCustoSecundario(
-        centroCustoConverter.convert(dataContract.getCentroCustoSecundario()));
-    obj.setVencimento(dataContract.getVencimento());
-    obj.setValorParcela(dataContract.getValorParcela());
-    obj.setParcela(dataContract.getParcela());
-    obj.setQuantidadeTotalParcelas(dataContract.getQuantidadeTotalParcelas());
-    obj.setContaBancaria(contaBancariaConverter.convert(dataContract.getContaBancaria()));
-    obj.setObservacao(dataContract.getObservacao());
-    obj.setStatus(dataContract.getStatus());
-    obj.setTipo(dataContract.getTipo());
-    obj.setUsuario(usuarioConverter.convert(dataContract.getUsuario()));
-  }
-
-  public static void parse(
       final String id, final Permissao obj, final PermissaoDataContract dataContract) {
     obj.setId(id);
     obj.setDescricao(dataContract.getDescricao());
-  }
-
-  public static void parse(
-      final String id,
-      final PermissaoUsuario obj,
-      final PermissaoUsuarioDataContract dataContract) {
-    obj.setId(id);
-    obj.setIdPermissao(dataContract.getIdPermissao());
-    obj.setIdUsuario(dataContract.getIdUsuario());
   }
 }

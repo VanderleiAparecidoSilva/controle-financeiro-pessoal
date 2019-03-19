@@ -14,7 +14,7 @@ public class UploadGateway {
   @Autowired private UploadRepository repository;
 
   public Collection<Upload> buscarUploadsPendentes() {
-    return repository.findByProcessado(false);
+    return repository.findByProcessadoAndErroIsNull(false);
   }
 
   public void save(final Upload obj) {

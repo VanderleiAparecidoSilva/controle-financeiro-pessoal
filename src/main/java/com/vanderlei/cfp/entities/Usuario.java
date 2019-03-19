@@ -6,15 +6,11 @@ import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.FetchType;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
 
 @Document(collection = "usuario")
@@ -36,6 +32,8 @@ public class Usuario implements Serializable {
   @Column(unique = true)
   private String email;
 
+  private String emailCC;
+
   @JsonIgnore private String senha;
 
   private Boolean permiteEmailLembrete;
@@ -51,10 +49,15 @@ public class Usuario implements Serializable {
   }
 
   public Usuario(
-      final String id, final String nome, final String email, final Boolean permiteEmailLembrete) {
+      final String id,
+      final String nome,
+      final String email,
+      final String emailCC,
+      final Boolean permiteEmailLembrete) {
     this.id = id;
     this.nome = nome;
     this.email = email;
+    this.emailCC = emailCC;
     this.permiteEmailLembrete = permiteEmailLembrete;
   }
 
@@ -80,6 +83,14 @@ public class Usuario implements Serializable {
 
   public void setEmail(String email) {
     this.email = email;
+  }
+
+  public String getEmailCC() {
+    return emailCC;
+  }
+
+  public void setEmailCC(String emailCC) {
+    this.emailCC = emailCC;
   }
 
   public String getSenha() {
