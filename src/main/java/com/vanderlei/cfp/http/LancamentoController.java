@@ -2,6 +2,7 @@ package com.vanderlei.cfp.http;
 
 import com.vanderlei.cfp.entities.Baixa;
 import com.vanderlei.cfp.entities.Lancamento;
+import com.vanderlei.cfp.entities.LancamentoFiltro;
 import com.vanderlei.cfp.entities.enums.Status;
 import com.vanderlei.cfp.entities.enums.Tipo;
 import com.vanderlei.cfp.entities.enums.TipoUpload;
@@ -11,6 +12,7 @@ import com.vanderlei.cfp.gateways.converters.*;
 import com.vanderlei.cfp.http.data.BaixaDataContract;
 import com.vanderlei.cfp.http.data.LancamentoDataContract;
 import com.vanderlei.cfp.http.data.LancamentoEstatisticaCentroCustoDataContract;
+import com.vanderlei.cfp.http.data.LancamentoFiltroDataContract;
 import com.vanderlei.cfp.http.mapping.UrlMapping;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -47,6 +49,8 @@ public class LancamentoController {
   @Autowired private LancamentoGateway gateway;
 
   @Autowired private LancamentoDataContractConverter dataContractConverter;
+
+  @Autowired private LancamentoFiltroDataContractConverter filtroDataContractConverter;
 
   @Autowired private LancamentoConverter converter;
 
@@ -588,6 +592,38 @@ public class LancamentoController {
                 .collect(Collectors.toList()));
   }
 
+    @ApiOperation(
+            value = "Busca todos os lançamentos ativos por usuário e tipo",
+            response = LancamentoDataContract.class,
+            responseContainer = "Page",
+            tags = {
+                    TAG_CONTROLLER,
+            })
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            code = 200,
+                            message = "Um ou mais lançamentos encontrados",
+                            response = LancamentoDataContract.class,
+                            responseContainer = "Page"),
+                    @ApiResponse(code = 400, message = "Request inválido"),
+                    @ApiResponse(code = 404, message = "Lançamento não encontrado")
+            })
+    @RequestMapping(
+            value = "/ativos/tipo",
+            produces = {APPLICATION_JSON_VALUE},
+            method = GET)
+    ResponseEntity<List<LancamentoFiltroDataContract>> buscaTodosAtivos(
+            @ApiParam(value = "Identificador do usuário", required = true) @RequestParam(value = "email")
+            final String email,
+            @ApiParam(value = "Tipo", required = true) @RequestParam(value = "tipo") final String tipo) {
+        List<LancamentoFiltroDataContract> dataContractList =
+                filtroDataContractConverter.convert(gateway.buscarTodosAtivosPorUsuarioTipo(email, tipo));
+        return dataContractList.size() > 0
+                ? ResponseEntity.ok().body(dataContractList)
+                : ResponseEntity.notFound().build();
+    }
+
   @ApiOperation(
       value = "Cadastrar novo lançamento",
       response = Lancamento.class,
@@ -610,6 +646,34 @@ public class LancamentoController {
     obj = gateway.inserir(obj);
     publisher.publishEvent(new ResourceEvent(this, response, obj.getId()));
     return ResponseEntity.status(HttpStatus.CREATED).body(obj);
+  }
+
+  @ApiOperation(
+      value = "Alterar lançamento",
+      response = Lancamento.class,
+      tags = {
+        TAG_CONTROLLER,
+      })
+  @ApiResponses(
+      value = {
+        @ApiResponse(code = 200, message = "Alterado com sucesso!", response = Lancamento.class),
+        @ApiResponse(code = 400, message = "Request inválido")
+      })
+  @RequestMapping(
+      consumes = {APPLICATION_JSON_VALUE},
+      produces = {APPLICATION_JSON_VALUE},
+      method = PUT)
+  ResponseEntity<Lancamento> alterar(
+      @ApiParam(value = "Lançamento") @Valid @RequestBody final LancamentoDataContract dataContract,
+      HttpServletResponse response) {
+    Lancamento obj = converter.convert(dataContract);
+
+    obj.setId(dataContract.getId());
+    final LocalDate vencimento = obj.getVencimento().minusDays(1);
+    obj.setVencimento(vencimento);
+    obj = gateway.alterar(obj);
+    publisher.publishEvent(new ResourceEvent(this, response, obj.getId()));
+    return ResponseEntity.status(HttpStatus.OK).body(obj);
   }
 
   @ApiOperation(

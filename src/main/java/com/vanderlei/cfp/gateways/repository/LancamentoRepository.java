@@ -43,6 +43,10 @@ public interface LancamentoRepository extends MongoRepository<Lancamento, String
       final Tipo tipo, final String email, final Pageable pageable);
 
   @Transactional(readOnly = true)
+  List<Lancamento> findByTipoAndUsuarioEmailAndDataExclusaoIsNullOrderByNomeNome(
+      final Tipo tipo, final String email);
+
+  @Transactional(readOnly = true)
   Page<Lancamento> findByTipoAndStatusInAndUsuarioEmailAndDataExclusaoIsNullAndVencimentoBetween(
       final Tipo tipo,
       final List<Status> status,

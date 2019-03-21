@@ -1,9 +1,6 @@
 package com.vanderlei.cfp.gateways;
 
-import com.vanderlei.cfp.entities.Baixa;
-import com.vanderlei.cfp.entities.Lancamento;
-import com.vanderlei.cfp.entities.TituloLancamento;
-import com.vanderlei.cfp.entities.Usuario;
+import com.vanderlei.cfp.entities.*;
 import com.vanderlei.cfp.entities.enums.Operacao;
 import com.vanderlei.cfp.entities.enums.Status;
 import com.vanderlei.cfp.entities.enums.Tipo;
@@ -26,6 +23,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class LancamentoGateway {
@@ -175,6 +173,24 @@ public class LancamentoGateway {
         tipo, email, from.minusDays(1).atTime(23, 59, 59), to.plusDays(1).atStartOfDay());
   }
 
+  public List<LancamentoFiltro> buscarTodosAtivosPorUsuarioTipo(
+      final String email, final String tipo) {
+    final HashSet<LancamentoFiltro> filtros = new HashSet<>();
+    if (tipo.equals("DESPESA")) {
+      repository.findByTipoAndUsuarioEmailAndDataExclusaoIsNullOrderByNomeNome(Tipo.DESPESA, email)
+          .stream()
+          .map(l -> filtros.add(LancamentoFiltro.builder().nome(l.getNome().getNome()).build()))
+          .collect(Collectors.toList());
+    } else if (tipo.equals("RECEITA")) {
+      repository.findByTipoAndUsuarioEmailAndDataExclusaoIsNullOrderByNomeNome(Tipo.RECEITA, email)
+          .stream()
+          .map(l -> filtros.add(LancamentoFiltro.builder().nome(l.getNome().getNome()).build()))
+          .collect(Collectors.toList());
+    }
+
+    return new ArrayList<>(filtros);
+  }
+
   public Lancamento inserir(final Lancamento obj) {
     Lancamento objRet = null;
 
@@ -299,19 +315,15 @@ public class LancamentoGateway {
     return objRet;
   }
 
-  private boolean dataValida(final int dayOfMonth, final LocalDate date) {
-    String data =
-        date.getYear()
-            + "-"
-            + StringUtils.leftPad(String.valueOf(date.getMonthValue()), 2, "0")
-            + "-"
-            + StringUtils.leftPad(String.valueOf(dayOfMonth), 2, "0");
-    return DateUtils.isValid(data);
+  public Lancamento alterar(final Lancamento obj) {
+    obj.setDataAlteracao(LocalDateTime.now());
+    return repository.save(obj);
   }
 
   public void alterarTipo(final String id) {
     Lancamento obj = this.buscarPorCodigo(id);
     obj.setTipo(obj.getTipo().equals(Tipo.RECEITA) ? Tipo.DESPESA : Tipo.RECEITA);
+    obj.setDataAlteracao(LocalDateTime.now());
     repository.save(obj);
   }
 
@@ -464,5 +476,15 @@ public class LancamentoGateway {
     }
 
     return date;
+  }
+
+  private boolean dataValida(final int dayOfMonth, final LocalDate date) {
+    String data =
+        date.getYear()
+            + "-"
+            + StringUtils.leftPad(String.valueOf(date.getMonthValue()), 2, "0")
+            + "-"
+            + StringUtils.leftPad(String.valueOf(dayOfMonth), 2, "0");
+    return DateUtils.isValid(data);
   }
 }
