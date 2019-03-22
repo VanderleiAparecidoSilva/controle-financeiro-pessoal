@@ -1,7 +1,10 @@
 package com.vanderlei.cfp.http.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.io.Serializable;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CredenciaisDataContract implements Serializable {
 
     private String email;

@@ -188,7 +188,9 @@ public class LancamentoGateway {
           .collect(Collectors.toList());
     }
 
-    return new ArrayList<>(filtros);
+    return filtros.stream()
+        .sorted(Comparator.comparing(LancamentoFiltro::getNome))
+        .collect(Collectors.toList());
   }
 
   public Lancamento inserir(final Lancamento obj) {

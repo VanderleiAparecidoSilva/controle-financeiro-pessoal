@@ -1,5 +1,6 @@
 package com.vanderlei.cfp.http.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.Valid;
@@ -7,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class BaixaDataContract implements Serializable {
 
     private static final long serialVersionUID = 1L;

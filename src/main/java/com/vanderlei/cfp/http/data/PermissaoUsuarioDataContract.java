@@ -1,9 +1,12 @@
 package com.vanderlei.cfp.http.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PermissaoUsuarioDataContract implements Serializable {
 
   private static final long serialVersionUID = 1L;
