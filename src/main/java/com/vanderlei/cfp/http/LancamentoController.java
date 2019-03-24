@@ -2,7 +2,6 @@ package com.vanderlei.cfp.http;
 
 import com.vanderlei.cfp.entities.Baixa;
 import com.vanderlei.cfp.entities.Lancamento;
-import com.vanderlei.cfp.entities.LancamentoFiltro;
 import com.vanderlei.cfp.entities.enums.Status;
 import com.vanderlei.cfp.entities.enums.Tipo;
 import com.vanderlei.cfp.entities.enums.TipoUpload;
@@ -592,37 +591,68 @@ public class LancamentoController {
                 .collect(Collectors.toList()));
   }
 
-    @ApiOperation(
-            value = "Busca todos os lançamentos ativos por usuário e tipo",
+  @ApiOperation(
+      value = "Busca todos os lançamentos ativos por usuário e tipo",
+      response = LancamentoDataContract.class,
+      responseContainer = "Page",
+      tags = {
+        TAG_CONTROLLER,
+      })
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            code = 200,
+            message = "Um ou mais lançamentos encontrados",
             response = LancamentoDataContract.class,
-            responseContainer = "Page",
-            tags = {
-                    TAG_CONTROLLER,
-            })
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            code = 200,
-                            message = "Um ou mais lançamentos encontrados",
-                            response = LancamentoDataContract.class,
-                            responseContainer = "Page"),
-                    @ApiResponse(code = 400, message = "Request inválido"),
-                    @ApiResponse(code = 404, message = "Lançamento não encontrado")
-            })
-    @RequestMapping(
-            value = "/ativos/tipo",
-            produces = {APPLICATION_JSON_VALUE},
-            method = GET)
-    ResponseEntity<List<LancamentoFiltroDataContract>> buscaTodosAtivos(
-            @ApiParam(value = "Identificador do usuário", required = true) @RequestParam(value = "email")
-            final String email,
-            @ApiParam(value = "Tipo", required = true) @RequestParam(value = "tipo") final String tipo) {
-        List<LancamentoFiltroDataContract> dataContractList =
-                filtroDataContractConverter.convert(gateway.buscarTodosAtivosPorUsuarioTipo(email, tipo));
-        return dataContractList.size() > 0
-                ? ResponseEntity.ok().body(dataContractList)
-                : ResponseEntity.notFound().build();
-    }
+            responseContainer = "Page"),
+        @ApiResponse(code = 400, message = "Request inválido"),
+        @ApiResponse(code = 404, message = "Lançamento não encontrado")
+      })
+  @RequestMapping(
+      value = "/ativos/tipo",
+      produces = {APPLICATION_JSON_VALUE},
+      method = GET)
+  ResponseEntity<List<LancamentoFiltroDataContract>> buscaTodosAtivosPorTipo(
+      @ApiParam(value = "Identificador do usuário", required = true) @RequestParam(value = "email")
+          final String email,
+      @ApiParam(value = "Tipo", required = true) @RequestParam(value = "tipo") final String tipo) {
+    List<LancamentoFiltroDataContract> dataContractList =
+        filtroDataContractConverter.convert(gateway.buscarTodosAtivosPorUsuarioTipo(email, tipo));
+    return dataContractList.size() > 0
+        ? ResponseEntity.ok().body(dataContractList)
+        : ResponseEntity.notFound().build();
+  }
+
+  @ApiOperation(
+      value = "Busca todos os lançamentos ativos por usuário",
+      response = LancamentoDataContract.class,
+      responseContainer = "List",
+      tags = {
+        TAG_CONTROLLER,
+      })
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            code = 200,
+            message = "Um ou mais lançamentos encontrados",
+            response = LancamentoDataContract.class,
+            responseContainer = "Page"),
+        @ApiResponse(code = 400, message = "Request inválido"),
+        @ApiResponse(code = 404, message = "Lançamento não encontrado")
+      })
+  @RequestMapping(
+      value = "/ativos",
+      produces = {APPLICATION_JSON_VALUE},
+      method = GET)
+  ResponseEntity<List<LancamentoFiltroDataContract>> buscaTodosAtivos(
+      @ApiParam(value = "Identificador do usuário", required = true) @RequestParam(value = "email")
+          final String email) {
+    List<LancamentoFiltroDataContract> dataContractList =
+        filtroDataContractConverter.convert(gateway.buscarTodosAtivosPorUsuario(email));
+    return dataContractList.size() > 0
+        ? ResponseEntity.ok().body(dataContractList)
+        : ResponseEntity.notFound().build();
+  }
 
   @ApiOperation(
       value = "Cadastrar novo lançamento",

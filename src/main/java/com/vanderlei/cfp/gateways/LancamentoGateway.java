@@ -193,6 +193,17 @@ public class LancamentoGateway {
         .collect(Collectors.toList());
   }
 
+  public List<LancamentoFiltro> buscarTodosAtivosPorUsuario(final String email) {
+    final HashSet<LancamentoFiltro> filtros = new HashSet<>();
+    repository.findByUsuarioEmailAndDataExclusaoIsNullOrderByNomeNome(email).stream()
+        .map(l -> filtros.add(LancamentoFiltro.builder().nome(l.getNome().getNome()).build()))
+        .collect(Collectors.toList());
+
+    return filtros.stream()
+        .sorted(Comparator.comparing(LancamentoFiltro::getNome))
+        .collect(Collectors.toList());
+  }
+
   public Lancamento inserir(final Lancamento obj) {
     Lancamento objRet = null;
 
