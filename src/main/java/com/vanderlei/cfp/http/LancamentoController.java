@@ -699,6 +699,7 @@ public class LancamentoController {
     Lancamento obj = converter.convert(dataContract);
 
     obj.setId(dataContract.getId());
+    obj.setObservacao(obj.getObservacao().toUpperCase());
     obj = gateway.alterar(obj);
     LancamentoDataContract objReturn = dataContractConverter.convert(obj);
 
