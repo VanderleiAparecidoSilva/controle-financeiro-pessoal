@@ -693,17 +693,17 @@ public class LancamentoController {
       consumes = {APPLICATION_JSON_VALUE},
       produces = {APPLICATION_JSON_VALUE},
       method = PUT)
-  ResponseEntity<Lancamento> alterar(
+  ResponseEntity<LancamentoDataContract> alterar(
       @ApiParam(value = "Lançamento") @Valid @RequestBody final LancamentoDataContract dataContract,
       HttpServletResponse response) {
     Lancamento obj = converter.convert(dataContract);
 
     obj.setId(dataContract.getId());
-    final LocalDate vencimento = obj.getVencimento().minusDays(1);
-    obj.setVencimento(vencimento);
     obj = gateway.alterar(obj);
-    publisher.publishEvent(new ResourceEvent(this, response, obj.getId()));
-    return ResponseEntity.status(HttpStatus.OK).body(obj);
+    LancamentoDataContract objReturn = dataContractConverter.convert(obj);
+
+    publisher.publishEvent(new ResourceEvent(this, response, objReturn.getId()));
+    return ResponseEntity.status(HttpStatus.OK).body(objReturn);
   }
 
   @ApiOperation(
