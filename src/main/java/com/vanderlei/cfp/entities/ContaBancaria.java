@@ -40,6 +40,8 @@ public class ContaBancaria implements Serializable {
 
   private Boolean atualizarSaldoBancarioNaBaixaTitulo;
 
+  private Boolean contaBancariaPadrao;
+
   @NotNull private Usuario usuario;
 
   @NotEmpty private LocalDateTime dataInclusao;
@@ -123,6 +125,14 @@ public class ContaBancaria implements Serializable {
 
   public void setAtualizarSaldoBancarioNaBaixaTitulo(Boolean atualizarSaldoBancarioNaBaixaTitulo) {
     this.atualizarSaldoBancarioNaBaixaTitulo = atualizarSaldoBancarioNaBaixaTitulo;
+  }
+
+  public Boolean getContaBancariaPadrao() {
+    return contaBancariaPadrao;
+  }
+
+  public void setContaBancariaPadrao(Boolean contaBancariaPadrao) {
+    this.contaBancariaPadrao = contaBancariaPadrao;
   }
 
   public Usuario getUsuario() {

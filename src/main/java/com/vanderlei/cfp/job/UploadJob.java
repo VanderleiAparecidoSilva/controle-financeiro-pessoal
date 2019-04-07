@@ -108,6 +108,7 @@ public class UploadJob implements Job {
       obj.setNumeroContaBancaria(((ContaBancariaUpload) upload).getNumeroContaBancaria());
       obj.setLimiteContaBancaria(((ContaBancariaUpload) upload).getLimiteContaBancaria());
       obj.setSaldoContaBancaria(((ContaBancariaUpload) upload).getSaldoContaBancaria());
+      obj.setContaBancariaPadrao(((ContaBancariaUpload) upload).getContaBancariaPadrao());
       obj.setVincularSaldoBancarioNoTotalReceita(
           ((ContaBancariaUpload) upload).getVincularSaldoBancarioNoTotalReceita());
       obj.setAtualizarSaldoBancarioNaBaixaTitulo(

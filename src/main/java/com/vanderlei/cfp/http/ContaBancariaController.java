@@ -76,6 +76,33 @@ public class ContaBancariaController {
   }
 
   @ApiOperation(
+      value = "Busca conta bancária default do usuário",
+      response = ContaBancariaDataContract.class,
+      tags = {
+        TAG_CONTROLLER,
+      })
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            code = 200,
+            message = "Conta bancária encontrada",
+            response = ContaBancariaDataContract.class),
+        @ApiResponse(code = 400, message = "Request inválido"),
+        @ApiResponse(code = 404, message = "Conta bancária não encontrada")
+      })
+  @RequestMapping(
+      value = "/{email}/default",
+      produces = {APPLICATION_JSON_VALUE},
+      method = GET)
+  ResponseEntity<Object> buscaDefault(
+      @ApiParam(value = "Identificador do usuário", required = true) @PathVariable("email")
+          final String email) {
+    ContaBancaria obj = gateway.buscarDefault(email);
+    final ContaBancariaDataContract dataContract = dataContractConverter.convert(obj);
+    return obj != null ? ResponseEntity.ok().body(dataContract) : ResponseEntity.notFound().build();
+  }
+
+  @ApiOperation(
       value = "Busca todas as contas bancárias por usuário (paginado)",
       response = ContaBancariaDataContract.class,
       responseContainer = "List",

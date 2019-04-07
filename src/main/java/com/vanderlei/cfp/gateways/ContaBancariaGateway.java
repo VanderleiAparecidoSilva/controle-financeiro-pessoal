@@ -104,6 +104,16 @@ public class ContaBancariaGateway {
     return contaBancaria;
   }
 
+  public ContaBancaria buscarDefault(final String email) {
+    List<ContaBancaria> contaBancariaList =
+        Optional.ofNullable(repository.findByContaBancariaPadraoAndUsuarioEmail(true, email))
+            .orElseThrow(
+                () ->
+                    new ObjectNotFoundException(
+                        msgObjectNotFound + msgTipo + ContaBancaria.class.getName()));
+    return contaBancariaList.get(0);
+  }
+
   public ContaBancaria inserir(final ContaBancaria obj) {
     if (usuarioGateway.buscarPorEmail(obj.getUsuario().getEmail(), true) == null) {
       throw new ObjectNotFoundException(
@@ -115,6 +125,8 @@ public class ContaBancariaGateway {
       throw new ObjectDuplicatedException(
           msgObjectDuplicated + obj.getNome() + msgTipo + ContaBancaria.class.getName());
     }
+    verificarContaBancariaPadrao(obj);
+
     obj.setId(null);
     obj.setDataInclusao(LocalDateTime.now());
     return repository.save(obj);
@@ -125,6 +137,7 @@ public class ContaBancariaGateway {
       throw new ObjectNotFoundException(
           msgUsuarioObjectNotFound + obj.getUsuario() + msgTipo + ContaBancaria.class.getName());
     }
+    verificarContaBancariaPadrao(obj);
     obj.setDataAlteracao(LocalDateTime.now());
     return repository.save(obj);
   }
@@ -167,8 +180,9 @@ public class ContaBancariaGateway {
         obj.setSaldoContaBancaria(getDoubleValue(strArray[4]));
       } catch (ParseException e) {
       }
-      obj.setVincularSaldoBancarioNoTotalReceita(Boolean.valueOf(strArray[5]));
-      obj.setAtualizarSaldoBancarioNaBaixaTitulo(Boolean.valueOf(strArray[6]));
+      obj.setContaBancariaPadrao(Boolean.valueOf(strArray[5]));
+      obj.setVincularSaldoBancarioNoTotalReceita(Boolean.valueOf(strArray[6]));
+      obj.setAtualizarSaldoBancarioNaBaixaTitulo(Boolean.valueOf(strArray[7]));
 
       obj.setId(null);
       obj.setDataInclusao(LocalDateTime.now());
@@ -184,5 +198,19 @@ public class ContaBancariaGateway {
     sfs.setDecimalSeparator(',');
     df.setDecimalFormatSymbols(sfs);
     return BigDecimal.valueOf(df.parse(value.replace(".", "")).doubleValue());
+  }
+
+  private void verificarContaBancariaPadrao(final ContaBancaria obj) {
+    if (obj.getContaBancariaPadrao()) {
+      List<ContaBancaria> contaBancariaPadrao =
+          repository.findByContaBancariaPadraoAndUsuarioEmail(true, obj.getUsuario().getEmail());
+      if (!contaBancariaPadrao.isEmpty()) {
+        contaBancariaPadrao.forEach(
+            cb -> {
+              cb.setContaBancariaPadrao(false);
+              repository.save(cb);
+            });
+      }
+    }
   }
 }

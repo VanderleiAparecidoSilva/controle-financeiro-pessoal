@@ -64,6 +64,7 @@ public class LancamentoDataContractConverter
               obj.getContaBancaria().getSaldoContaBancaria(),
               obj.getContaBancaria().getVincularSaldoBancarioNoTotalReceita(),
               obj.getContaBancaria().getAtualizarSaldoBancarioNaBaixaTitulo(),
+              obj.getContaBancaria().getContaBancariaPadrao(),
               objDataContract.getUsuario()));
     }
 

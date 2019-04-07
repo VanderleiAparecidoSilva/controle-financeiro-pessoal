@@ -34,6 +34,7 @@ public class Parsers {
         dataContract.getAtualizarSaldoBancarioNaBaixaTitulo());
     obj.setVincularSaldoBancarioNoTotalReceita(
         dataContract.getVincularSaldoBancarioNoTotalReceita());
+    obj.setContaBancariaPadrao(dataContract.getContaBancariaPadrao());
     obj.setLimiteContaBancaria(dataContract.getLimiteContaBancaria());
     obj.setSaldoContaBancaria(dataContract.getSaldoContaBancaria());
   }

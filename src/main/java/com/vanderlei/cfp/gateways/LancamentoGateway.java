@@ -285,6 +285,12 @@ public class LancamentoGateway {
               + obj.getContaBancaria().getNome()
               + msgTipo
               + Lancamento.class.getName());
+    } else {
+      ContaBancaria contaBancariaDefault =
+          contaBancariaGateway.buscarDefault(obj.getUsuario().getEmail());
+      if (contaBancariaDefault != null) {
+        obj.setContaBancaria(contaBancariaDefault);
+      }
     }
 
     final int qtdParcelas = obj.getParcela();
@@ -330,6 +336,13 @@ public class LancamentoGateway {
 
   public Lancamento alterar(final Lancamento obj) {
     obj.setDataAlteracao(LocalDateTime.now());
+    if (obj.getContaBancaria() == null) {
+      ContaBancaria contaBancariaDefault =
+          contaBancariaGateway.buscarDefault(obj.getUsuario().getEmail());
+      if (contaBancariaDefault != null) {
+        obj.setContaBancaria(contaBancariaDefault);
+      }
+    }
     return repository.save(obj);
   }
 

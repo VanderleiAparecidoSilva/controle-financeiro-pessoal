@@ -28,4 +28,7 @@ public interface ContaBancariaRepository extends MongoRepository<ContaBancaria, 
 
   @Transactional(readOnly = true)
   Optional<ContaBancaria> findByIdAndUsuarioEmail(final String id, final String email);
+
+  @Transactional(readOnly = true)
+  List<ContaBancaria> findByContaBancariaPadraoAndUsuarioEmail(final Boolean padrao, final String email);
 }

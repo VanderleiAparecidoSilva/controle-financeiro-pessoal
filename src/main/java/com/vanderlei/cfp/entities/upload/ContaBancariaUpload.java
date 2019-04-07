@@ -26,6 +26,8 @@ public class ContaBancariaUpload extends Upload {
 
   private Boolean atualizarSaldoBancarioNaBaixaTitulo;
 
+  private Boolean contaBancariaPadrao;
+
   public ContaBancariaUpload() {}
 
   public ContaBancariaUpload(
@@ -33,12 +35,14 @@ public class ContaBancariaUpload extends Upload {
       final String numeroContaBancaria,
       final BigDecimal limiteContaBancaria,
       final BigDecimal saldoContaBancaria,
+      final Boolean contaBancariaPadrao,
       final Boolean vincularSaldoBancarioNoTotalReceita,
       final Boolean atualizarSaldoBancarioNaBaixaTitulo) {
     this.nome = nome;
     this.numeroContaBancaria = numeroContaBancaria;
     this.limiteContaBancaria = limiteContaBancaria;
     this.saldoContaBancaria = saldoContaBancaria;
+    this.contaBancariaPadrao = contaBancariaPadrao;
     this.vincularSaldoBancarioNoTotalReceita = vincularSaldoBancarioNoTotalReceita;
     this.atualizarSaldoBancarioNaBaixaTitulo = atualizarSaldoBancarioNaBaixaTitulo;
   }
@@ -89,5 +93,13 @@ public class ContaBancariaUpload extends Upload {
 
   public void setAtualizarSaldoBancarioNaBaixaTitulo(Boolean atualizarSaldoBancarioNaBaixaTitulo) {
     this.atualizarSaldoBancarioNaBaixaTitulo = atualizarSaldoBancarioNaBaixaTitulo;
+  }
+
+  public Boolean getContaBancariaPadrao() {
+    return contaBancariaPadrao;
+  }
+
+  public void setContaBancariaPadrao(Boolean contaBancariaPadrao) {
+    this.contaBancariaPadrao = contaBancariaPadrao;
   }
 }

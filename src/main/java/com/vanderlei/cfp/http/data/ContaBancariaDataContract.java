@@ -33,6 +33,8 @@ public class ContaBancariaDataContract implements Serializable {
 
   private Boolean atualizarSaldoBancarioNaBaixaTitulo;
 
+  private Boolean contaBancariaPadrao;
+
   private Boolean ativo;
 
   @JsonIgnore private LocalDateTime dataInclusao;
@@ -56,6 +58,7 @@ public class ContaBancariaDataContract implements Serializable {
       final BigDecimal saldoContaBancaria,
       final Boolean vincularSaldoBancarioNoTotalReceita,
       final Boolean atualizarSaldoBancarioNaBaixaTitulo,
+      final Boolean contaBancariaPadrao,
       final UsuarioDataContract usuario) {
     this.id = id;
     this.nome = nome;
@@ -64,6 +67,7 @@ public class ContaBancariaDataContract implements Serializable {
     this.saldoContaBancaria = saldoContaBancaria;
     this.vincularSaldoBancarioNoTotalReceita = vincularSaldoBancarioNoTotalReceita;
     this.atualizarSaldoBancarioNaBaixaTitulo = atualizarSaldoBancarioNaBaixaTitulo;
+    this.contaBancariaPadrao = contaBancariaPadrao;
     this.usuario = usuario;
   }
 
@@ -121,6 +125,14 @@ public class ContaBancariaDataContract implements Serializable {
 
   public void setAtualizarSaldoBancarioNaBaixaTitulo(Boolean atualizarSaldoBancarioNaBaixaTitulo) {
     this.atualizarSaldoBancarioNaBaixaTitulo = atualizarSaldoBancarioNaBaixaTitulo;
+  }
+
+  public Boolean getContaBancariaPadrao() {
+    return contaBancariaPadrao;
+  }
+
+  public void setContaBancariaPadrao(Boolean contaBancariaPadrao) {
+    this.contaBancariaPadrao = contaBancariaPadrao;
   }
 
   public Boolean getAtivo() {
