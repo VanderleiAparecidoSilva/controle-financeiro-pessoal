@@ -177,7 +177,9 @@ public class LancamentoGateway {
       final LocalDate from,
       final LocalDate to,
       final String costCenter) {
-    if (StringUtils.isEmpty(costCenter) || costCenter.equalsIgnoreCase("undefined")) {
+    if (StringUtils.isEmpty(costCenter)
+        || costCenter.equalsIgnoreCase("null")
+        || costCenter.equalsIgnoreCase("undefined")) {
       return repository.findByTipoAndUsuarioEmailAndDataExclusaoIsNullAndVencimentoBetween(
           tipo, email, from.minusDays(1).atTime(23, 59, 59), to.plusDays(1).atStartOfDay());
     } else {
