@@ -399,10 +399,12 @@ public class LancamentoController {
           @ApiParam(value = "Data final")
               @RequestParam(value = "to")
               @DateTimeFormat(pattern = "yyyy-MM-dd")
-              final LocalDate to) {
+              final LocalDate to,
+          @ApiParam(value = "Centro de Custo") @RequestParam(value = "costCenter")
+              final String costCenter) {
     List<LancamentoDataContract> objLancamentoList =
         dataContractConverter.convert(
-            gateway.buscarEstatisticaCentroCusto(Tipo.RECEITA, email, from, to));
+            gateway.buscarEstatisticaCentroCusto(Tipo.RECEITA, email, from, to, costCenter));
 
     return ResponseEntity.ok()
         .body(
@@ -455,10 +457,12 @@ public class LancamentoController {
           @ApiParam(value = "Data final")
               @RequestParam(value = "to")
               @DateTimeFormat(pattern = "yyyy-MM-dd")
-              final LocalDate to) {
+              final LocalDate to,
+          @ApiParam(value = "Centro de Custo") @RequestParam(value = "costCenter")
+              final String costCenter) {
     List<LancamentoDataContract> objLancamentoList =
         dataContractConverter.convert(
-            gateway.buscarEstatisticaCentroCusto(Tipo.DESPESA, email, from, to));
+            gateway.buscarEstatisticaCentroCusto(Tipo.DESPESA, email, from, to, costCenter));
 
     return ResponseEntity.ok()
         .body(
@@ -511,10 +515,12 @@ public class LancamentoController {
           @ApiParam(value = "Data final")
               @RequestParam(value = "to")
               @DateTimeFormat(pattern = "yyyy-MM-dd")
-              final LocalDate to) {
+              final LocalDate to,
+          @ApiParam(value = "Centro de Custo") @RequestParam(value = "costCenter")
+              final String costCenter) {
     List<LancamentoDataContract> objLancamentoList =
         dataContractConverter.convert(
-            gateway.buscarEstatisticaCentroCusto(Tipo.RECEITA, email, from, to));
+            gateway.buscarEstatisticaCentroCusto(Tipo.RECEITA, email, from, to, costCenter));
 
     return ResponseEntity.ok()
         .body(
@@ -567,10 +573,12 @@ public class LancamentoController {
           @ApiParam(value = "Data final")
               @RequestParam(value = "to")
               @DateTimeFormat(pattern = "yyyy-MM-dd")
-              final LocalDate to) {
+              final LocalDate to,
+          @ApiParam(value = "Centro de Custo") @RequestParam(value = "costCenter")
+              final String costCenter) {
     List<LancamentoDataContract> objLancamentoList =
         dataContractConverter.convert(
-            gateway.buscarEstatisticaCentroCusto(Tipo.DESPESA, email, from, to));
+            gateway.buscarEstatisticaCentroCusto(Tipo.DESPESA, email, from, to, costCenter));
 
     return ResponseEntity.ok()
         .body(

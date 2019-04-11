@@ -75,6 +75,13 @@ public class CentroCustoGateway {
     return new ArrayList<>();
   }
 
+  public List<CentroCusto> buscarTodosAtivosPorUsuarioPrimaria(final String email) {
+    return repository.findByUsuarioEmailOrderByNome(email).stream()
+        .filter(obj -> ObjectUtils.defaultIfNull(obj.getAtivo(), false))
+        .filter(obj -> ObjectUtils.defaultIfNull(obj.getPrimaria(), false))
+        .collect(Collectors.toList());
+  }
+
   public List<CentroCusto> buscarTodosAtivosPorUsuarioTipoSecundaria(
       final String email, final String tipo) {
     if (tipo.equals("DESPESA")) {

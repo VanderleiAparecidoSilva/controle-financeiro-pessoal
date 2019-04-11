@@ -178,6 +178,37 @@ public class CentroCustoController {
   }
 
   @ApiOperation(
+      value = "Busca todos os centro de custos primarios ativos por usuário",
+      response = CentroCustoDataContract.class,
+      responseContainer = "List",
+      tags = {
+        TAG_CONTROLLER,
+      })
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            code = 200,
+            message = "Um ou mais centro de custos encontrados",
+            response = CentroCustoDataContract.class,
+            responseContainer = "List"),
+        @ApiResponse(code = 400, message = "Request inválido"),
+        @ApiResponse(code = 404, message = "Centro de custo não encontrado")
+      })
+  @RequestMapping(
+      value = "/primarios/ativos",
+      produces = {APPLICATION_JSON_VALUE},
+      method = GET)
+  ResponseEntity<List<CentroCustoDataContract>> buscaTodosPrimariosAtivos(
+      @ApiParam(value = "Identificador do usuário", required = true) @RequestParam(value = "email")
+          final String email) {
+    List<CentroCustoDataContract> dataContractList =
+        dataContractConverter.convert(gateway.buscarTodosAtivosPorUsuarioPrimaria(email));
+    return dataContractList.size() > 0
+        ? ResponseEntity.ok().body(dataContractList)
+        : ResponseEntity.notFound().build();
+  }
+
+  @ApiOperation(
       value = "Busca todos os centro de custos ativos por usuário, tipo e secundária",
       response = CentroCustoDataContract.class,
       responseContainer = "Page",

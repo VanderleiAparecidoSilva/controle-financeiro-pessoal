@@ -1,5 +1,6 @@
 package com.vanderlei.cfp.gateways;
 
+import com.vanderlei.cfp.config.json.JsonHelper;
 import com.vanderlei.cfp.entities.*;
 import com.vanderlei.cfp.entities.enums.Operacao;
 import com.vanderlei.cfp.entities.enums.Status;
@@ -10,6 +11,7 @@ import com.vanderlei.cfp.exceptions.ObjectNotFoundException;
 import com.vanderlei.cfp.gateways.converters.LancamentoConverter;
 import com.vanderlei.cfp.gateways.repository.LancamentoRepository;
 import com.vanderlei.cfp.gateways.repository.UploadRepository;
+import com.vanderlei.cfp.http.data.CentroCustoDataContract;
 import com.vanderlei.cfp.utils.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +64,8 @@ public class LancamentoGateway {
   @Autowired private LancamentoConverter lancamentoConverter;
 
   @Autowired private UploadRepository uploadRepository;
+
+  @Autowired private JsonHelper jsonHelper;
 
   public Page<Lancamento> buscarTodosPorUsuarioPaginado(
       final String email,
@@ -168,9 +172,25 @@ public class LancamentoGateway {
   }
 
   public List<Lancamento> buscarEstatisticaCentroCusto(
-      final Tipo tipo, final String email, final LocalDate from, final LocalDate to) {
-    return repository.findByTipoAndUsuarioEmailAndDataExclusaoIsNullAndVencimentoBetween(
-        tipo, email, from.minusDays(1).atTime(23, 59, 59), to.plusDays(1).atStartOfDay());
+      final Tipo tipo,
+      final String email,
+      final LocalDate from,
+      final LocalDate to,
+      final String costCenter) {
+    if (StringUtils.isEmpty(costCenter) || costCenter.equalsIgnoreCase("undefined")) {
+      return repository.findByTipoAndUsuarioEmailAndDataExclusaoIsNullAndVencimentoBetween(
+          tipo, email, from.minusDays(1).atTime(23, 59, 59), to.plusDays(1).atStartOfDay());
+    } else {
+      CentroCustoDataContract centroCusto =
+          jsonHelper.jsonToObject(costCenter, CentroCustoDataContract.class);
+      return repository
+          .findByTipoAndCentroCustoPrimarioNomeAndUsuarioEmailAndDataExclusaoIsNullAndVencimentoBetween(
+              tipo,
+              centroCusto.getNome(),
+              email,
+              from.minusDays(1).atTime(23, 59, 59),
+              to.plusDays(1).atStartOfDay());
+    }
   }
 
   public List<LancamentoFiltro> buscarTodosAtivosPorUsuarioTipo(

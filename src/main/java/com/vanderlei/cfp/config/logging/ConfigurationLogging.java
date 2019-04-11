@@ -16,8 +16,8 @@ public class ConfigurationLogging {
   @PostConstruct
   public void init() {
     log.info(LocalDateTime.now() + " - ==========================================");
-    log.info(LocalDateTime.now() + " - spring.application.name=" + name);
-    log.info(LocalDateTime.now() + " - spring.profiles.active=" + profile);
+    log.info(LocalDateTime.now() + " - spring.application.name = " + name);
+    log.info(LocalDateTime.now() + " - spring.profiles.active = " + profile);
     log.info(LocalDateTime.now() + " - ==========================================");
   }
 
