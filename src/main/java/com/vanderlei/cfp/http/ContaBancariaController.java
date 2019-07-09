@@ -16,6 +16,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.apache.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -28,6 +29,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_PDF_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RequiredArgsConstructor
@@ -351,5 +353,11 @@ public class ContaBancariaController {
           final ContaBancariaSaldoDataContract saldo) {
     gateway.atualizarSaldo(id, email, saldo.getValor(), saldo.getOperacao());
     return ResponseEntity.noContent().build();
+  }
+
+  @RequestMapping(value = "/relatorio", method = GET)
+  ResponseEntity<byte[]> relatorio(@RequestParam String email) throws Exception {
+    byte[] report = gateway.report(email);
+    return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, APPLICATION_PDF_VALUE).body(report);
   }
 }

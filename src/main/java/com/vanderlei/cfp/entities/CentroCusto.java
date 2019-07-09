@@ -44,6 +44,14 @@ public class CentroCusto implements Serializable {
 
   private LocalDateTime dataExclusao;
 
+  private String strPrimaria;
+
+  private String strSecundaria;
+
+  private String strAplicaReceita;
+
+  private String strAplicaDespesa;
+
   public CentroCusto() {}
 
   public CentroCusto(
@@ -159,5 +167,21 @@ public class CentroCusto implements Serializable {
   public int hashCode() {
 
     return Objects.hash(id);
+  }
+
+  public String getStrPrimaria() {
+    return this.primaria ? "Sim" : "Não";
+  }
+
+  public String getStrSecundaria() {
+    return this.secundaria ? "Sim" : "Não";
+  }
+
+  public String getStrAplicaReceita() {
+    return this.aplicarNaReceita ? "Sim" : "Não";
+  }
+
+  public String getStrAplicaDespesa() {
+    return this.aplicarNaDespesa ? "Sim" : "Não";
   }
 }

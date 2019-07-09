@@ -8,6 +8,10 @@ import com.vanderlei.cfp.exceptions.ObjectDuplicatedException;
 import com.vanderlei.cfp.exceptions.ObjectNotFoundException;
 import com.vanderlei.cfp.gateways.repository.CentroCustoRepository;
 import com.vanderlei.cfp.gateways.repository.UploadRepository;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,10 +20,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -73,6 +76,39 @@ public class CentroCustoGateway {
     }
 
     return new ArrayList<>();
+  }
+
+  public byte[] report(final String email, final String tipo) throws JRException {
+    List<CentroCusto> centroCustoList = this.buscarTodosAtivosPorUsuario(email);
+    List<CentroCusto> centroCustoListByType =
+        centroCustoList.stream()
+            .filter(cc -> cc.getAtivo())
+            .filter(
+                cc ->
+                    tipo.equalsIgnoreCase("Receita")
+                        ? cc.getAplicarNaReceita()
+                        : cc.getAplicarNaDespesa())
+            .collect(Collectors.toList());
+
+    if (centroCustoListByType.size() > 0) {
+      Map<String, Object> params = new HashMap<>();
+      params.put("REPORT_LOCALE", new Locale("pt", "BR"));
+
+      InputStream inputStream =
+          this.getClass()
+              .getClassLoader()
+              .getResourceAsStream("templates/report/centro_custo.jrxml");
+      if (!Objects.isNull(inputStream)) {
+        JasperDesign template = JRXmlLoader.load(inputStream);
+        JasperReport report = JasperCompileManager.compileReport(template);
+        JasperPrint print =
+            JasperFillManager.fillReport(
+                report, params, new JRBeanCollectionDataSource(centroCustoListByType));
+        return JasperExportManager.exportReportToPdf(print);
+      }
+    }
+
+    return null;
   }
 
   public List<CentroCusto> buscarTodosAtivosPorUsuarioPrimaria(final String email) {

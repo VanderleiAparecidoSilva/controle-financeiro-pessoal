@@ -50,6 +50,8 @@ public class ContaBancaria implements Serializable {
 
   private LocalDateTime dataExclusao;
 
+  private String strPadrao;
+
   public ContaBancaria() {}
 
   public ContaBancaria(
@@ -183,5 +185,11 @@ public class ContaBancaria implements Serializable {
   public int hashCode() {
 
     return Objects.hash(id);
+  }
+
+  public String getStrPadrao() {
+    return Objects.isNull(this.contaBancariaPadrao)
+        ? "Não"
+        : this.contaBancariaPadrao ? "Sim" : "Não";
   }
 }

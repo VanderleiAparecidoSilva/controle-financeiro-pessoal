@@ -9,6 +9,10 @@ import com.vanderlei.cfp.exceptions.ObjectDuplicatedException;
 import com.vanderlei.cfp.exceptions.ObjectNotFoundException;
 import com.vanderlei.cfp.gateways.repository.ContaBancariaRepository;
 import com.vanderlei.cfp.gateways.repository.UploadRepository;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -16,14 +20,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -190,6 +193,29 @@ public class ContaBancariaGateway {
       obj.setProcessado(false);
       uploadRepository.save(obj);
     }
+  }
+
+  public byte[] report(final String email) throws JRException {
+    List<ContaBancaria> contaBancariaList = this.buscarTodosAtivosPorUsuario(email);
+    if (contaBancariaList.size() > 0) {
+      Map<String, Object> params = new HashMap<>();
+      params.put("REPORT_LOCALE", new Locale("pt", "BR"));
+
+      InputStream inputStream =
+          this.getClass()
+              .getClassLoader()
+              .getResourceAsStream("templates/report/conta_bancaria.jrxml");
+      if (!Objects.isNull(inputStream)) {
+        JasperDesign template = JRXmlLoader.load(inputStream);
+        JasperReport report = JasperCompileManager.compileReport(template);
+        JasperPrint print =
+            JasperFillManager.fillReport(
+                report, params, new JRBeanCollectionDataSource(contaBancariaList));
+        return JasperExportManager.exportReportToPdf(print);
+      }
+    }
+
+    return null;
   }
 
   private BigDecimal getDoubleValue(final String value) throws ParseException {
