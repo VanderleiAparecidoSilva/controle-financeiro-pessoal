@@ -19,6 +19,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -36,6 +37,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_PDF_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RequiredArgsConstructor
@@ -833,6 +835,63 @@ public class LancamentoController {
       gateway.upload(email, dataContract);
     }
     return ResponseEntity.noContent().build();
+  }
+
+  @RequestMapping(value = "/relatorio/lancamento", method = GET)
+  ResponseEntity<byte[]> relatorio(
+      @ApiParam(value = "Identificador do usuário", required = true) @RequestParam(value = "email")
+          final String email,
+      @ApiParam(value = "Tipo do lançamento", required = true) @RequestParam(value = "type")
+          final String type,
+      @ApiParam(value = "Data inicial")
+          @RequestParam(value = "from")
+          @DateTimeFormat(pattern = "yyyy-MM-dd")
+          final LocalDate from,
+      @ApiParam(value = "Data final")
+          @RequestParam(value = "to")
+          @DateTimeFormat(pattern = "yyyy-MM-dd")
+          final LocalDate to,
+      @ApiParam(value = "Descrição")
+          @RequestParam(value = "description", defaultValue = StringUtils.EMPTY)
+          final String description,
+      @ApiParam(value = "Somente títulos em aberto")
+          @RequestParam(value = "onlyOpen", defaultValue = "Sim")
+          final String onlyOpen,
+      @ApiParam(value = "Quantidade de páginas") @RequestParam(value = "page", defaultValue = "0")
+          final Integer page,
+      @ApiParam(value = "Quantidade de linhas por página")
+          @RequestParam(value = "linesPerPage", defaultValue = "500")
+          final Integer linesPerPage,
+      @ApiParam(value = "Ordenação") @RequestParam(value = "orderBy", defaultValue = "vencimento")
+          final String orderBy,
+      @ApiParam(value = "Direção") @RequestParam(value = "direction", defaultValue = "ASC")
+          final String direction,
+      @ApiParam(value = "Ordenação Secundária")
+          @RequestParam(value = "orderByTwo", defaultValue = "nome.nome")
+          final String orderByTwo,
+      @ApiParam(value = "Direção Secundária")
+          @RequestParam(value = "directionTwo", defaultValue = "ASC")
+          final String directionTwo)
+      throws Exception {
+    byte[] report =
+        gateway.report(
+            email,
+            from,
+            to,
+            description,
+            getStatus(onlyOpen.equalsIgnoreCase("Sim")),
+            getType(type),
+            page,
+            linesPerPage,
+            orderBy,
+            direction,
+            orderByTwo,
+            directionTwo);
+    return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, APPLICATION_PDF_VALUE).body(report);
+  }
+
+  private Tipo getType(final String type) {
+    return type.equalsIgnoreCase("Receita") ? Tipo.RECEITA : Tipo.DESPESA;
   }
 
   private List<Status> getStatus(final boolean onlyOpen) {

@@ -6,6 +6,7 @@ import com.vanderlei.cfp.entities.enums.Operacao;
 import com.vanderlei.cfp.entities.enums.Status;
 import com.vanderlei.cfp.entities.enums.Tipo;
 import com.vanderlei.cfp.entities.enums.TipoUpload;
+import com.vanderlei.cfp.entities.report.LancamentoReport;
 import com.vanderlei.cfp.entities.upload.LancamentoUpload;
 import com.vanderlei.cfp.exceptions.ObjectNotFoundException;
 import com.vanderlei.cfp.gateways.converters.LancamentoConverter;
@@ -13,6 +14,10 @@ import com.vanderlei.cfp.gateways.repository.LancamentoRepository;
 import com.vanderlei.cfp.gateways.repository.UploadRepository;
 import com.vanderlei.cfp.http.data.CentroCustoDataContract;
 import com.vanderlei.cfp.utils.DateUtils;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,7 +25,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -513,6 +520,79 @@ public class LancamentoGateway {
 
       uploadRepository.save(obj);
     }
+  }
+
+  public byte[] report(
+      final String email,
+      final LocalDate from,
+      final LocalDate to,
+      final String description,
+      final List<Status> status,
+      final Tipo tipo,
+      final Integer page,
+      final Integer linesPerPage,
+      final String orderBy,
+      final String direction,
+      final String orderByTwo,
+      final String directionTwo)
+      throws JRException {
+    List<Lancamento> lancamentoList =
+        this.buscarTodosPorPeriodoUsuarioPaginado(
+                email,
+                from,
+                to,
+                description,
+                status,
+                tipo,
+                page,
+                linesPerPage,
+                orderBy,
+                direction,
+                orderByTwo,
+                directionTwo)
+            .getContent();
+
+    if (lancamentoList.size() > 0) {
+      double totalValorParcela =
+          lancamentoList.stream().mapToDouble(lc -> lc.getValorParcela().doubleValue()).sum();
+
+      List<LancamentoReport> lancamentoReportList =
+          lancamentoList.stream()
+              .map(lc -> getLancamentoReport(lc, totalValorParcela))
+              .collect(Collectors.toList());
+
+      Map<String, Object> params = new HashMap<>();
+      params.put("REPORT_LOCALE", new Locale("pt", "BR"));
+      params.put("TIPO_LANCAMENTO", tipo.getDescricao());
+      params.put("DT_INICIO", Date.valueOf(from));
+      params.put("DT_FIM", Date.valueOf(to));
+
+      InputStream inputStream =
+          this.getClass().getClassLoader().getResourceAsStream("templates/report/lancamento.jrxml");
+      if (!Objects.isNull(inputStream)) {
+        JasperDesign template = JRXmlLoader.load(inputStream);
+        JasperReport report = JasperCompileManager.compileReport(template);
+        JasperPrint print =
+            JasperFillManager.fillReport(
+                report, params, new JRBeanCollectionDataSource(lancamentoReportList));
+        return JasperExportManager.exportReportToPdf(print);
+      }
+    }
+
+    return null;
+  }
+
+  private LancamentoReport getLancamentoReport(
+      final Lancamento lancamento, double totalValorParcela) {
+    return LancamentoReport.builder()
+        .vencimento(Date.valueOf(lancamento.getVencimento()))
+        .nome(lancamento.getNome().getNome())
+        .valor(lancamento.getValorParcela())
+        .parcela(lancamento.getParcelaAtualTotalParcela())
+        .status(lancamento.getStatus().getDescricao())
+        .observacao(lancamento.getObservacao())
+        .total(BigDecimal.valueOf(totalValorParcela))
+        .build();
   }
 
   private LocalDate getVencimento(final String dateString) {
