@@ -363,6 +363,12 @@ public class LancamentoGateway {
     return objRet;
   }
 
+  public Lancamento alterar(final String id, final Lancamento obj) {
+    obj.setId(id);
+    obj.setObservacao(obj.getObservacao().toUpperCase());
+    return this.alterar(obj);
+  }
+
   public Lancamento alterar(final Lancamento obj) {
     obj.setDataAlteracao(LocalDateTime.now());
     if (obj.getContaBancaria() == null) {

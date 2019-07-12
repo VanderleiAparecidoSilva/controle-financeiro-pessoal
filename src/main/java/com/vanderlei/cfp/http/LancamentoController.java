@@ -704,13 +704,18 @@ public class LancamentoController {
       produces = {APPLICATION_JSON_VALUE},
       method = PUT)
   ResponseEntity<LancamentoDataContract> alterar(
+      @ApiParam(value = "Alterar todos os lançamentos em aberto", required = true)
+          @RequestParam(value = "updateAll", defaultValue = "False")
+          final String updateAll,
       @ApiParam(value = "Lançamento") @Valid @RequestBody final LancamentoDataContract dataContract,
       HttpServletResponse response) {
-    Lancamento obj = converter.convert(dataContract);
 
-    obj.setId(dataContract.getId());
-    obj.setObservacao(obj.getObservacao().toUpperCase());
-    obj = gateway.alterar(obj);
+    Lancamento obj = converter.convert(dataContract);
+    if (!Boolean.valueOf(updateAll)) {
+        obj = gateway.alterar(dataContract.getId(), obj);
+    } else {
+        // Continuar com logica de alteração de todos os registros com parcelas em aberto
+    }
     LancamentoDataContract objReturn = dataContractConverter.convert(obj);
 
     publisher.publishEvent(new ResourceEvent(this, response, objReturn.getId()));
