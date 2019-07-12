@@ -712,9 +712,9 @@ public class LancamentoController {
 
     Lancamento obj = converter.convert(dataContract);
     if (!Boolean.valueOf(updateAll)) {
-        obj = gateway.alterar(dataContract.getId(), obj);
+      obj = gateway.alterar(dataContract.getId(), obj);
     } else {
-        // Continuar com logica de alteração de todos os registros com parcelas em aberto
+      // Continuar com logica de alteração de todos os registros com parcelas em aberto
     }
     LancamentoDataContract objReturn = dataContractConverter.convert(obj);
 
