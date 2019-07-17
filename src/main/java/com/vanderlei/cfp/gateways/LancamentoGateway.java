@@ -169,7 +169,7 @@ public class LancamentoGateway {
     PageRequest pageRequest =
         PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
     Page<Lancamento> objList =
-        repository.findByStatusAndUsuarioEmailAndUuidAndParcelaGreaterThanOrderByParcela(
+        repository.findByStatusAndUsuarioEmailAndUuidAndParcelaGreaterThanAndDataExclusaoIsNullOrderByParcela(
             Status.ABERTO,
             obj.getUsuario().getEmail(),
             obj.getUuid(),

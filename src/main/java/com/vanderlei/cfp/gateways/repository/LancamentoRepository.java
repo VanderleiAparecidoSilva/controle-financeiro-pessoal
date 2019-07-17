@@ -27,7 +27,7 @@ public interface LancamentoRepository extends MongoRepository<Lancamento, String
       final Status status, final LocalDate date);
 
   @Transactional(readOnly = true)
-  Page<Lancamento> findByStatusAndUsuarioEmailAndUuidAndParcelaGreaterThanOrderByParcela(
+  Page<Lancamento> findByStatusAndUsuarioEmailAndUuidAndParcelaGreaterThanAndDataExclusaoIsNullOrderByParcela(
       final Status status,
       final String email,
       final UUID uuid,
