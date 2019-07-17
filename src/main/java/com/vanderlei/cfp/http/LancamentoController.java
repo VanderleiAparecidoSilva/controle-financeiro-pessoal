@@ -23,6 +23,8 @@ import org.apache.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -366,7 +369,7 @@ public class LancamentoController {
                 id, page, linesPerPage, orderBy, direction));
     return objList.getTotalElements() > 0
         ? ResponseEntity.ok().body(objList)
-        : ResponseEntity.notFound().build();
+        : ResponseEntity.ok().body(new PageImpl<LancamentoDataContract>(new ArrayList<>()));
   }
 
   @ApiOperation(

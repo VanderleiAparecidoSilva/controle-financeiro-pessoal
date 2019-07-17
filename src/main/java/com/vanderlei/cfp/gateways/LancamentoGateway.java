@@ -352,7 +352,7 @@ public class LancamentoGateway {
           vencimento = vencimento.plusMonths(1);
         }
       }
-      obj.setObservacao(obj.getObservacao().toUpperCase());
+      obj.setObservacao(!Objects.isNull(obj.getObservacao()) ? obj.getObservacao().toUpperCase() : null);
 
       repository.save(obj);
       if (objRet == null) {
@@ -365,7 +365,7 @@ public class LancamentoGateway {
 
   public Lancamento alterar(final String id, final Lancamento obj) {
     obj.setId(id);
-    obj.setObservacao(obj.getObservacao().toUpperCase());
+    obj.setObservacao(!Objects.isNull(obj.getObservacao()) ? obj.getObservacao().toUpperCase() : null);
     return this.alterar(obj);
   }
 
