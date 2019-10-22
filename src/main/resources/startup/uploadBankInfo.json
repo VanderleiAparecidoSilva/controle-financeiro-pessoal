@@ -1,0 +1,20 @@
+[
+  {
+    "id": "BancoInter",
+    "descricao": "CC - INTER",
+    "centroCustoPrimario": "CARTAO DE CREDITO",
+    "centroCustoSecundario": "DIVERSOS",
+    "diaVencimento": 20,
+    "contaBancaria": "SANTANDER",
+    "linhaInicialArquivo": 8
+  },
+  {
+    "id": "PortoSeguro",
+    "descricao": "CC - PORTO SEGURO",
+    "centroCustoPrimario": "CARTAO DE CREDITO",
+    "centroCustoSecundario": "DIVERSOS",
+    "diaVencimento": 11,
+    "contaBancaria": "SANTANDER",
+    "linhaInicialArquivo": 8
+  }
+]
