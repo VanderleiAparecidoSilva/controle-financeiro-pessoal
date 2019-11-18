@@ -4,14 +4,10 @@ import com.vanderlei.cfp.entities.Baixa;
 import com.vanderlei.cfp.entities.Lancamento;
 import com.vanderlei.cfp.entities.enums.Status;
 import com.vanderlei.cfp.entities.enums.Tipo;
-import com.vanderlei.cfp.entities.enums.TipoUpload;
 import com.vanderlei.cfp.events.ResourceEvent;
 import com.vanderlei.cfp.gateways.LancamentoGateway;
 import com.vanderlei.cfp.gateways.converters.*;
-import com.vanderlei.cfp.http.data.BaixaDataContract;
-import com.vanderlei.cfp.http.data.LancamentoDataContract;
-import com.vanderlei.cfp.http.data.LancamentoEstatisticaCentroCustoDataContract;
-import com.vanderlei.cfp.http.data.LancamentoFiltroDataContract;
+import com.vanderlei.cfp.http.data.*;
 import com.vanderlei.cfp.http.mapping.UrlMapping;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -24,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -834,14 +829,11 @@ public class LancamentoController {
   ResponseEntity<Void> upload(
       @ApiParam(value = "Identificador do usuário", required = true) @RequestParam(value = "email")
           final String email,
-      @ApiParam(value = "Lançamento") @RequestBody final String dataContract) {
+      @ApiParam(value = "Tipo", required = true) @RequestParam(value = "tipo") final String tipo,
+      @ApiParam(value = "Lançamento") @RequestBody
+          final LancamentoUploadDataContract dataContract) {
 
-    if (dataContract
-        .split(";")[0]
-        .toUpperCase()
-        .equals(TipoUpload.LANCAMENTO.getDescricao().toUpperCase())) {
-      gateway.upload(email, dataContract);
-    }
+    gateway.upload(email, dataContract);
     return ResponseEntity.noContent().build();
   }
 

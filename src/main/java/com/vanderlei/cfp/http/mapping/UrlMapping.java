@@ -11,4 +11,5 @@ public interface UrlMapping {
     String TOKENS = "/api/tokens";
     String PERMISSAO = "/api/permissao";
     String PERMISSAO_USUARIO = "/api/permissao/usuario";
+    String UPLOAD_BANK = "/api/uploadbank";
 }

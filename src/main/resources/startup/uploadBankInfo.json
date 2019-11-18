@@ -6,7 +6,13 @@
     "centroCustoSecundario": "DIVERSOS",
     "diaVencimento": 20,
     "contaBancaria": "SANTANDER",
-    "linhaInicialArquivo": 8
+    "linhaInicialArquivo": 8,
+    "tipo": "D",
+    "usuario" : {
+      "nome" : "Vanderlei Aparecido Silva",
+      "email" : "vanderlei@gmail.com",
+      "permiteEmailLembrete" : true
+    }
   },
   {
     "id": "PortoSeguro",
@@ -15,6 +21,12 @@
     "centroCustoSecundario": "DIVERSOS",
     "diaVencimento": 11,
     "contaBancaria": "SANTANDER",
-    "linhaInicialArquivo": 8
+    "linhaInicialArquivo": 8,
+    "tipo": "D",
+    "usuario" : {
+      "nome" : "Vanderlei Aparecido Silva",
+      "email" : "vanderlei@gmail.com",
+      "permiteEmailLembrete" : true
+    }
   }
 ]

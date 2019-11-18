@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 @Profile("!test")
@@ -24,7 +25,11 @@ public class UploadBankStartUp {
     final List<UploadBank> uploadBankList =
         jsonHelper.toListObject("startup/uploadBankInfo.json", UploadBank.class);
     uploadBankList.stream()
-        .filter(uploadBank -> !uploadBankGateway.findById(uploadBank.getId()).isPresent())
+        .filter(
+            uploadBank ->
+                Objects.isNull(
+                    uploadBankGateway.findByIdAndUsuarioEmail(
+                        uploadBank.getId(), uploadBank.getUsuario().getEmail())))
         .forEach(uploadBankGateway::save);
   }
 }

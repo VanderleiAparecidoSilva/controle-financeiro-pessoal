@@ -3,6 +3,7 @@ package com.vanderlei.cfp.gateways;
 import com.vanderlei.cfp.exceptions.FileException;
 import org.apache.commons.io.FilenameUtils;
 import org.imgscalr.Scalr;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,58 +16,63 @@ import java.io.IOException;
 import java.io.InputStream;
 
 @Service
+@Profile("!test")
 public class ImageGateway {
 
-    public BufferedImage getJpgImageFromFile(MultipartFile uploadedFile) {
-        String ext = FilenameUtils.getExtension(uploadedFile.getOriginalFilename());
-        if (!"png".equals(ext) && !"jpg".equals(ext)) {
-            throw new FileException("Somente imagens PNG e/ou JPG são permitidas");
-        }
-
-        try {
-            BufferedImage img = ImageIO.read(uploadedFile.getInputStream());
-            if ("png".equals(ext)) {
-                img = pngToJpg(img);
-            }
-
-            return img;
-        } catch (IOException e) {
-            throw new FileException("Erro ao ler arquivo");
-        }
+  public BufferedImage getJpgImageFromFile(MultipartFile uploadedFile) {
+    String ext = FilenameUtils.getExtension(uploadedFile.getOriginalFilename());
+    if (!"png".equals(ext) && !"jpg".equals(ext)) {
+      throw new FileException("Somente imagens PNG e/ou JPG são permitidas");
     }
 
-    public BufferedImage pngToJpg(BufferedImage img) {
-        BufferedImage jpgImage = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
-        jpgImage.createGraphics().drawImage(img, 0, 0, Color.WHITE, null);
-        return jpgImage;
-    }
+    try {
+      BufferedImage img = ImageIO.read(uploadedFile.getInputStream());
+      if ("png".equals(ext)) {
+        img = pngToJpg(img);
+      }
 
-    public InputStream getInputStream(BufferedImage img, String extension) {
-        try {
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
-            ImageIO.write(img, extension, os);
-            return new ByteArrayInputStream(os.toByteArray());
-        } catch (IOException e) {
-            throw new FileException("Erro ao ler arquivo");
-        }
+      return img;
+    } catch (IOException e) {
+      throw new FileException("Erro ao ler arquivo");
     }
+  }
 
-    public BufferedImage cropSquare(BufferedImage sourceImg) {
-        int min = (sourceImg.getHeight() <= sourceImg.getWidth()) ? sourceImg.getHeight() : sourceImg.getWidth();
-        return Scalr.crop(
-                sourceImg,
-                (sourceImg.getWidth()/2) - (min/2),
-                (sourceImg.getHeight()/2 - (min/2)),
-                min,
-                min);
-    }
+  public BufferedImage pngToJpg(BufferedImage img) {
+    BufferedImage jpgImage =
+        new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
+    jpgImage.createGraphics().drawImage(img, 0, 0, Color.WHITE, null);
+    return jpgImage;
+  }
 
-    public BufferedImage resize(BufferedImage sourceImg, int size) {
-        return Scalr.resize(sourceImg, Scalr.Method.ULTRA_QUALITY, size);
+  public InputStream getInputStream(BufferedImage img, String extension) {
+    try {
+      ByteArrayOutputStream os = new ByteArrayOutputStream();
+      ImageIO.write(img, extension, os);
+      return new ByteArrayInputStream(os.toByteArray());
+    } catch (IOException e) {
+      throw new FileException("Erro ao ler arquivo");
     }
+  }
 
-    public BufferedImage cropAndResize(BufferedImage sourceImg, int size) {
-        sourceImg = this.cropSquare(sourceImg);
-        return this.resize(sourceImg, size);
-    }
+  public BufferedImage cropSquare(BufferedImage sourceImg) {
+    int min =
+        (sourceImg.getHeight() <= sourceImg.getWidth())
+            ? sourceImg.getHeight()
+            : sourceImg.getWidth();
+    return Scalr.crop(
+        sourceImg,
+        (sourceImg.getWidth() / 2) - (min / 2),
+        (sourceImg.getHeight() / 2 - (min / 2)),
+        min,
+        min);
+  }
+
+  public BufferedImage resize(BufferedImage sourceImg, int size) {
+    return Scalr.resize(sourceImg, Scalr.Method.ULTRA_QUALITY, size);
+  }
+
+  public BufferedImage cropAndResize(BufferedImage sourceImg, int size) {
+    sourceImg = this.cropSquare(sourceImg);
+    return this.resize(sourceImg, size);
+  }
 }
