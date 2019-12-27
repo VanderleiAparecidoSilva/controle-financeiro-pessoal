@@ -25,6 +25,8 @@ public class UploadBankDataContract {
 
   private Integer linhaInicialArquivo;
 
+  private String tipoArquivo;
+
   private String tipo;
 
   @Valid
@@ -45,6 +47,7 @@ public class UploadBankDataContract {
       final Integer diaVencimento,
       final String contaBancaria,
       final Integer linhaInicialArquivo,
+      final String tipoArquivo,
       final String tipo,
       final UsuarioDataContract usuario) {
     this.id = id;
@@ -54,6 +57,7 @@ public class UploadBankDataContract {
     this.diaVencimento = diaVencimento;
     this.contaBancaria = contaBancaria;
     this.linhaInicialArquivo = linhaInicialArquivo;
+    this.tipoArquivo = tipoArquivo;
     this.tipo = tipo;
     this.usuario = usuario;
   }
@@ -112,6 +116,14 @@ public class UploadBankDataContract {
 
   public void setLinhaInicialArquivo(Integer linhaInicialArquivo) {
     this.linhaInicialArquivo = linhaInicialArquivo;
+  }
+
+  public String getTipoArquivo() {
+    return tipoArquivo;
+  }
+
+  public void setTipoArquivo(String tipoArquivo) {
+    this.tipoArquivo = tipoArquivo;
   }
 
   public String getTipo() {
