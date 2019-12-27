@@ -7,7 +7,10 @@ import com.vanderlei.cfp.entities.enums.Tipo;
 import com.vanderlei.cfp.events.ResourceEvent;
 import com.vanderlei.cfp.gateways.LancamentoGateway;
 import com.vanderlei.cfp.gateways.converters.*;
-import com.vanderlei.cfp.http.data.*;
+import com.vanderlei.cfp.http.data.BaixaDataContract;
+import com.vanderlei.cfp.http.data.LancamentoDataContract;
+import com.vanderlei.cfp.http.data.LancamentoEstatisticaCentroCustoDataContract;
+import com.vanderlei.cfp.http.data.LancamentoFiltroDataContract;
 import com.vanderlei.cfp.http.mapping.UrlMapping;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -829,8 +832,7 @@ public class LancamentoController {
   ResponseEntity<Void> upload(
       @ApiParam(value = "Identificador do usuário", required = true) @RequestParam(value = "email")
           final String email,
-      @ApiParam(value = "Lançamento") @RequestBody
-          final LancamentoUploadDataContract dataContract) {
+      @ApiParam(value = "Lançamento") @RequestBody final String dataContract) {
 
     gateway.upload(email, dataContract);
     return ResponseEntity.noContent().build();
