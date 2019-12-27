@@ -5,13 +5,14 @@ import com.vanderlei.cfp.entities.*;
 import com.vanderlei.cfp.entities.enums.Operacao;
 import com.vanderlei.cfp.entities.enums.Status;
 import com.vanderlei.cfp.entities.enums.Tipo;
+import com.vanderlei.cfp.entities.enums.TipoUpload;
 import com.vanderlei.cfp.entities.report.LancamentoReport;
+import com.vanderlei.cfp.entities.upload.LancamentoUpload;
 import com.vanderlei.cfp.exceptions.ObjectNotFoundException;
 import com.vanderlei.cfp.gateways.converters.LancamentoConverter;
 import com.vanderlei.cfp.gateways.repository.LancamentoRepository;
 import com.vanderlei.cfp.gateways.repository.UploadRepository;
 import com.vanderlei.cfp.http.data.CentroCustoDataContract;
-import com.vanderlei.cfp.http.data.LancamentoUploadDataContract;
 import com.vanderlei.cfp.utils.DateUtils;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -504,32 +505,32 @@ public class LancamentoGateway {
     return repository.findByStatusAndVencimentoBeforeOrderByUsuarioNome(status, date);
   }
 
-  public void upload(final String email, final LancamentoUploadDataContract obj) {
-    //    Usuario usuario = usuarioGateway.buscarPorEmail(email, true);
-    //
-    //    if (usuario != null) {
-    //      LancamentoUpload obj = new LancamentoUpload();
-    //      String[] strArray = str.split(";");
-    //
-    //      obj.setTipo(TipoUpload.toEnum(strArray[0]));
-    //      obj.setDescricao(strArray[1].toUpperCase());
-    //      obj.setCentroCustoPrimario(strArray[2].toUpperCase());
-    //      obj.setCentroCustoSecundario(strArray[3].toUpperCase());
-    //      obj.setVencimento(getVencimento(strArray[4]));
-    //      obj.setValorParcela(BigDecimal.valueOf(Double.valueOf(strArray[5].replace(",", "."))));
-    //      obj.setParcela(Integer.valueOf(strArray[6]));
-    //      obj.setGerarParcelaUnica(Boolean.valueOf(strArray[7]));
-    //      obj.setContaBancaria(strArray[8].toUpperCase());
-    //      obj.setObservacao(strArray[9].toUpperCase());
-    //      obj.setStatus(strArray[10].toUpperCase());
-    //      obj.setTipoLancamento(strArray[11].toUpperCase());
-    //      obj.setId(null);
-    //      obj.setDataInclusao(LocalDateTime.now());
-    //      obj.setUsuario(usuario);
-    //      obj.setProcessado(false);
-    //
-    //      uploadRepository.save(obj);
-    //    }
+  public void upload(final String email, final String str) {
+    final Usuario usuario = usuarioGateway.buscarPorEmail(email, true);
+
+    if (usuario != null) {
+      LancamentoUpload obj = new LancamentoUpload();
+      String[] strArray = str.split(";");
+
+      obj.setTipo(TipoUpload.toEnum(strArray[0]));
+      obj.setDescricao(strArray[1].toUpperCase());
+      obj.setCentroCustoPrimario(strArray[2].toUpperCase());
+      obj.setCentroCustoSecundario(strArray[3].toUpperCase());
+      obj.setVencimento(getVencimento(strArray[4]));
+      obj.setValorParcela(BigDecimal.valueOf(Double.valueOf(strArray[5].replace(",", "."))));
+      obj.setParcela(Integer.valueOf(strArray[6]));
+      obj.setGerarParcelaUnica(Boolean.valueOf(strArray[7]));
+      obj.setContaBancaria(strArray[8].toUpperCase());
+      obj.setObservacao(strArray[9].toUpperCase());
+      obj.setStatus(strArray[10].toUpperCase());
+      obj.setTipoLancamento(strArray[11].toUpperCase());
+      obj.setId(null);
+      obj.setDataInclusao(LocalDateTime.now());
+      obj.setUsuario(usuario);
+      obj.setProcessado(false);
+
+      uploadRepository.save(obj);
+    }
   }
 
   public byte[] report(

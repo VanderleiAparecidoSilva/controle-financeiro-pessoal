@@ -829,7 +829,6 @@ public class LancamentoController {
   ResponseEntity<Void> upload(
       @ApiParam(value = "Identificador do usuário", required = true) @RequestParam(value = "email")
           final String email,
-      @ApiParam(value = "Tipo", required = true) @RequestParam(value = "tipo") final String tipo,
       @ApiParam(value = "Lançamento") @RequestBody
           final LancamentoUploadDataContract dataContract) {
 
